@@ -239,6 +239,33 @@ const App = () => {
           isOpen={isSupportOpen}
           onClose={() => setIsSupportOpen(false)}
         />
+
+        <NotificationsModal 
+          isOpen={isNotificationsOpen}
+          onClose={() => setIsNotificationsOpen(false)}
+        />
+
+        <MembersListModal 
+          isOpen={isMembersListOpen}
+          onClose={() => setIsMembersListOpen(false)}
+          members={mockContacts}
+        />
+
+        <UpcomingToursModal 
+          isOpen={isUpcomingToursOpen}
+          onClose={() => setIsUpcomingToursOpen(false)}
+          tours={mockUpcomingTours}
+        />
+
+        <DepositModal 
+          isOpen={isDepositOpen}
+          onClose={() => setIsDepositOpen(false)}
+        />
+
+        <WithdrawModal 
+          isOpen={isWithdrawOpen}
+          onClose={() => setIsWithdrawOpen(false)}
+        />
       </div>
     </BrowserRouter>
   );
