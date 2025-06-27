@@ -11,7 +11,12 @@ import {
   FloatingActionButton, 
   CreateTontineModal, 
   AddContactModal, 
-  SupportModal 
+  SupportModal,
+  NotificationsModal,
+  MembersListModal,
+  UpcomingToursModal,
+  DepositModal,
+  WithdrawModal
 } from './components';
 
 const App = () => {
