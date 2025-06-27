@@ -337,104 +337,181 @@ export const SocialFeed = ({ tontines }) => {
   );
 };
 
-// Discussions Tab
-const DiscussionsTab = () => {
-  const mockDiscussions = [
-    {
-      id: 1,
-      author: 'Mariam K.',
-      avatar: 'MK',
-      color: 'bg-red-500',
-      time: '2h',
-      tontine: 'TFK',
-      message: 'Bonjour tout le monde ! N\'oubliez pas le versement de demain 💰',
-      likes: 5,
-      replies: 2
-    },
-    {
-      id: 2,
-      author: 'Fatou D.',
-      avatar: 'FD',
-      color: 'bg-blue-500',
-      time: '4h',
-      tontine: 'GAA',
-      message: 'Félicitations à Aminata pour avoir reçu son tour ! 🎉🎊',
-      likes: 12,
-      replies: 8
-    },
-    {
-      id: 3,
-      author: 'Ibrahim T.',
-      avatar: 'IT',
-      color: 'bg-green-500',
-      time: '1j',
-      tontine: 'ÉQB',
-      message: 'Question: peut-on modifier le montant pour le prochain cycle ?',
-      likes: 3,
-      replies: 15
-    }
-  ];
+// Discussions Tab - Now organized by Tontine groups
+const DiscussionsTab = ({ tontines }) => {
+  const [selectedTontine, setSelectedTontine] = useState(null);
+  
+  // Mock discussions organized by tontine
+  const mockDiscussionsByTontine = {
+    'tfk': [
+      {
+        id: 1,
+        author: 'Mariam K.',
+        avatar: 'MK',
+        color: 'bg-red-500',
+        time: '2h',
+        message: 'Bonjour tout le monde ! N\'oubliez pas le versement de demain 💰',
+        likes: 5,
+        replies: 2
+      }
+    ],
+    'gaa': [
+      {
+        id: 2,
+        author: 'Fatou D.',
+        avatar: 'FD',
+        color: 'bg-blue-500',
+        time: '4h',
+        message: 'Félicitations à Aminata pour avoir reçu son tour ! 🎉🎊',
+        likes: 12,
+        replies: 8
+      }
+    ],
+    'eqb': [
+      {
+        id: 3,
+        author: 'Ibrahim T.',
+        avatar: 'IT',
+        color: 'bg-green-500',
+        time: '1j',
+        message: 'Question: peut-on modifier le montant pour le prochain cycle ?',
+        likes: 3,
+        replies: 15
+      }
+    ]
+  };
+
+  if (selectedTontine) {
+    const discussions = mockDiscussionsByTontine[selectedTontine.id] || [];
+    
+    return (
+      <div className="space-y-4">
+        {/* Header for selected tontine */}
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => setSelectedTontine(null)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ArrowLeftIcon className="w-5 h-5" />
+              </button>
+              <div className={`w-10 h-10 ${selectedTontine.color} rounded-full flex items-center justify-center text-white font-bold`}>
+                {selectedTontine.name}
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-800">{selectedTontine.fullName}</h3>
+                <p className="text-sm text-gray-500">{selectedTontine.membersCount} membres</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Create Post for this tontine */}
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="flex items-center space-x-3 mb-3">
+            <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+              ME
+            </div>
+            <input 
+              type="text" 
+              placeholder={`Partagez quelque chose avec ${selectedTontine.name}...`}
+              className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="flex space-x-4 text-gray-500">
+              <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
+                📷 <span>Photo</span>
+              </button>
+              <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
+                📊 <span>Sondage</span>
+              </button>
+            </div>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-600">
+              Publier
+            </button>
+          </div>
+        </div>
+
+        {/* Discussions for this tontine */}
+        {discussions.map(discussion => (
+          <div key={discussion.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <div className="flex items-start space-x-3">
+              <div className={`w-10 h-10 ${discussion.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                {discussion.avatar}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2 mb-1">
+                  <h4 className="font-semibold text-gray-800">{discussion.author}</h4>
+                  <span className="text-xs text-gray-500">•</span>
+                  <span className="text-xs text-gray-500">{discussion.time}</span>
+                </div>
+                <p className="text-gray-700 mb-3">{discussion.message}</p>
+                <div className="flex items-center space-x-6">
+                  <button className="flex items-center space-x-1 text-gray-500 hover:text-red-500 text-sm">
+                    <HeartIcon className="w-4 h-4" />
+                    <span>{discussion.likes}</span>
+                  </button>
+                  <button className="flex items-center space-x-1 text-gray-500 hover:text-blue-500 text-sm">
+                    <ChatBubbleLeftIcon className="w-4 h-4" />
+                    <span>{discussion.replies}</span>
+                  </button>
+                  <button className="flex items-center space-x-1 text-gray-500 hover:text-green-500 text-sm">
+                    <ShareIcon className="w-4 h-4" />
+                    <span>Partager</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {discussions.length === 0 && (
+          <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 text-center">
+            <div className="text-gray-400 mb-4">
+              <ChatBubbleLeftIcon className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-800 mb-2">Aucune discussion pour le moment</h3>
+            <p className="text-gray-600">Soyez le premier à démarrer une conversation dans ce groupe !</p>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
-      {/* Create Post */}
-      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-3">
-          <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
-            ME
-          </div>
-          <input 
-            type="text" 
-            placeholder="Partagez quelque chose avec votre communauté..."
-            className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-4 text-gray-500">
-            <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
-              📷 <span>Photo</span>
-            </button>
-            <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
-              📊 <span>Sondage</span>
-            </button>
-          </div>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-600">
-            Publier
-          </button>
-        </div>
-      </div>
-
-      {/* Discussions List */}
-      {mockDiscussions.map(discussion => (
-        <div key={discussion.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-          <div className="flex items-start space-x-3">
-            <div className={`w-10 h-10 ${discussion.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
-              {discussion.avatar}
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">Discussions par Tontine</h3>
+      
+      {/* Tontine groups list */}
+      {tontines && tontines.map(tontine => (
+        <div 
+          key={tontine.id}
+          onClick={() => setSelectedTontine(tontine)}
+          className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className={`w-12 h-12 ${tontine.color} rounded-full flex items-center justify-center text-white font-bold`}>
+                {tontine.name}
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-800">{tontine.fullName}</h4>
+                <p className="text-sm text-gray-500">{tontine.membersCount} membres</p>
+                <p className="text-xs text-gray-400">
+                  {mockDiscussionsByTontine[tontine.id] ? 
+                    `${mockDiscussionsByTontine[tontine.id].length} message(s)` : 
+                    'Aucun message'
+                  }
+                </p>
+              </div>
             </div>
-            <div className="flex-1">
-              <div className="flex items-center space-x-2 mb-1">
-                <h4 className="font-semibold text-gray-800">{discussion.author}</h4>
-                <span className="text-xs text-gray-500">•</span>
-                <span className="text-xs text-gray-500">{discussion.time}</span>
-                <span className="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full">
-                  {discussion.tontine}
-                </span>
-              </div>
-              <p className="text-gray-700 mb-3">{discussion.message}</p>
-              <div className="flex items-center space-x-6">
-                <button className="flex items-center space-x-1 text-gray-500 hover:text-red-500 text-sm">
-                  <HeartIcon className="w-4 h-4" />
-                  <span>{discussion.likes}</span>
-                </button>
-                <button className="flex items-center space-x-1 text-gray-500 hover:text-blue-500 text-sm">
-                  <ChatBubbleLeftIcon className="w-4 h-4" />
-                  <span>{discussion.replies}</span>
-                </button>
-                <button className="flex items-center space-x-1 text-gray-500 hover:text-green-500 text-sm">
-                  <ShareIcon className="w-4 h-4" />
-                  <span>Partager</span>
-                </button>
-              </div>
+            <div className="flex flex-col items-end">
+              <ChevronRightIcon className="w-5 h-5 text-gray-400" />
+              {mockDiscussionsByTontine[tontine.id] && mockDiscussionsByTontine[tontine.id].length > 0 && (
+                <div className="w-3 h-3 bg-blue-500 rounded-full mt-1"></div>
+              )}
             </div>
           </div>
         </div>
