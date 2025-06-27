@@ -240,6 +240,7 @@ const App = () => {
         <CreateTontineModal 
           isOpen={isCreateTontineOpen}
           onClose={() => setIsCreateTontineOpen(false)}
+          onTontineCreated={handleTontineCreated}
         />
         
         <AddContactModal 
