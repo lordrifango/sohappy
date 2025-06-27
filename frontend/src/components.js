@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Header Component
-export const Header = ({ notifications }) => (
+export const Header = ({ notifications, onNotificationClick }) => (
   <header className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-4 shadow-lg">
     <div className="flex justify-between items-center">
       <div className="flex items-center space-x-2">
@@ -9,10 +9,13 @@ export const Header = ({ notifications }) => (
       </div>
       <div className="flex items-center space-x-4">
         <div className="relative">
-          <button className="p-2 hover:bg-white hover:bg-opacity-10 rounded-full transition-colors">
+          <button 
+            onClick={onNotificationClick}
+            className="p-2 hover:bg-white hover:bg-opacity-10 rounded-full transition-colors"
+          >
             <BellIcon className="w-6 h-6" />
             {notifications > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
                 {notifications}
               </span>
             )}
