@@ -386,23 +386,71 @@ const DiscussionsTab = ({ tontines }) => {
     
     return (
       <div className="space-y-4">
-        {/* Header for selected tontine */}
+        {/* Complete tontine info header */}
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => setSelectedTontine(null)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <ArrowLeftIcon className="w-5 h-5" />
-              </button>
-              <div className={`w-10 h-10 ${selectedTontine.color} rounded-full flex items-center justify-center text-white font-bold`}>
-                {selectedTontine.name}
+          <div className="flex items-center space-x-3 mb-4">
+            <button
+              onClick={() => setSelectedTontine(null)}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <ArrowLeftIcon className="w-5 h-5" />
+            </button>
+            <div className={`w-12 h-12 ${selectedTontine.color} rounded-full flex items-center justify-center text-white font-bold`}>
+              {selectedTontine.name}
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-800 text-lg">{selectedTontine.fullName}</h3>
+              <p className="text-sm text-gray-500">{selectedTontine.membersCount} membres</p>
+            </div>
+          </div>
+
+          {/* Tontine details */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">Montant par tour</p>
+              <p className="font-bold text-gray-800">{selectedTontine.amount} {selectedTontine.currency}</p>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">Prochain paiement</p>
+              <p className="font-medium text-gray-800">{selectedTontine.nextPayment}</p>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">Période</p>
+              <p className="text-sm text-gray-700">{selectedTontine.startDate} - {selectedTontine.endDate}</p>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">Progression</p>
+              <div className="flex items-center space-x-2">
+                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-emerald-500 h-2 rounded-full"
+                    style={{ width: `${selectedTontine.progress}%` }}
+                  ></div>
+                </div>
+                <span className="text-xs font-medium">{selectedTontine.progress}%</span>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-800">{selectedTontine.fullName}</h3>
-                <p className="text-sm text-gray-500">{selectedTontine.membersCount} membres</p>
-              </div>
+            </div>
+          </div>
+
+          {/* Members preview */}
+          <div className="border-t border-gray-200 pt-3">
+            <p className="text-sm font-medium text-gray-700 mb-2">Membres actifs</p>
+            <div className="flex -space-x-2">
+              {Array.from({length: Math.min(selectedTontine.membersCount, 6)}).map((_, i) => (
+                <div 
+                  key={i}
+                  className={`w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold ${
+                    ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500'][i]
+                  }`}
+                >
+                  {String.fromCharCode(65 + i)}
+                </div>
+              ))}
+              {selectedTontine.membersCount > 6 && (
+                <div className="w-8 h-8 bg-gray-400 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                  +{selectedTontine.membersCount - 6}
+                </div>
+              )}
             </div>
           </div>
         </div>
