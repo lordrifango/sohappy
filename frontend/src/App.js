@@ -1,54 +1,207 @@
-import { useEffect } from "react";
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { 
+  Header, 
+  Dashboard, 
+  TontineCard, 
+  MembersList, 
+  SocialFeed, 
+  BottomNavigation, 
+  FloatingActionButton, 
+  CreateTontineModal, 
+  AddContactModal, 
+  SupportModal 
+} from './components';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const App = () => {
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [selectedTontine, setSelectedTontine] = useState(null);
+  const [isCreateTontineOpen, setIsCreateTontineOpen] = useState(false);
+  const [isAddContactOpen, setIsAddContactOpen] = useState(false);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [notifications, setNotifications] = useState(3);
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+  // Mock data pour les tontines
+  const mockTontines = [
+    {
+      id: 'tfk',
+      name: 'TFK',
+      fullName: 'Tontine Familiale Konaté',
+      amount: '250 000',
+      currency: 'FCFA',
+      nextPayment: '15 Février 2025',
+      membersCount: 8,
+      startDate: '15 Janvier 2025',
+      endDate: '15 Août 2025',
+      remaining: 'Environ 1 mois restant',
+      progress: 75,
+      color: 'bg-green-500'
+    },
+    {
+      id: 'gaa',
+      name: 'GAA',
+      fullName: 'Groupe Amis Abidjan',
+      amount: '100 000',
+      currency: 'FCFA',
+      nextPayment: '1 Mars 2025',
+      membersCount: 11,
+      startDate: '1 Février 2025',
+      endDate: '1 Décembre 2025',
+      remaining: 'Environ 5 mois restants',
+      progress: 45,
+      color: 'bg-blue-500'
+    },
+    {
+      id: 'eqb',
+      name: 'ÉQB',
+      fullName: 'Épargne Quartier Bamako',
+      amount: '500 000',
+      currency: 'FCFA',
+      nextPayment: '15 Avril 2025',
+      membersCount: 15,
+      startDate: '15 Mars 2025',
+      endDate: '15 Mai 2026',
+      remaining: 'Environ 10 mois restants',
+      progress: 30,
+      color: 'bg-purple-500'
+    },
+    {
+      id: 'tfc',
+      name: 'TFC',
+      fullName: 'Tontine Famille Coulibaly',
+      amount: '350 000',
+      currency: 'FCFA',
+      nextPayment: '1 Mars 2025',
+      membersCount: 7,
+      startDate: '1 Février 2025',
+      endDate: '1 Août 2025',
+      remaining: 'Environ 1 mois restant',
+      progress: 80,
+      color: 'bg-red-500'
+    },
+    {
+      id: 'fcb',
+      name: 'FCB',
+      fullName: 'Femmes Commerçantes Bietry',
+      amount: '200 000',
+      currency: 'FCFA',
+      nextPayment: '15 Mars 2025',
+      membersCount: 9,
+      startDate: '15 Février 2025',
+      endDate: '15 Octobre 2025',
+      remaining: 'Environ 3 mois restants',
+      progress: 55,
+      color: 'bg-yellow-500'
+    },
+    {
+      id: 'jek',
+      name: 'JEK',
+      fullName: 'Jeunes Entrepreneurs Koumassi',
+      amount: '150 000',
+      currency: 'FCFA',
+      nextPayment: '1 Avril 2025',
+      membersCount: 8,
+      startDate: '1 Mars 2025',
+      endDate: '1 Octobre 2025',
+      remaining: 'Environ 3 mois restants',
+      progress: 40,
+      color: 'bg-indigo-500'
     }
+  ];
+
+  // Mock data pour les membres
+  const mockMembers = {
+    tfk: [
+      { id: 1, name: 'Mariam Konaté', role: 'Administrateur', status: 'Actif', badges: ['Digne de confiance', 'Principal'], avatar: 'MK', color: 'bg-red-500' },
+      { id: 2, name: 'Aminata Koné', role: 'Membre', status: 'Actif', badges: ['Digne de confiance', 'Principal'], avatar: 'AK', color: 'bg-orange-500' },
+      { id: 3, name: 'Fatou Diallo', role: 'Membre', status: 'Actif', badges: ['Principal'], avatar: 'FD', color: 'bg-red-600' },
+      { id: 4, name: 'Ibrahim Touré', role: 'Membre', status: 'Actif', badges: ['Principal'], avatar: 'IT', color: 'bg-orange-400' },
+      { id: 5, name: 'Moussa Camara', role: 'Membre', status: 'Actif', badges: ['Principal'], avatar: 'MC', color: 'bg-yellow-400' },
+      { id: 6, name: 'Sekou Sylla', role: 'Membre', status: 'En retard', badges: [], avatar: 'SS', color: 'bg-yellow-300' },
+      { id: 7, name: 'Kadiatou Bah', role: 'Membre', status: 'Excusé', badges: [], avatar: 'KB', color: 'bg-green-400' },
+      { id: 8, name: 'Oumar Barry', role: 'Membre', status: 'En retard', badges: [], avatar: 'OB', color: 'bg-green-500' }
+    ]
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+  const handleTontineSelect = (tontine) => {
+    setSelectedTontine(tontine);
+    setActiveTab('members');
+  };
+
+  const handleBackToDashboard = () => {
+    setSelectedTontine(null);
+    setActiveTab('dashboard');
+  };
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50">
+        <Header notifications={notifications} />
+        
+        <main className="pb-20">
+          <Routes>
+            <Route path="/" element={
+              <>
+                {activeTab === 'dashboard' && (
+                  <Dashboard 
+                    tontines={mockTontines}
+                    onTontineSelect={handleTontineSelect}
+                  />
+                )}
+                
+                {activeTab === 'members' && selectedTontine && (
+                  <MembersList 
+                    tontine={selectedTontine}
+                    members={mockMembers[selectedTontine.id] || []}
+                    onBack={handleBackToDashboard}
+                  />
+                )}
+                
+                {activeTab === 'social' && (
+                  <SocialFeed />
+                )}
+              </>
+            } />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+
+        <BottomNavigation 
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onTabChange={(tab) => {
+            setActiveTab(tab);
+            if (tab === 'dashboard') {
+              setSelectedTontine(null);
+            }
+          }}
+        />
+
+        <FloatingActionButton 
+          onCreateTontine={() => setIsCreateTontineOpen(true)}
+          onAddContact={() => setIsAddContactOpen(true)}
+          onSupport={() => setIsSupportOpen(true)}
+        />
+
+        {/* Modals */}
+        <CreateTontineModal 
+          isOpen={isCreateTontineOpen}
+          onClose={() => setIsCreateTontineOpen(false)}
+        />
+        
+        <AddContactModal 
+          isOpen={isAddContactOpen}
+          onClose={() => setIsAddContactOpen(false)}
+        />
+        
+        <SupportModal 
+          isOpen={isSupportOpen}
+          onClose={() => setIsSupportOpen(false)}
+        />
+      </div>
+    </BrowserRouter>
   );
 };
-
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
-  );
-}
 
 export default App;
