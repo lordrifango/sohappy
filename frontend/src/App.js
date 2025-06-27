@@ -140,6 +140,31 @@ const App = () => {
     setActiveTab('dashboard');
   };
 
+  const handleCurrencyToggle = () => {
+    const currencies = ['FCFA', 'USD', 'EUR'];
+    const currentIndex = currencies.indexOf(currency);
+    const nextIndex = (currentIndex + 1) % currencies.length;
+    setCurrency(currencies[nextIndex]);
+  };
+
+  // Mock contacts data
+  const mockContacts = [
+    { id: 1, name: 'Amadou Diallo', status: 'En ligne', avatar: 'AD', color: 'bg-green-500', lastSeen: 'maintenant' },
+    { id: 2, name: 'Awa Traoré', status: 'En ligne', avatar: 'AT', color: 'bg-blue-500', lastSeen: 'maintenant' },
+    { id: 3, name: 'Boubacar Koné', status: 'Hors ligne', avatar: 'BK', color: 'bg-gray-500', lastSeen: 'il y a 5 min' },
+    { id: 4, name: 'Fatou Camara', status: 'En ligne', avatar: 'FC', color: 'bg-purple-500', lastSeen: 'maintenant' },
+    { id: 5, name: 'Ibrahim Sylla', status: 'Hors ligne', avatar: 'IS', color: 'bg-red-500', lastSeen: 'il y a 1h' }
+  ];
+
+  // Mock upcoming tours data
+  const mockUpcomingTours = [
+    { id: 1, tontine: 'TFK', type: 'À payer', amount: '250 000 FCFA', date: '15 Février 2025', color: 'bg-red-500' },
+    { id: 2, tontine: 'GAA', type: 'À recevoir', amount: '100 000 FCFA', date: '1 Mars 2025', color: 'bg-green-500' },
+    { id: 3, tontine: 'ÉQB', type: 'À payer', amount: '500 000 FCFA', date: '15 Avril 2025', color: 'bg-red-500' },
+    { id: 4, tontine: 'TFC', type: 'À payer', amount: '350 000 FCFA', date: '1 Mars 2025', color: 'bg-red-500' },
+    { id: 5, tontine: 'FCB', type: 'À recevoir', amount: '200 000 FCFA', date: '15 Mars 2025', color: 'bg-green-500' }
+  ];
+
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50">
