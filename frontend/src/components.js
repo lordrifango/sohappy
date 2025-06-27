@@ -1556,8 +1556,12 @@ export const DepositModal = ({ isOpen, onClose }) => {
 
 // Withdraw Modal
 export const WithdrawModal = ({ isOpen, onClose }) => {
+  const [step, setStep] = useState(1); // 1: amount & method, 2: phone, 3: SMS code, 4: success
   const [amount, setAmount] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [smsCode, setSmsCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const paymentMethods = [
     { id: 'wave', name: 'Wave', icon: '🐧', color: 'bg-blue-500', time: '1-3 minutes' },
@@ -1565,6 +1569,38 @@ export const WithdrawModal = ({ isOpen, onClose }) => {
     { id: 'mtn', name: 'MTN Mobile Money', icon: '🟡', color: 'bg-yellow-500', time: '1-3 minutes' },
     { id: 'moov', name: 'Moov Mobile Money', icon: '🔵', color: 'bg-blue-600', time: '3-7 minutes' }
   ];
+
+  const handleSendSMS = async () => {
+    setIsLoading(true);
+    // Simulate SMS sending
+    setTimeout(() => {
+      setIsLoading(false);
+      setStep(3);
+    }, 2000);
+  };
+
+  const handleVerifyCode = async () => {
+    setIsLoading(true);
+    // Simulate code verification
+    setTimeout(() => {
+      setIsLoading(false);
+      setStep(4);
+    }, 1500);
+  };
+
+  const resetModal = () => {
+    setStep(1);
+    setAmount('');
+    setSelectedMethod('');
+    setPhoneNumber('');
+    setSmsCode('');
+    setIsLoading(false);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setTimeout(resetModal, 300);
+  };
 
   if (!isOpen) return null;
 
@@ -1574,94 +1610,239 @@ export const WithdrawModal = ({ isOpen, onClose }) => {
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-t-2xl">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">Retirer de l'argent</h2>
-            <button onClick={onClose} className="text-white hover:text-gray-200">
+            <button onClick={handleClose} className="text-white hover:text-gray-200">
               <XMarkIcon className="w-6 h-6" />
             </button>
           </div>
           <p className="mt-2 opacity-90">Solde disponible: 1 000 000 FCFA</p>
-        </div>
-
-        <div className="p-6 space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Montant à retirer (FCFA)
-            </label>
-            <input
-              type="number"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="50 000"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Méthode de retrait
-            </label>
-            <div className="space-y-3">
-              {paymentMethods.map(method => (
+          
+          {/* Progress indicator */}
+          <div className="mt-4">
+            <div className="flex space-x-2">
+              {[1, 2, 3, 4].map((s) => (
                 <div
-                  key={method.id}
-                  onClick={() => setSelectedMethod(method.id)}
-                  className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    selectedMethod === method.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                  key={s}
+                  className={`h-2 flex-1 rounded-full ${
+                    s <= step ? 'bg-white' : 'bg-white bg-opacity-30'
                   }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-10 h-10 ${method.color} rounded-full flex items-center justify-center text-white text-xl`}>
-                        {method.icon}
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-800">{method.name}</p>
-                        <p className="text-sm text-gray-500">Arrivée dans {method.time}</p>
-                      </div>
-                    </div>
-                    {selectedMethod === method.id && (
-                      <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                />
               ))}
             </div>
+            <p className="text-sm mt-2 opacity-90">Étape {step} sur 4</p>
           </div>
+        </div>
 
-          {amount && selectedMethod && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-              <h4 className="font-medium text-blue-800 mb-2">Récapitulatif</h4>
-              <div className="space-y-1 text-sm text-blue-700">
-                <div className="flex justify-between">
-                  <span>Montant:</span>
-                  <span>{amount} FCFA</span>
+        <div className="p-6">
+          {step === 1 && (
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Montant à retirer (FCFA)
+                </label>
+                <input
+                  type="number"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="50 000"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Méthode de retrait
+                </label>
+                <div className="space-y-3">
+                  {paymentMethods.map(method => (
+                    <div
+                      key={method.id}
+                      onClick={() => setSelectedMethod(method.id)}
+                      className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                        selectedMethod === method.id
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-10 h-10 ${method.color} rounded-full flex items-center justify-center text-white text-xl`}>
+                            {method.icon}
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-800">{method.name}</p>
+                            <p className="text-sm text-gray-500">Arrivée dans {method.time}</p>
+                          </div>
+                        </div>
+                        {selectedMethod === method.id && (
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex justify-between">
-                  <span>Méthode:</span>
-                  <span>{paymentMethods.find(m => m.id === selectedMethod)?.name}</span>
+              </div>
+
+              <button 
+                className="w-full bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50"
+                disabled={!amount || !selectedMethod}
+                onClick={() => setStep(2)}
+              >
+                Continuer
+              </button>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="space-y-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  📱
                 </div>
-                <div className="flex justify-between">
-                  <span>Estimation d'arrivée:</span>
-                  <span>{paymentMethods.find(m => m.id === selectedMethod)?.time}</span>
+                <h3 className="text-lg font-semibold text-gray-800">Vérification par SMS</h3>
+                <p className="text-gray-600">Entrez votre numéro de téléphone pour recevoir un code de confirmation</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Numéro de téléphone
+                </label>
+                <input
+                  type="tel"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="+225 XX XX XX XX XX"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <h4 className="font-medium text-blue-800 mb-2">Récapitulatif</h4>
+                <div className="space-y-1 text-sm text-blue-700">
+                  <div className="flex justify-between">
+                    <span>Montant:</span>
+                    <span>{amount} FCFA</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Méthode:</span>
+                    <span>{paymentMethods.find(m => m.id === selectedMethod)?.name}</span>
+                  </div>
                 </div>
+              </div>
+
+              <div className="flex space-x-3">
+                <button 
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50"
+                  onClick={() => setStep(1)}
+                >
+                  Retour
+                </button>
+                <button 
+                  className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50"
+                  disabled={!phoneNumber || isLoading}
+                  onClick={handleSendSMS}
+                >
+                  {isLoading ? 'Envoi...' : 'Envoyer SMS'}
+                </button>
               </div>
             </div>
           )}
 
-          <button 
-            className="w-full bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50"
-            disabled={!amount || !selectedMethod}
-            onClick={() => {
-              onClose();
-              setAmount('');
-              setSelectedMethod('');
-            }}
-          >
-            Confirmer le retrait
-          </button>
+          {step === 3 && (
+            <div className="space-y-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  🔒
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800">Code de vérification</h3>
+                <p className="text-gray-600">Entrez le code à 6 chiffres envoyé au {phoneNumber}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Code de vérification
+                </label>
+                <input
+                  type="text"
+                  maxLength="6"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-lg text-center tracking-widest focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="000000"
+                  value={smsCode}
+                  onChange={(e) => setSmsCode(e.target.value.replace(/\D/g, ''))}
+                />
+              </div>
+
+              <div className="text-center">
+                <button className="text-blue-600 text-sm hover:underline">
+                  Renvoyer le code
+                </button>
+              </div>
+
+              <div className="flex space-x-3">
+                <button 
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50"
+                  onClick={() => setStep(2)}
+                >
+                  Retour
+                </button>
+                <button 
+                  className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50"
+                  disabled={smsCode.length !== 6 || isLoading}
+                  onClick={handleVerifyCode}
+                >
+                  {isLoading ? 'Vérification...' : 'Vérifier'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-6 text-center">
+              <div className="mb-6">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                    ✓
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Retrait bien pris en compte !</h3>
+                <p className="text-gray-600 mb-4">Veuillez patienter, vous allez recevoir votre argent bientôt.</p>
+                
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-left">
+                  <h4 className="font-medium text-green-800 mb-3">Détails de la transaction</h4>
+                  <div className="space-y-2 text-sm text-green-700">
+                    <div className="flex justify-between">
+                      <span>Montant:</span>
+                      <span className="font-medium">{amount} FCFA</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Méthode:</span>
+                      <span className="font-medium">{paymentMethods.find(m => m.id === selectedMethod)?.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Numéro:</span>
+                      <span className="font-medium">{phoneNumber}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Estimation d'arrivée:</span>
+                      <span className="font-medium">{paymentMethods.find(m => m.id === selectedMethod)?.time}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>ID Transaction:</span>
+                      <span className="font-medium text-xs">TXN{Date.now().toString().slice(-8)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                className="w-full bg-green-500 text-white py-3 rounded-xl font-medium hover:bg-green-600"
+                onClick={handleClose}
+              >
+                Terminer
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
