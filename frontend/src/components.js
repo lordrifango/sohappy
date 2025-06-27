@@ -761,7 +761,7 @@ export const FloatingActionButton = ({ onCreateTontine, onAddContact, onSupport 
 };
 
 // Create Tontine Modal Component
-export const CreateTontineModal = ({ isOpen, onClose }) => {
+export const CreateTontineModal = ({ isOpen, onClose, onTontineCreated }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -772,73 +772,132 @@ export const CreateTontineModal = ({ isOpen, onClose }) => {
     startDate: '',
     members: []
   });
-
-  if (!isOpen) return null;
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+  const [newTontineId, setNewTontineId] = useState(null);
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
 
+  const handleCreateTontine = () => {
+    // Generate new tontine data
+    const newTontine = {
+      id: `tontine_${Date.now()}`,
+      name: formData.name.split(' ').map(word => word[0]).join('').toUpperCase(),
+      fullName: formData.name,
+      amount: formData.amount,
+      currency: 'FCFA',
+      nextPayment: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'),
+      membersCount: 1, // Creator only initially
+      startDate: formData.startDate,
+      endDate: new Date(new Date(formData.startDate).getTime() + parseInt(formData.duration) * 30 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'),
+      remaining: `${formData.duration} mois restants`,
+      progress: 0,
+      color: ['bg-blue-500', 'bg-purple-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500'][Math.floor(Math.random() * 5)]
+    };
+
+    setNewTontineId(newTontine.id);
+    setShowSuccessScreen(true);
+    
+    // Call parent callback to add tontine to list
+    if (onTontineCreated) {
+      onTontineCreated(newTontine);
+    }
+  };
+
+  const resetModal = () => {
+    setStep(1);
+    setFormData({
+      name: '',
+      description: '',
+      amount: '',
+      frequency: 'monthly',
+      duration: '',
+      startDate: '',
+      members: []
+    });
+    setShowSuccessScreen(false);
+    setNewTontineId(null);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setTimeout(resetModal, 300);
+  };
+
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-t-2xl">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">Créer une Tontine</h2>
-            <button onClick={onClose} className="text-white hover:text-gray-200">
-              <XMarkIcon className="w-6 h-6" />
-            </button>
-          </div>
-          <div className="mt-2">
-            <div className="flex space-x-2">
-              {[1, 2, 3, 4].map((s) => (
-                <div
-                  key={s}
-                  className={`h-2 flex-1 rounded-full ${
-                    s <= step ? 'bg-white' : 'bg-white bg-opacity-30'
-                  }`}
-                />
-              ))}
+        {!showSuccessScreen ? (
+          <>
+            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-t-2xl">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Créer une Tontine</h2>
+                <button onClick={handleClose} className="text-white hover:text-gray-200">
+                  <XMarkIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="mt-2">
+                <div className="flex space-x-2">
+                  {[1, 2, 3, 4].map((s) => (
+                    <div
+                      key={s}
+                      className={`h-2 flex-1 rounded-full ${
+                        s <= step ? 'bg-white' : 'bg-white bg-opacity-30'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="text-sm mt-2 opacity-90">Étape {step} sur 4</p>
+              </div>
             </div>
-            <p className="text-sm mt-2 opacity-90">Étape {step} sur 4</p>
-          </div>
-        </div>
 
-        <div className="p-6">
-          {step === 1 && <CreateTontineStep1 formData={formData} setFormData={setFormData} />}
-          {step === 2 && <CreateTontineStep2 formData={formData} setFormData={setFormData} />}
-          {step === 3 && <CreateTontineStep3 formData={formData} setFormData={setFormData} />}
-          {step === 4 && <CreateTontineStep4 formData={formData} setFormData={setFormData} />}
-        </div>
+            <div className="p-6">
+              {step === 1 && <CreateTontineStep1 formData={formData} setFormData={setFormData} />}
+              {step === 2 && <CreateTontineStep2 formData={formData} setFormData={setFormData} />}
+              {step === 3 && <CreateTontineStep3 formData={formData} setFormData={setFormData} />}
+              {step === 4 && <CreateTontineStep4 formData={formData} setFormData={setFormData} />}
+            </div>
 
-        <div className="flex justify-between p-6 border-t border-gray-200">
-          {step > 1 && (
-            <button
-              onClick={prevStep}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-            >
-              Précédent
-            </button>
-          )}
-          {step < 4 ? (
-            <button
-              onClick={nextStep}
-              className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 ml-auto"
-            >
-              Suivant
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                // Handle tontine creation
-                onClose();
-                setStep(1);
-              }}
-              className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 ml-auto"
-            >
-              Créer la Tontine
-            </button>
-          )}
-        </div>
+            <div className="flex justify-between p-6 border-t border-gray-200">
+              {step > 1 && (
+                <button
+                  onClick={prevStep}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Précédent
+                </button>
+              )}
+              {step < 4 ? (
+                <button
+                  onClick={nextStep}
+                  className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 ml-auto"
+                >
+                  Suivant
+                </button>
+              ) : (
+                <button
+                  onClick={handleCreateTontine}
+                  className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 ml-auto"
+                >
+                  Créer la Tontine
+                </button>
+              )}
+            </div>
+          </>
+        ) : (
+          <TontineSuccessScreen 
+            tontineName={formData.name}
+            tontineId={newTontineId}
+            onClose={handleClose}
+            onInviteContacts={() => {
+              // Logic to open invite contacts modal
+              handleClose();
+              // Could trigger parent to open AddContactModal
+            }}
+          />
+        )}
       </div>
     </div>
   );
