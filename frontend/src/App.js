@@ -191,7 +191,7 @@ const App = () => {
               <>
                 {activeTab === 'dashboard' && (
                   <Dashboard 
-                    tontines={mockTontines}
+                    tontines={allTontines}
                     onTontineSelect={handleTontineSelect}
                     currency={currency}
                     onCurrencyToggle={handleCurrencyToggle}
@@ -211,7 +211,7 @@ const App = () => {
                 )}
                 
                 {activeTab === 'social' && (
-                  <SocialFeed tontines={mockTontines} />
+                  <SocialFeed tontines={allTontines} />
                 )}
               </>
             } />
