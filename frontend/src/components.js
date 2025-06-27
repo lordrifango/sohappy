@@ -1213,3 +1213,409 @@ const ShareIcon = ({ className }) => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
   </svg>
 );
+
+const ChevronRightIcon = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+  </svg>
+);
+
+// New Modals
+
+// Notifications Modal
+export const NotificationsModal = ({ isOpen, onClose }) => {
+  const mockNotifications = [
+    {
+      id: 1,
+      type: 'payment',
+      title: 'Paiement reçu',
+      message: 'Mariam K. a effectué son versement pour TFK',
+      time: '2h',
+      icon: '💰',
+      read: false
+    },
+    {
+      id: 2,
+      type: 'reminder',
+      title: 'Rappel de versement',
+      message: 'N\'oubliez pas votre versement pour GAA demain',
+      time: '1j',
+      icon: '⏰',
+      read: false
+    },
+    {
+      id: 3,
+      type: 'message',
+      title: 'Nouveau message',
+      message: 'Ibrahim T. a posté dans ÉQB',
+      time: '1j',
+      icon: '💬',
+      read: true
+    }
+  ];
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-t-2xl">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Notifications</h2>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-4 space-y-3">
+          {mockNotifications.map(notification => (
+            <div 
+              key={notification.id} 
+              className={`p-4 rounded-xl border transition-all ${
+                notification.read ? 'bg-gray-50 border-gray-200' : 'bg-blue-50 border-blue-200'
+              }`}
+            >
+              <div className="flex items-start space-x-3">
+                <div className="text-2xl">{notification.icon}</div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-gray-800">{notification.title}</h4>
+                  <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                  <span className="text-xs text-gray-400 mt-2 block">{notification.time}</span>
+                </div>
+                {!notification.read && (
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="p-4 border-t border-gray-200">
+          <button className="w-full text-blue-600 text-sm hover:underline">
+            Marquer tout comme lu
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Members List Modal
+export const MembersListModal = ({ isOpen, onClose, members }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-t-2xl">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Contacts Tonty</h2>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+          <p className="mt-2 opacity-90">Membres connectés: {members.filter(m => m.status === 'En ligne').length}</p>
+        </div>
+
+        <div className="p-4 space-y-3">
+          {members.map(member => (
+            <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center space-x-3">
+                <div className={`w-10 h-10 ${member.color} rounded-full flex items-center justify-center text-white font-bold relative`}>
+                  {member.avatar}
+                  {member.status === 'En ligne' && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-gray-800">{member.name}</p>
+                  <p className={`text-sm ${member.status === 'En ligne' ? 'text-green-600' : 'text-gray-500'}`}>
+                    {member.status === 'En ligne' ? 'En ligne' : member.lastSeen}
+                  </p>
+                </div>
+              </div>
+              <button className="text-blue-600 text-sm hover:underline">
+                Contacter
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Upcoming Tours Modal
+export const UpcomingToursModal = ({ isOpen, onClose, tours }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-t-2xl">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Mes Tours à Venir</h2>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+          <p className="mt-2 opacity-90">Paiements et réceptions programmés</p>
+        </div>
+
+        <div className="p-4 space-y-3">
+          {tours.map(tour => (
+            <div key={tour.id} className="p-4 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-8 h-8 ${tour.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                    {tour.tontine}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800">{tour.tontine}</p>
+                    <p className="text-sm text-gray-500">{tour.date}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={`text-sm font-medium ${
+                    tour.type === 'À recevoir' ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {tour.type}
+                  </p>
+                  <p className="font-bold text-gray-800">{tour.amount}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Deposit Modal
+export const DepositModal = ({ isOpen, onClose }) => {
+  const [amount, setAmount] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState('');
+
+  const paymentMethods = [
+    { id: 'wave', name: 'Wave', icon: '🐧', color: 'bg-blue-500', time: '1-3 minutes' },
+    { id: 'orange', name: 'Orange Money', icon: '🟠', color: 'bg-orange-500', time: '2-5 minutes' },
+    { id: 'mtn', name: 'MTN Mobile Money', icon: '🟡', color: 'bg-yellow-500', time: '1-3 minutes' },
+    { id: 'moov', name: 'Moov Mobile Money', icon: '🔵', color: 'bg-blue-600', time: '3-7 minutes' }
+  ];
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-t-2xl">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Déposer de l'argent</h2>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Montant à déposer (FCFA)
+            </label>
+            <input
+              type="number"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="25 000"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Méthode de paiement
+            </label>
+            <div className="space-y-3">
+              {paymentMethods.map(method => (
+                <div
+                  key={method.id}
+                  onClick={() => setSelectedMethod(method.id)}
+                  className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                    selectedMethod === method.id
+                      ? 'border-emerald-500 bg-emerald-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-10 h-10 ${method.color} rounded-full flex items-center justify-center text-white text-xl`}>
+                        {method.icon}
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800">{method.name}</p>
+                        <p className="text-sm text-gray-500">Arrivée dans {method.time}</p>
+                      </div>
+                    </div>
+                    {selectedMethod === method.id && (
+                      <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center">
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {amount && selectedMethod && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <h4 className="font-medium text-emerald-800 mb-2">Récapitulatif</h4>
+              <div className="space-y-1 text-sm text-emerald-700">
+                <div className="flex justify-between">
+                  <span>Montant:</span>
+                  <span>{amount} FCFA</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Méthode:</span>
+                  <span>{paymentMethods.find(m => m.id === selectedMethod)?.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Estimation d'arrivée:</span>
+                  <span>{paymentMethods.find(m => m.id === selectedMethod)?.time}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <button 
+            className="w-full bg-emerald-500 text-white py-3 rounded-xl font-medium hover:bg-emerald-600 disabled:opacity-50"
+            disabled={!amount || !selectedMethod}
+            onClick={() => {
+              onClose();
+              setAmount('');
+              setSelectedMethod('');
+            }}
+          >
+            Confirmer le dépôt
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Withdraw Modal
+export const WithdrawModal = ({ isOpen, onClose }) => {
+  const [amount, setAmount] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState('');
+
+  const paymentMethods = [
+    { id: 'wave', name: 'Wave', icon: '🐧', color: 'bg-blue-500', time: '1-3 minutes' },
+    { id: 'orange', name: 'Orange Money', icon: '🟠', color: 'bg-orange-500', time: '2-5 minutes' },
+    { id: 'mtn', name: 'MTN Mobile Money', icon: '🟡', color: 'bg-yellow-500', time: '1-3 minutes' },
+    { id: 'moov', name: 'Moov Mobile Money', icon: '🔵', color: 'bg-blue-600', time: '3-7 minutes' }
+  ];
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-t-2xl">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Retirer de l'argent</h2>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+          <p className="mt-2 opacity-90">Solde disponible: 1 000 000 FCFA</p>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Montant à retirer (FCFA)
+            </label>
+            <input
+              type="number"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="50 000"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Méthode de retrait
+            </label>
+            <div className="space-y-3">
+              {paymentMethods.map(method => (
+                <div
+                  key={method.id}
+                  onClick={() => setSelectedMethod(method.id)}
+                  className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                    selectedMethod === method.id
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-10 h-10 ${method.color} rounded-full flex items-center justify-center text-white text-xl`}>
+                        {method.icon}
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800">{method.name}</p>
+                        <p className="text-sm text-gray-500">Arrivée dans {method.time}</p>
+                      </div>
+                    </div>
+                    {selectedMethod === method.id && (
+                      <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {amount && selectedMethod && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <h4 className="font-medium text-blue-800 mb-2">Récapitulatif</h4>
+              <div className="space-y-1 text-sm text-blue-700">
+                <div className="flex justify-between">
+                  <span>Montant:</span>
+                  <span>{amount} FCFA</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Méthode:</span>
+                  <span>{paymentMethods.find(m => m.id === selectedMethod)?.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Estimation d'arrivée:</span>
+                  <span>{paymentMethods.find(m => m.id === selectedMethod)?.time}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <button 
+            className="w-full bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50"
+            disabled={!amount || !selectedMethod}
+            onClick={() => {
+              onClose();
+              setAmount('');
+              setSelectedMethod('');
+            }}
+          >
+            Confirmer le retrait
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
