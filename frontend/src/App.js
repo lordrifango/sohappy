@@ -168,7 +168,10 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50">
-        <Header notifications={notifications} />
+        <Header 
+          notifications={notifications} 
+          onNotificationClick={() => setIsNotificationsOpen(true)}
+        />
         
         <main className="pb-20">
           <Routes>
