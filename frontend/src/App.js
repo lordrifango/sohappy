@@ -20,7 +20,13 @@ const App = () => {
   const [isCreateTontineOpen, setIsCreateTontineOpen] = useState(false);
   const [isAddContactOpen, setIsAddContactOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isMembersListOpen, setIsMembersListOpen] = useState(false);
+  const [isUpcomingToursOpen, setIsUpcomingToursOpen] = useState(false);
+  const [isDepositOpen, setIsDepositOpen] = useState(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [notifications, setNotifications] = useState(3);
+  const [currency, setCurrency] = useState('FCFA'); // FCFA -> USD -> EUR -> FCFA
 
   // Mock data pour les tontines
   const mockTontines = [
