@@ -989,39 +989,58 @@ const CreateTontineStep3 = ({ formData, setFormData }) => (
   </div>
 );
 
-const CreateTontineStep4 = ({ formData, setFormData }) => (
-  <div className="space-y-4">
-    <h3 className="text-lg font-semibold text-gray-800">Récapitulatif</h3>
-    <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-      <div className="flex justify-between">
-        <span className="text-gray-600">Nom:</span>
-        <span className="font-medium">{formData.name || 'Non défini'}</span>
+// Tontine Success Screen Component
+const TontineSuccessScreen = ({ tontineName, tontineId, onClose, onInviteContacts }) => (
+  <div className="p-6 text-center">
+    <div className="mb-8">
+      <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center">
+          ✓
+        </div>
       </div>
-      <div className="flex justify-between">
-        <span className="text-gray-600">Montant:</span>
-        <span className="font-medium">{formData.amount ? `${formData.amount} FCFA` : 'Non défini'}</span>
-      </div>
-      <div className="flex justify-between">
-        <span className="text-gray-600">Fréquence:</span>
-        <span className="font-medium">
-          {formData.frequency === 'weekly' ? 'Hebdomadaire' : 
-           formData.frequency === 'monthly' ? 'Mensuel' : 'Trimestriel'}
-        </span>
-      </div>
-      <div className="flex justify-between">
-        <span className="text-gray-600">Durée:</span>
-        <span className="font-medium">{formData.duration || 'Non défini'} tours</span>
-      </div>
-      <div className="flex justify-between">
-        <span className="text-gray-600">Début:</span>
-        <span className="font-medium">{formData.startDate || 'Non défini'}</span>
+      <h3 className="text-2xl font-bold text-gray-800 mb-3">Tontine créée avec succès ! 🎉</h3>
+      <p className="text-gray-600 mb-6">
+        Votre tontine <strong>"{tontineName}"</strong> a été créée et est maintenant active.
+      </p>
+      
+      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6 text-left">
+        <h4 className="font-medium text-emerald-800 mb-3">Prochaines étapes</h4>
+        <div className="space-y-2 text-sm text-emerald-700">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+            <span>Invitez vos contacts à rejoindre la tontine</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+            <span>Configurez les paramètres de paiement</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+            <span>Commencez les discussions avec vos membres</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-      <h4 className="font-medium text-emerald-800 mb-2">🎉 Prêt à créer !</h4>
-      <p className="text-sm text-emerald-600">
-        Votre tontine sera créée et vous pourrez ensuite inviter des membres.
-      </p>
+
+    <div className="space-y-3">
+      <button 
+        onClick={onInviteContacts}
+        className="w-full bg-emerald-500 text-white py-3 rounded-xl font-medium hover:bg-emerald-600 flex items-center justify-center space-x-2"
+      >
+        <span>👥</span>
+        <span>Inviter des contacts maintenant</span>
+      </button>
+      
+      <button 
+        onClick={onClose}
+        className="w-full border-2 border-emerald-500 text-emerald-600 py-3 rounded-xl font-medium hover:bg-emerald-50"
+      >
+        Terminer et voir ma tontine
+      </button>
+    </div>
+
+    <div className="mt-6 text-xs text-gray-500">
+      ID de la tontine: {tontineId}
     </div>
   </div>
 );
