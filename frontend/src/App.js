@@ -153,6 +153,12 @@ const App = () => {
     setCurrency(currencies[nextIndex]);
   };
 
+  const handleTontineCreated = (newTontine) => {
+    setDynamicTontines(prev => [newTontine, ...prev]);
+  };
+
+  const allTontines = [...dynamicTontines, ...mockTontines];
+
   // Mock contacts data
   const mockContacts = [
     { id: 1, name: 'Amadou Diallo', status: 'En ligne', avatar: 'AD', color: 'bg-green-500', lastSeen: 'maintenant' },
