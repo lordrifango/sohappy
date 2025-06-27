@@ -181,6 +181,12 @@ const App = () => {
                   <Dashboard 
                     tontines={mockTontines}
                     onTontineSelect={handleTontineSelect}
+                    currency={currency}
+                    onCurrencyToggle={handleCurrencyToggle}
+                    onMembersClick={() => setIsMembersListOpen(true)}
+                    onUpcomingToursClick={() => setIsUpcomingToursOpen(true)}
+                    onDepositClick={() => setIsDepositOpen(true)}
+                    onWithdrawClick={() => setIsWithdrawOpen(true)}
                   />
                 )}
                 
@@ -193,7 +199,7 @@ const App = () => {
                 )}
                 
                 {activeTab === 'social' && (
-                  <SocialFeed />
+                  <SocialFeed tontines={mockTontines} />
                 )}
               </>
             } />
