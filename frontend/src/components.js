@@ -643,7 +643,7 @@ export const BottomNavigation = ({ activeTab, onTabChange }) => (
         onClick={() => onTabChange('social')}
       >
         <UsersIcon className="w-6 h-6" />
-        <span className="text-xs mt-1">Réseau Social</span>
+        <span className="text-xs mt-1">Réseau Tonty</span>
       </button>
     </div>
   </div>
