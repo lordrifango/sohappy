@@ -33,6 +33,7 @@ const App = () => {
   const [notifications, setNotifications] = useState(3);
   const [currency, setCurrency] = useState('FCFA'); // FCFA -> USD -> EUR -> FCFA
   const [dynamicTontines, setDynamicTontines] = useState([]);
+  const [currentBalance, setCurrentBalance] = useState(1000000); // Solde en FCFA
 
   // Mock data pour les tontines
   const mockTontines = [
