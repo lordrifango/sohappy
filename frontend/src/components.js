@@ -989,6 +989,43 @@ const CreateTontineStep3 = ({ formData, setFormData }) => (
   </div>
 );
 
+const CreateTontineStep4 = ({ formData, setFormData }) => (
+  <div className="space-y-4">
+    <h3 className="text-lg font-semibold text-gray-800">Récapitulatif</h3>
+    <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+      <div className="flex justify-between">
+        <span className="text-gray-600">Nom:</span>
+        <span className="font-medium">{formData.name || 'Non défini'}</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-gray-600">Montant:</span>
+        <span className="font-medium">{formData.amount ? `${formData.amount} FCFA` : 'Non défini'}</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-gray-600">Fréquence:</span>
+        <span className="font-medium">
+          {formData.frequency === 'weekly' ? 'Hebdomadaire' : 
+           formData.frequency === 'monthly' ? 'Mensuel' : 'Trimestriel'}
+        </span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-gray-600">Durée:</span>
+        <span className="font-medium">{formData.duration || 'Non défini'} tours</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-gray-600">Début:</span>
+        <span className="font-medium">{formData.startDate || 'Non défini'}</span>
+      </div>
+    </div>
+    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+      <h4 className="font-medium text-emerald-800 mb-2">🎉 Prêt à créer !</h4>
+      <p className="text-sm text-emerald-600">
+        Votre tontine sera créée et vous pourrez ensuite inviter des membres.
+      </p>
+    </div>
+  </div>
+);
+
 // Tontine Success Screen Component
 const TontineSuccessScreen = ({ tontineName, tontineId, onClose, onInviteContacts }) => (
   <div className="p-6 text-center">
