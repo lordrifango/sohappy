@@ -32,22 +32,45 @@ export const Header = ({ notifications, onNotificationClick }) => (
 );
 
 // Dashboard Component
-export const Dashboard = ({ tontines, onTontineSelect }) => {
+export const Dashboard = ({ tontines, onTontineSelect, currency, onCurrencyToggle, onMembersClick, onUpcomingToursClick, onDepositClick, onWithdrawClick }) => {
   const totalBalance = "1 000 000";
-  const activeTontines = 8;
+  const activeTontines = tontines.length;
   const connectedMembers = 24;
   const upcomingTours = 21;
+  const maxTontines = 10;
+  const progressPercentage = (activeTontines / maxTontines) * 100;
+
+  const getCurrencySymbol = () => {
+    switch(currency) {
+      case 'USD': return '$';
+      case 'EUR': return '€';
+      default: return 'FCFA';
+    }
+  };
+
+  const getCurrencyValue = () => {
+    switch(currency) {
+      case 'USD': return '1 650'; // Conversion approximative
+      case 'EUR': return '1 524'; // Conversion approximative
+      default: return totalBalance;
+    }
+  };
 
   return (
     <div className="p-4 space-y-6">
       {/* Balance Section */}
       <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg">
         <div className="text-right mb-2">
-          <span className="text-sm opacity-90">FCFA</span>
+          <button 
+            onClick={onCurrencyToggle}
+            className="text-sm opacity-90 hover:opacity-100 bg-white bg-opacity-10 px-2 py-1 rounded-full transition-all"
+          >
+            {getCurrencySymbol()}
+          </button>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-medium opacity-90">Solde réel</h2>
-          <h1 className="text-3xl font-bold">{totalBalance} FCFA</h1>
+          <h1 className="text-3xl font-bold">{getCurrencyValue()} {getCurrencySymbol()}</h1>
         </div>
         
         <div className="grid grid-cols-3 gap-4 mb-4">
@@ -56,19 +79,29 @@ export const Dashboard = ({ tontines, onTontineSelect }) => {
             <p className="text-xl font-bold">{activeTontines}</p>
           </div>
           <div>
-            <p className="text-sm opacity-90">Membres connectés</p>
-            <p className="text-xl font-bold">{connectedMembers}</p>
+            <button onClick={onMembersClick} className="text-left hover:bg-white hover:bg-opacity-10 p-2 rounded transition-all">
+              <p className="text-sm opacity-90">Membres connectés</p>
+              <p className="text-xl font-bold">{connectedMembers}</p>
+            </button>
           </div>
           <div>
-            <p className="text-sm opacity-90">Mes tours à venir</p>
-            <p className="text-xl font-bold">{upcomingTours}</p>
+            <button onClick={onUpcomingToursClick} className="text-left hover:bg-white hover:bg-opacity-10 p-2 rounded transition-all">
+              <p className="text-sm opacity-90">Mes tours à venir</p>
+              <p className="text-xl font-bold">{upcomingTours}</p>
+            </button>
           </div>
         </div>
         
         <div className="bg-white bg-opacity-10 rounded-lg p-3 mb-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-2">
             <span className="text-sm">Tontines actives</span>
-            <span className="text-sm">0/10</span>
+            <span className="text-sm">{activeTontines}/{maxTontines}</span>
+          </div>
+          <div className="w-full bg-white bg-opacity-20 rounded-full h-2">
+            <div 
+              className="bg-white h-2 rounded-full transition-all duration-500"
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
           </div>
         </div>
         
@@ -81,10 +114,16 @@ export const Dashboard = ({ tontines, onTontineSelect }) => {
 
       {/* Action Buttons */}
       <div className="flex space-x-4">
-        <button className="flex-1 bg-emerald-500 text-white py-3 px-6 rounded-xl font-medium hover:bg-emerald-600 transition-colors shadow-lg">
+        <button 
+          onClick={onDepositClick}
+          className="flex-1 bg-emerald-500 text-white py-3 px-6 rounded-xl font-medium hover:bg-emerald-600 transition-colors shadow-lg btn-press"
+        >
           + Déposer
         </button>
-        <button className="flex-1 border-2 border-emerald-500 text-emerald-600 py-3 px-6 rounded-xl font-medium hover:bg-emerald-50 transition-colors">
+        <button 
+          onClick={onWithdrawClick}
+          className="flex-1 border-2 border-emerald-500 text-emerald-600 py-3 px-6 rounded-xl font-medium hover:bg-emerald-50 transition-colors btn-press"
+        >
           ↓ Retirer
         </button>
       </div>
