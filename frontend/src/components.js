@@ -293,14 +293,14 @@ const MemberCard = ({ member }) => (
 );
 
 // Social Feed Component
-export const SocialFeed = () => {
+export const SocialFeed = ({ tontines }) => {
   const [activeSubTab, setActiveSubTab] = useState('discussions');
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with gradient */}
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4">
-        <h1 className="text-2xl font-bold">Réseau Social</h1>
+        <h1 className="text-2xl font-bold">Réseau Tonty</h1>
         <p className="opacity-90">Restez connecté avec votre communauté</p>
       </div>
 
@@ -331,7 +331,7 @@ export const SocialFeed = () => {
       </div>
 
       <div className="p-4">
-        {activeSubTab === 'discussions' ? <DiscussionsTab /> : <CommunityTab />}
+        {activeSubTab === 'discussions' ? <DiscussionsTab tontines={tontines} /> : <CommunityTab />}
       </div>
     </div>
   );
