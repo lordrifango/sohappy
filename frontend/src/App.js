@@ -32,6 +32,7 @@ const App = () => {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [notifications, setNotifications] = useState(3);
   const [currency, setCurrency] = useState('FCFA'); // FCFA -> USD -> EUR -> FCFA
+  const [dynamicTontines, setDynamicTontines] = useState([]);
 
   // Mock data pour les tontines
   const mockTontines = [
