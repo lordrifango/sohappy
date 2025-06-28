@@ -2031,10 +2031,21 @@ export const WithdrawModal = ({ isOpen, onClose, onBalanceChange, currentBalance
 
               <button 
                 className="w-full bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50"
-                disabled={!amount || !selectedMethod}
-                onClick={() => setStep(2)}
+                disabled={!amount || !selectedMethod || parseFloat(amount) > currentBalance || parseFloat(amount) <= 0}
+                onClick={() => {
+                  const withdrawAmount = parseFloat(amount);
+                  if (withdrawAmount > currentBalance) {
+                    alert('Solde insuffisant pour effectuer ce retrait');
+                    return;
+                  }
+                  if (withdrawAmount <= 0) {
+                    alert('Le montant doit être supérieur à 0');
+                    return;
+                  }
+                  setStep(2);
+                }}
               >
-                Continuer
+                {parseFloat(amount) > currentBalance ? 'Solde insuffisant' : 'Continuer'}
               </button>
             </div>
           )}
