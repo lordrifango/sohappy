@@ -29,7 +29,14 @@ const TontyApp = () => {
   const { balance, formatBalance, deposit, withdraw } = useBalance();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedTontine, setSelectedTontine] = useState(null);
+  
+  // Modaux d'objectifs
+  const [isGoalTypeSelectionOpen, setIsGoalTypeSelectionOpen] = useState(false);
+  const [isPersonalGoalOpen, setIsPersonalGoalOpen] = useState(false);
+  const [isFundOpen, setIsFundOpen] = useState(false);
   const [isCreateTontineOpen, setIsCreateTontineOpen] = useState(false);
+  
+  // Autres modaux
   const [isAddContactOpen, setIsAddContactOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -37,9 +44,12 @@ const TontyApp = () => {
   const [isUpcomingToursOpen, setIsUpcomingToursOpen] = useState(false);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  
   const [notifications, setNotifications] = useState(3);
   const [currency, setCurrency] = useState('FCFA'); // FCFA -> USD -> EUR -> FCFA
   const [dynamicTontines, setDynamicTontines] = useState([]);
+  const [personalGoals, setPersonalGoals] = useState([]);
+  const [funds, setFunds] = useState([]);
   const [currentBalance, setCurrentBalance] = useState(1000000); // Solde en FCFA
 
   // Mock data pour les tontines
