@@ -190,6 +190,39 @@ const TontyApp = () => {
     }
   };
 
+  // Gestion de la sélection du type d'objectif
+  const handleGoalTypeSelection = (type) => {
+    setIsGoalTypeSelectionOpen(false);
+    switch(type) {
+      case 'personal':
+        setIsPersonalGoalOpen(true);
+        break;
+      case 'tontine':
+        setIsCreateTontineOpen(true);
+        break;
+      case 'fund':
+        setIsFundOpen(true);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Création d'objectifs
+  const handlePersonalGoalCreated = (newGoal) => {
+    setPersonalGoals(prev => [newGoal, ...prev]);
+    console.log('Objectif personnel créé:', newGoal);
+  };
+
+  const handleFundCreated = (newFund) => {
+    setFunds(prev => [newFund, ...prev]);
+    console.log('Cagnotte créée:', newFund);
+  };
+
+  const handleTontineCreated = (newTontine) => {
+    setDynamicTontines(prev => [newTontine, ...prev]);
+  };
+
   // Mock contacts data
   const mockContacts = [
     { id: 1, name: 'Amadou Diallo', status: 'En ligne', avatar: 'AD', color: 'bg-green-500', lastSeen: 'maintenant' },
