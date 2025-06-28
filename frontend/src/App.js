@@ -181,108 +181,163 @@ const TontyApp = () => {
   ];
 
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
-        <Header 
-          notifications={notifications} 
-          onNotificationClick={() => setIsNotificationsOpen(true)}
-        />
-        
-        <main className="pb-20">
-          <Routes>
-            <Route path="/" element={
-              <>
-                {activeTab === 'dashboard' && (
-                  <Dashboard 
-                    tontines={allTontines}
-                    onTontineSelect={handleTontineSelect}
-                    currency={currency}
-                    onCurrencyToggle={handleCurrencyToggle}
-                    onMembersClick={() => setIsMembersListOpen(true)}
-                    onUpcomingToursClick={() => setIsUpcomingToursOpen(true)}
-                    onDepositClick={() => setIsDepositOpen(true)}
-                    onWithdrawClick={() => setIsWithdrawOpen(true)}
-                  />
-                )}
-                
-                {activeTab === 'members' && selectedTontine && (
-                  <MembersList 
-                    tontine={selectedTontine}
-                    members={mockMembers[selectedTontine.id] || []}
-                    onBack={handleBackToDashboard}
-                  />
-                )}
-                
-                {activeTab === 'social' && (
-                  <SocialFeed tontines={allTontines} />
-                )}
-              </>
-            } />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+    <div className="min-h-screen bg-gray-50">
+      <Header 
+        notifications={notifications} 
+        onNotificationClick={() => setIsNotificationsOpen(true)}
+      />
+      
+      <main className="pb-20">
+        <Routes>
+          <Route path="/" element={
+            <>
+              {activeTab === 'dashboard' && (
+                <Dashboard 
+                  tontines={allTontines}
+                  onTontineSelect={handleTontineSelect}
+                  currency={currency}
+                  onCurrencyToggle={handleCurrencyToggle}
+                  onMembersClick={() => setIsMembersListOpen(true)}
+                  onUpcomingToursClick={() => setIsUpcomingToursOpen(true)}
+                  onDepositClick={() => setIsDepositOpen(true)}
+                  onWithdrawClick={() => setIsWithdrawOpen(true)}
+                />
+              )}
+              
+              {activeTab === 'members' && selectedTontine && (
+                <MembersList 
+                  tontine={selectedTontine}
+                  members={mockMembers[selectedTontine.id] || []}
+                  onBack={handleBackToDashboard}
+                />
+              )}
+              
+              {activeTab === 'social' && (
+                <SocialFeed tontines={allTontines} />
+              )}
+            </>
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
 
-        <BottomNavigation 
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          onTabChange={(tab) => {
-            setActiveTab(tab);
-            if (tab === 'dashboard') {
-              setSelectedTontine(null);
-            }
+      <BottomNavigation 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          if (tab === 'dashboard') {
+            setSelectedTontine(null);
+          }
+        }}
+      />
+
+      <FloatingActionButton 
+        onCreateTontine={() => setIsCreateTontineOpen(true)}
+        onAddContact={() => setIsAddContactOpen(true)}
+        onSupport={() => setIsSupportOpen(true)}
+      />
+
+      {/* Modals */}
+      <CreateTontineModal 
+        isOpen={isCreateTontineOpen}
+        onClose={() => setIsCreateTontineOpen(false)}
+        onTontineCreated={handleTontineCreated}
+      />
+      
+      <AddContactModal 
+        isOpen={isAddContactOpen}
+        onClose={() => setIsAddContactOpen(false)}
+      />
+      
+      <SupportModal 
+        isOpen={isSupportOpen}
+        onClose={() => setIsSupportOpen(false)}
+      />
+
+      <NotificationsModal 
+        isOpen={isNotificationsOpen}
+        onClose={() => setIsNotificationsOpen(false)}
+      />
+
+      <MembersListModal 
+        isOpen={isMembersListOpen}
+        onClose={() => setIsMembersListOpen(false)}
+        members={mockContacts}
+      />
+
+      <UpcomingToursModal 
+        isOpen={isUpcomingToursOpen}
+        onClose={() => setIsUpcomingToursOpen(false)}
+        tours={mockUpcomingTours}
+      />
+
+      <DepositModal 
+        isOpen={isDepositOpen}
+        onClose={() => setIsDepositOpen(false)}
+      />
+
+      <WithdrawModal 
+        isOpen={isWithdrawOpen}
+        onClose={() => setIsWithdrawOpen(false)}
+      />
+    </div>
+  );
+};
+
+// Authentication Wrapper Component
+const AuthWrapper = () => {
+  const { isAuthenticated, loading, login } = useAuth();
+  const [authStep, setAuthStep] = useState('phone'); // 'phone' or 'verify'
+  const [phoneData, setPhoneData] = useState(null);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-lg">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    if (authStep === 'phone') {
+      return (
+        <PhoneLoginScreen 
+          onCodeSent={(data) => {
+            setPhoneData(data);
+            setAuthStep('verify');
           }}
         />
+      );
+    } else {
+      return (
+        <SMSVerificationScreen 
+          phoneData={phoneData}
+          onVerificationSuccess={(data) => {
+            login(data.sessionId, data.phone, data.countryCode);
+          }}
+          onBackToPhone={() => {
+            setAuthStep('phone');
+            setPhoneData(null);
+          }}
+        />
+      );
+    }
+  }
 
-        <FloatingActionButton 
-          onCreateTontine={() => setIsCreateTontineOpen(true)}
-          onAddContact={() => setIsAddContactOpen(true)}
-          onSupport={() => setIsSupportOpen(true)}
-        />
+  return <TontyApp />;
+};
 
-        {/* Modals */}
-        <CreateTontineModal 
-          isOpen={isCreateTontineOpen}
-          onClose={() => setIsCreateTontineOpen(false)}
-          onTontineCreated={handleTontineCreated}
-        />
-        
-        <AddContactModal 
-          isOpen={isAddContactOpen}
-          onClose={() => setIsAddContactOpen(false)}
-        />
-        
-        <SupportModal 
-          isOpen={isSupportOpen}
-          onClose={() => setIsSupportOpen(false)}
-        />
-
-        <NotificationsModal 
-          isOpen={isNotificationsOpen}
-          onClose={() => setIsNotificationsOpen(false)}
-        />
-
-        <MembersListModal 
-          isOpen={isMembersListOpen}
-          onClose={() => setIsMembersListOpen(false)}
-          members={mockContacts}
-        />
-
-        <UpcomingToursModal 
-          isOpen={isUpcomingToursOpen}
-          onClose={() => setIsUpcomingToursOpen(false)}
-          tours={mockUpcomingTours}
-        />
-
-        <DepositModal 
-          isOpen={isDepositOpen}
-          onClose={() => setIsDepositOpen(false)}
-        />
-
-        <WithdrawModal 
-          isOpen={isWithdrawOpen}
-          onClose={() => setIsWithdrawOpen(false)}
-        />
-      </div>
+// Main App Component
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AuthWrapper />
+      </AuthProvider>
     </BrowserRouter>
   );
 };
