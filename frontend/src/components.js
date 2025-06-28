@@ -1596,8 +1596,25 @@ export const DepositModal = ({ isOpen, onClose, onBalanceChange }) => {
     setIsLoading(true);
     // Simulate code verification
     setTimeout(() => {
-      setIsLoading(false);
-      setStep(4);
+      try {
+        // Effectuer le dépôt
+        const depositAmount = parseFloat(amount);
+        const methodName = paymentMethods.find(m => m.id === selectedMethod)?.name || 'Mobile Money';
+        
+        if (onBalanceChange) {
+          const result = onBalanceChange(depositAmount, 'deposit', methodName);
+          setTransactionResult(result);
+          setStep(4);
+        } else {
+          // Fallback if no balance context
+          setStep(4);
+        }
+      } catch (error) {
+        console.error('Deposit error:', error);
+        alert('Erreur lors du dépôt: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
     }, 1500);
   };
 
