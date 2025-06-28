@@ -708,7 +708,7 @@ export const BottomNavigation = ({ activeTab, onTabChange }) => (
 );
 
 // Floating Action Button Component
-export const FloatingActionButton = ({ onCreateTontine, onAddContact, onSupport }) => {
+export const FloatingActionButton = ({ onCreateGoal, onAddContact, onSupport }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -718,14 +718,14 @@ export const FloatingActionButton = ({ onCreateTontine, onAddContact, onSupport 
         <div className="absolute bottom-16 right-0 space-y-3 animate-fade-in">
           <button
             onClick={() => {
-              onCreateTontine();
+              onCreateGoal();
               setIsOpen(false);
             }}
-            className="flex items-center justify-end space-x-3 bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-600 transition-all transform hover:scale-105"
+            className="flex items-center justify-end space-x-3 bg-emerald-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-emerald-600 transition-all transform hover:scale-105"
           >
-            <span className="text-sm font-medium">Créer une tontine</span>
+            <span className="text-sm font-medium">Créer un objectif</span>
             <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              🏛️
+              🎯
             </div>
           </button>
           
