@@ -216,6 +216,8 @@ const TontyApp = () => {
                   onUpcomingToursClick={() => setIsUpcomingToursOpen(true)}
                   onDepositClick={() => setIsDepositOpen(true)}
                   onWithdrawClick={() => setIsWithdrawOpen(true)}
+                  balance={balance}
+                  formatBalance={formatBalance}
                 />
               )}
               
