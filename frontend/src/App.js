@@ -292,11 +292,14 @@ const TontyApp = () => {
       <DepositModal 
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
+        onBalanceChange={handleBalanceChange}
       />
 
       <WithdrawModal 
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
+        onBalanceChange={handleBalanceChange}
+        currentBalance={balance}
       />
     </div>
   );
