@@ -232,6 +232,42 @@ frontend:
         agent: "main"
         comment: "Updated Dashboard to display real user balance that updates in real-time with deposits/withdrawals"
 
+  - task: "Goal Type Selection System"
+    implemented: true
+    working: "NA"
+    file: "components.js, App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Modified FloatingActionButton to create goals instead of tontines. Added GoalTypeSelectionModal with 3 options: Personal Goal, Tontine, Fund/Cagnotte"
+
+  - task: "Personal Goal Creation"
+    implemented: true
+    working: "NA"
+    file: "components.js, App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created PersonalGoalModal for individual savings goals with categories, target amounts, deadlines, and reminder frequencies"
+
+  - task: "Fund/Cagnotte Creation"
+    implemented: true
+    working: "NA"
+    file: "components.js, App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created FundModal for creating crowdfunding cagnottes for events, emergencies, medical expenses with privacy settings"
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
