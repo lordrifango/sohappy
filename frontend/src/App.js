@@ -410,6 +410,20 @@ const TontyApp = () => {
         onBalanceChange={handleBalanceChange}
         currentBalance={balance}
       />
+
+      {/* Premium Modals */}
+      <PremiumModal 
+        isOpen={isPremiumModalOpen}
+        onClose={() => setIsPremiumModalOpen(false)}
+        limitType={premiumModalType}
+        onUpgrade={handleUpgradeToPremium}
+      />
+
+      <PricingPage 
+        isOpen={isPricingPageOpen}
+        onClose={() => setIsPricingPageOpen(false)}
+        onSelectPremium={handleSelectPremium}
+      />
     </div>
   );
 };
