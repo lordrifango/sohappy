@@ -107,27 +107,33 @@ user_problem_statement: "Ajouter un système d'authentification par téléphone 
 backend:
   - task: "Authentication API Endpoints"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added /api/auth/send-code, /api/auth/verify-code, and /api/auth/check-session endpoints with MongoDB storage for user sessions"
+      - working: true
+        agent: "testing"
+        comment: "All authentication endpoints are working correctly. POST /api/auth/send-code successfully accepts phone number and country code, generates a session ID. POST /api/auth/verify-code correctly validates 6-digit codes and rejects invalid formats. GET /api/auth/check-session/{session_id} correctly validates sessions and returns user information for valid sessions."
 
   - task: "Phone Authentication Models"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added PhoneAuthRequest, VerifyCodeRequest, AuthResponse, and UserSession models with proper validation"
+      - working: true
+        agent: "testing"
+        comment: "All authentication models are working correctly. PhoneAuthRequest properly validates phone and country code. VerifyCodeRequest correctly validates the 6-digit code format. UserSession model correctly stores session data in MongoDB with proper expiration handling."
 
 frontend:
   - task: "Authentication Context"
