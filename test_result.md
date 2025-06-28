@@ -286,6 +286,9 @@ test_plan:
     - "Functional Deposit Modal"
     - "Functional Withdraw Modal"
     - "Real-time Balance Display"
+    - "Goal Type Selection System"
+    - "Personal Goal Creation"
+    - "Fund/Cagnotte Creation"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
