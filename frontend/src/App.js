@@ -30,6 +30,21 @@ import {
 
 const TontyApp = () => {
   const { balance, formatBalance, deposit, withdraw } = useBalance();
+  const { 
+    isPremium, 
+    canCreateTontine, 
+    canCreateGoal, 
+    canCreateFund, 
+    addTontine, 
+    addGoal, 
+    addFund,
+    tontinesCount,
+    goalsCount,
+    fundsCount,
+    FREE_LIMITS,
+    activatePremium
+  } = usePremium();
+  
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedTontine, setSelectedTontine] = useState(null);
   
@@ -38,6 +53,11 @@ const TontyApp = () => {
   const [isPersonalGoalOpen, setIsPersonalGoalOpen] = useState(false);
   const [isFundOpen, setIsFundOpen] = useState(false);
   const [isCreateTontineOpen, setIsCreateTontineOpen] = useState(false);
+  
+  // Premium modals
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const [premiumModalType, setPremiumModalType] = useState('');
+  const [isPricingPageOpen, setIsPricingPageOpen] = useState(false);
   
   // Autres modaux
   const [isAddContactOpen, setIsAddContactOpen] = useState(false);
