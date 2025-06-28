@@ -23,6 +23,7 @@ import {
 } from './components';
 
 const TontyApp = () => {
+  const { balance, formatBalance, deposit, withdraw } = useBalance();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedTontine, setSelectedTontine] = useState(null);
   const [isCreateTontineOpen, setIsCreateTontineOpen] = useState(false);
