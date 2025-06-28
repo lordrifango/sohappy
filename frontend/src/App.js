@@ -309,6 +309,12 @@ const TontyApp = () => {
                   onWithdrawClick={() => setIsWithdrawOpen(true)}
                   balance={balance}
                   formatBalance={formatBalance}
+                  isPremium={isPremium}
+                  tontinesCount={tontinesCount}
+                  goalsCount={goalsCount}
+                  fundsCount={fundsCount}
+                  limits={FREE_LIMITS}
+                  onUpgrade={() => setIsPricingPageOpen(true)}
                 />
               )}
               
