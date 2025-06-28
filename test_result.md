@@ -246,6 +246,10 @@ test_plan:
     - "Phone Login Screen"
     - "SMS Verification Screen"
     - "App Integration with Authentication"
+    - "Balance Management System"
+    - "Functional Deposit Modal"
+    - "Functional Withdraw Modal"
+    - "Real-time Balance Display"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
