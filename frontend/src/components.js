@@ -1959,7 +1959,7 @@ export const WithdrawModal = ({ isOpen, onClose, onBalanceChange, currentBalance
               <XMarkIcon className="w-6 h-6" />
             </button>
           </div>
-          <p className="mt-2 opacity-90">Solde disponible: 1 000 000 FCFA</p>
+          <p className="mt-2 opacity-90">Solde disponible: {new Intl.NumberFormat('fr-FR').format(currentBalance)} FCFA</p>
           
           {/* Progress indicator */}
           <div className="mt-4">
