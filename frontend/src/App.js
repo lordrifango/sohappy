@@ -164,6 +164,19 @@ const TontyApp = () => {
 
   const allTontines = [...dynamicTontines, ...mockTontines];
 
+  // Fonction pour gérer les changements de solde
+  const handleBalanceChange = (amount, type, method) => {
+    try {
+      if (type === 'deposit') {
+        return deposit(amount, method);
+      } else if (type === 'withdraw') {
+        return withdraw(amount, method);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
   // Mock contacts data
   const mockContacts = [
     { id: 1, name: 'Amadou Diallo', status: 'En ligne', avatar: 'AD', color: 'bg-green-500', lastSeen: 'maintenant' },
