@@ -32,14 +32,18 @@ export const Header = ({ notifications, onNotificationClick }) => (
 );
 
 // Dashboard Component
-export const Dashboard = ({ tontines, onTontineSelect, currency, onCurrencyToggle, onMembersClick, onUpcomingToursClick, onDepositClick, onWithdrawClick }) => {
-  // Import du hook pour le solde
-  const { balance, formatBalance, convertBalance } = React.useContext(React.createContext()) || { 
-    balance: 1000000, 
-    formatBalance: (amount) => new Intl.NumberFormat('fr-FR').format(amount),
-    convertBalance: (currency) => currency === 'USD' ? 1650 : currency === 'EUR' ? 1524 : balance
-  };
-  
+export const Dashboard = ({ 
+  tontines, 
+  onTontineSelect, 
+  currency, 
+  onCurrencyToggle, 
+  onMembersClick, 
+  onUpcomingToursClick, 
+  onDepositClick, 
+  onWithdrawClick,
+  balance = 1000000,
+  formatBalance = (amount) => new Intl.NumberFormat('fr-FR').format(amount)
+}) => {
   const activeTontines = tontines.length;
   const connectedMembers = 24;
   const upcomingTours = 21;
@@ -56,8 +60,8 @@ export const Dashboard = ({ tontines, onTontineSelect, currency, onCurrencyToggl
 
   const getCurrencyValue = () => {
     switch(currency) {
-      case 'USD': return formatBalance(convertBalance('USD'));
-      case 'EUR': return formatBalance(convertBalance('EUR'));
+      case 'USD': return formatBalance(Math.round(balance * 0.00165));
+      case 'EUR': return formatBalance(Math.round(balance * 0.00152));
       default: return formatBalance(balance);
     }
   };
