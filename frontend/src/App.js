@@ -21,7 +21,7 @@ import {
   WithdrawModal
 } from './components';
 
-const App = () => {
+const TontyApp = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedTontine, setSelectedTontine] = useState(null);
   const [isCreateTontineOpen, setIsCreateTontineOpen] = useState(false);
