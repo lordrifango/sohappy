@@ -274,6 +274,24 @@ const TontyApp = () => {
       />
 
       {/* Modals */}
+      <GoalTypeSelectionModal 
+        isOpen={isGoalTypeSelectionOpen}
+        onClose={() => setIsGoalTypeSelectionOpen(false)}
+        onSelectType={handleGoalTypeSelection}
+      />
+
+      <PersonalGoalModal 
+        isOpen={isPersonalGoalOpen}
+        onClose={() => setIsPersonalGoalOpen(false)}
+        onGoalCreated={handlePersonalGoalCreated}
+      />
+
+      <FundModal 
+        isOpen={isFundOpen}
+        onClose={() => setIsFundOpen(false)}
+        onFundCreated={handleFundCreated}
+      />
+
       <CreateTontineModal 
         isOpen={isCreateTontineOpen}
         onClose={() => setIsCreateTontineOpen(false)}
