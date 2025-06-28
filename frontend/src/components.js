@@ -42,7 +42,13 @@ export const Dashboard = ({
   onDepositClick, 
   onWithdrawClick,
   balance = 1000000,
-  formatBalance = (amount) => new Intl.NumberFormat('fr-FR').format(amount)
+  formatBalance = (amount) => new Intl.NumberFormat('fr-FR').format(amount),
+  isPremium = false,
+  tontinesCount = 0,
+  goalsCount = 0,
+  fundsCount = 0,
+  limits = { tontines: 3, personalGoals: 1, funds: 1 },
+  onUpgrade
 }) => {
   const activeTontines = tontines.length;
   const connectedMembers = 24;
