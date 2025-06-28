@@ -167,6 +167,272 @@ export const Dashboard = ({
   );
 };
 
+//======= COMPOSANTS PREMIUM =======
+
+// Premium Modal - Affiché quand les limites gratuites sont atteintes
+export const PremiumModal = ({ isOpen, onClose, limitType, onUpgrade }) => {
+  if (!isOpen) return null;
+
+  const limitMessages = {
+    tontine: {
+      title: "Limite de tontines atteinte",
+      message: "En tant qu'utilisateur gratuit, vous ne pouvez créer que 3 tontines maximum.",
+      icon: "🏛️"
+    },
+    personalGoal: {
+      title: "Limite d'objectifs personnels atteinte",
+      message: "En tant qu'utilisateur gratuit, vous ne pouvez créer qu'1 objectif personnel maximum.",
+      icon: "🎯"
+    },
+    fund: {
+      title: "Limite de cagnottes atteinte",
+      message: "En tant qu'utilisateur gratuit, vous ne pouvez créer qu'1 cagnotte maximum.",
+      icon: "💰"
+    }
+  };
+
+  const currentLimit = limitMessages[limitType] || limitMessages.tontine;
+
+  const premiumFeatures = [
+    { icon: "🚀", title: "Tontines illimitées", description: "Créez autant de tontines que vous voulez" },
+    { icon: "🎯", title: "Objectifs illimités", description: "Fixez-vous tous les objectifs que vous souhaitez" },
+    { icon: "💰", title: "Cagnottes illimitées", description: "Organisez toutes vos collectes de fonds" },
+    { icon: "📊", title: "Analyses avancées", description: "Statistiques détaillées de vos épargnes" },
+    { icon: "📁", title: "Export PDF", description: "Téléchargez vos relevés en PDF" },
+    { icon: "🔔", title: "Notifications intelligentes", description: "Rappels personnalisés et optimisés" },
+    { icon: "🎨", title: "Thèmes premium", description: "Personnalisez l'apparence de votre app" },
+    { icon: "🛡️", title: "Support prioritaire", description: "Assistance rapide et dédiée" }
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-6 rounded-t-3xl">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-3">
+              <div className="text-3xl">{currentLimit.icon}</div>
+              <div>
+                <h2 className="text-xl font-bold">{currentLimit.title}</h2>
+                <p className="opacity-90 text-sm">Passez au Premium pour continuer</p>
+              </div>
+            </div>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6">
+          {/* Limit Message */}
+          <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6">
+            <p className="text-orange-800 text-center">{currentLimit.message}</p>
+          </div>
+
+          {/* Premium Features */}
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
+              🌟 Débloquez toutes les fonctionnalités Premium
+            </h3>
+            <div className="grid grid-cols-1 gap-3">
+              {premiumFeatures.map((feature, index) => (
+                <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl">
+                  <div className="text-xl">{feature.icon}</div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-800">{feature.title}</h4>
+                    <p className="text-sm text-gray-600">{feature.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pricing */}
+          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl p-6 mb-6 text-center">
+            <h3 className="text-lg font-bold mb-2">Tonty Premium</h3>
+            <div className="text-3xl font-bold mb-1">5 000 FCFA</div>
+            <p className="text-sm opacity-90 mb-4">par mois</p>
+            <div className="bg-white bg-opacity-20 rounded-lg p-3">
+              <p className="text-sm">✅ Tous vos objectifs en illimité</p>
+              <p className="text-sm">✅ Fonctionnalités avancées</p>
+              <p className="text-sm">✅ Support prioritaire</p>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            <button 
+              onClick={onUpgrade}
+              className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:from-emerald-600 hover:to-emerald-700 shadow-lg"
+            >
+              🚀 Passer au Premium maintenant
+            </button>
+            <button 
+              onClick={onClose}
+              className="w-full border border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50"
+            >
+              Plus tard
+            </button>
+          </div>
+
+          {/* Additional Info */}
+          <div className="mt-4 text-center">
+            <p className="text-xs text-gray-500">
+              Annulable à tout moment • Paiement sécurisé • Activation immédiate
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Pricing Page Component
+export const PricingPage = ({ isOpen, onClose, onSelectPremium }) => {
+  if (!isOpen) return null;
+
+  const freeFeatures = [
+    "✅ Jusqu'à 3 tontines",
+    "✅ 1 objectif personnel",
+    "✅ 1 cagnotte",
+    "✅ Dépôts et retraits gratuits",
+    "✅ Interface de base",
+    "❌ Historique limité (30 jours)",
+    "❌ Pas d'export PDF",
+    "❌ Support standard",
+    "❌ Analyses limitées"
+  ];
+
+  const premiumFeatures = [
+    "🚀 Tontines illimitées",
+    "🎯 Objectifs personnels illimités", 
+    "💰 Cagnottes illimitées",
+    "✅ Dépôts et retraits gratuits",
+    "📊 Analyses avancées et graphiques",
+    "📁 Export PDF des relevés",
+    "🔔 Notifications intelligentes",
+    "🛡️ Support prioritaire 24/7",
+    "☁️ Sauvegarde cloud sécurisée",
+    "🎨 Thèmes premium et customisation",
+    "📈 Statistiques détaillées",
+    "🔮 Accès anticipé aux nouvelles fonctionnalités",
+    "💾 Historique complet illimité"
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-t-3xl">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold">Choisissez votre plan Tonty</h1>
+              <p className="opacity-90 mt-1">Débloquez tout le potentiel de vos épargnes</p>
+            </div>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6">
+          {/* Plans Comparison */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Plan Gratuit */}
+            <div className="border-2 border-gray-200 rounded-2xl p-6 relative">
+              <div className="text-center mb-6">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Plan Gratuit</h2>
+                <div className="text-3xl font-bold text-gray-600 mb-1">0 FCFA</div>
+                <p className="text-gray-500">Pour toujours</p>
+              </div>
+              
+              <div className="space-y-3 mb-6">
+                {freeFeatures.map((feature, index) => (
+                  <div key={index} className="flex items-center text-sm">
+                    <span className={feature.startsWith('❌') ? 'text-gray-400' : 'text-gray-700'}>
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <button className="w-full bg-gray-100 text-gray-500 py-3 rounded-xl font-medium cursor-not-allowed">
+                Plan actuel
+              </button>
+            </div>
+
+            {/* Plan Premium */}
+            <div className="border-2 border-emerald-500 rounded-2xl p-6 relative bg-gradient-to-b from-emerald-50 to-white">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <span className="bg-emerald-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  ⭐ Recommandé
+                </span>
+              </div>
+              
+              <div className="text-center mb-6 mt-2">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Plan Premium</h2>
+                <div className="text-3xl font-bold text-emerald-600 mb-1">5 000 FCFA</div>
+                <p className="text-gray-500">par mois</p>
+              </div>
+              
+              <div className="space-y-3 mb-6">
+                {premiumFeatures.map((feature, index) => (
+                  <div key={index} className="flex items-center text-sm text-gray-700">
+                    <span>{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button 
+                onClick={onSelectPremium}
+                className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-emerald-700 shadow-lg"
+              >
+                🚀 Passer au Premium
+              </button>
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="bg-gray-50 rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">❓ Questions fréquentes</h3>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium text-gray-800 mb-1">Puis-je annuler mon abonnement à tout moment ?</h4>
+                <p className="text-sm text-gray-600">Oui, vous pouvez annuler à tout moment depuis les paramètres de votre compte. Votre abonnement restera actif jusqu'à la fin de la période payée.</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-800 mb-1">Que se passe-t-il si je dépasse les limites gratuites ?</h4>
+                <p className="text-sm text-gray-600">Vous ne pourrez plus créer de nouveaux objectifs jusqu'à ce que vous passiez au Premium ou supprimiez des objectifs existants.</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-800 mb-1">Mes données sont-elles sauvegardées ?</h4>
+                <p className="text-sm text-gray-600">Oui, toutes vos données sont automatiquement sauvegardées. Avec Premium, vous bénéficiez d'une sauvegarde cloud sécurisée supplémentaire.</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-800 mb-1">Comment fonctionne le paiement ?</h4>
+                <p className="text-sm text-gray-600">Paiement sécurisé par Mobile Money (Wave, Orange Money, MTN, Moov). Facturation automatique chaque mois.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-500 mb-4">
+              Rejoignez plus de 10 000 utilisateurs qui ont déjà choisi Tonty Premium
+            </p>
+            <button 
+              onClick={onSelectPremium}
+              className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-8 py-3 rounded-xl font-bold hover:from-purple-600 hover:to-blue-600 shadow-lg"
+            >
+              Essayer Premium maintenant
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Tontine Card Component
 export const TontineCard = ({ tontine, onClick }) => (
   <div 
