@@ -239,6 +239,21 @@ const TontyApp = () => {
   const { userTontines } = usePremium();
   const allTontines = [...userTontines, ...mockTontines];
 
+  // Handlers pour les modaux premium
+  const handleUpgradeToPremium = () => {
+    setIsPremiumModalOpen(false);
+    setIsPricingPageOpen(true);
+  };
+
+  const handleSelectPremium = () => {
+    // Simuler l'activation du premium (en réalité, cela passerait par un processus de paiement)
+    activatePremium(1); // 1 mois
+    setIsPricingPageOpen(false);
+    
+    // Afficher une notification de succès
+    alert('🎉 Félicitations ! Vous êtes maintenant Premium ! Profitez de toutes les fonctionnalités illimitées.');
+  };
+
   // Fonction pour gérer les changements de solde
   const handleBalanceChange = (amount, type, method) => {
     try {
