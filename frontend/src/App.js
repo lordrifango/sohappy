@@ -195,12 +195,28 @@ const TontyApp = () => {
   };
 
   const handleGoalTypeSelection = (type) => {
+    // Vérifier les limites avant d'ouvrir les modaux
     if (type === 'personal') {
-      setIsPersonalGoalOpen(true);
+      if (canCreateGoal()) {
+        setIsPersonalGoalOpen(true);
+      } else {
+        setPremiumModalType('personalGoal');
+        setIsPremiumModalOpen(true);
+      }
     } else if (type === 'fund') {
-      setIsFundOpen(true);
+      if (canCreateFund()) {
+        setIsFundOpen(true);
+      } else {
+        setPremiumModalType('fund');
+        setIsPremiumModalOpen(true);
+      }
     } else if (type === 'tontine') {
-      setIsCreateTontineOpen(true);
+      if (canCreateTontine()) {
+        setIsCreateTontineOpen(true);
+      } else {
+        setPremiumModalType('tontine');
+        setIsPremiumModalOpen(true);
+      }
     }
     setIsGoalTypeSelectionOpen(false);
   };
