@@ -342,4 +342,4 @@ const App = () => {
   );
 };
 
-export default TontyApp;
+export default App;
