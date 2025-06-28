@@ -171,6 +171,21 @@ const TontyApp = () => {
     setCurrency(currencies[nextIndex]);
   };
 
+  const handleGoalTypeSelection = (type) => {
+    if (type === 'personal') {
+      setIsPersonalGoalOpen(true);
+    } else if (type === 'fund') {
+      setIsFundOpen(true);
+    } else if (type === 'tontine') {
+      setIsCreateTontineOpen(true);
+    }
+    setIsGoalTypeSelectionOpen(false);
+  };
+
+  const handlePersonalGoalCreated = (newGoal) => {
+    setPersonalGoals(prev => [newGoal, ...prev]);
+    console.log('Personal goal created:', newGoal);
+  };
   const handleTontineCreated = (newTontine) => {
     setDynamicTontines(prev => [newTontine, ...prev]);
   };
