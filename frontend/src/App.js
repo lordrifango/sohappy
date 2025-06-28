@@ -222,14 +222,18 @@ const TontyApp = () => {
   };
 
   const handlePersonalGoalCreated = (newGoal) => {
-    setPersonalGoals(prev => [newGoal, ...prev]);
+    addGoal(newGoal);
     console.log('Personal goal created:', newGoal);
   };
+  
   const handleTontineCreated = (newTontine) => {
-    setDynamicTontines(prev => [newTontine, ...prev]);
+    addTontine(newTontine);
   };
 
-  const allTontines = [...dynamicTontines, ...mockTontines];
+  const handleFundCreated = (newFund) => {
+    addFund(newFund);
+    console.log('Cagnotte créée:', newFund);
+  };
 
   // Fonction pour gérer les changements de solde
   const handleBalanceChange = (amount, type, method) => {
