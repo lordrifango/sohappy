@@ -195,10 +195,6 @@ const TontyApp = () => {
     console.log('Cagnotte créée:', newFund);
   };
 
-  const handleTontineCreated = (newTontine) => {
-    setDynamicTontines(prev => [newTontine, ...prev]);
-  };
-
   // Mock contacts data
   const mockContacts = [
     { id: 1, name: 'Amadou Diallo', status: 'En ligne', avatar: 'AD', color: 'bg-green-500', lastSeen: 'maintenant' },
