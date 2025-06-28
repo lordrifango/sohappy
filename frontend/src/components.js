@@ -1625,6 +1625,7 @@ export const DepositModal = ({ isOpen, onClose, onBalanceChange }) => {
     setPhoneNumber('');
     setSmsCode('');
     setIsLoading(false);
+    setTransactionResult(null);
   };
 
   const handleClose = () => {
