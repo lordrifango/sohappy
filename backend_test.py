@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+import requests
+import json
+import time
+import re
+from datetime import datetime
+
+# Get the backend URL from the frontend .env file
+with open('/app/frontend/.env', 'r') as f:
+    env_content = f.read()
+    backend_url_match = re.search(r'REACT_APP_BACKEND_URL=(.+)', env_content)
+    if backend_url_match:
+        BACKEND_URL = backend_url_match.group(1).strip()
+    else:
+        raise ValueError("Could not find REACT_APP_BACKEND_URL in frontend/.env")
+
+print(f"Using backend URL: {BACKEND_URL}")
+
+# Test data
+valid_phone = "6505551234"
+valid_country_code = "+1"
+invalid_code_short = "12345"  # Not 6 digits
+invalid_code_letters = "12345a"  # Contains letters
+valid_code = "123456"  # Any 6 digits should work
+
+def test_send_code_endpoint():
+    """Test the /api/auth/send-code endpoint"""
+    print("\n=== Testing POST /api/auth/send-code ===")
+    
+    # Test with valid phone and country code
+    url = f"{BACKEND_URL}/api/auth/send-code"
+    payload = {
+        "phone": valid_phone,
+        "country_code": valid_country_code
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "session_id" in data, "Expected session_id in response"
+    assert data["session_id"] is not None, "Expected session_id to not be None"
+    
+    # Return session_id for use in other tests
+    return data["session_id"]
+
+def test_verify_code_endpoint(session_id):
+    """Test the /api/auth/verify-code endpoint"""
+    print("\n=== Testing POST /api/auth/verify-code ===")
+    url = f"{BACKEND_URL}/api/auth/verify-code"
+    
+    # Test with invalid code format (too short)
+    print("\nTesting with invalid code (too short):")
+    payload = {
+        "phone": valid_phone,
+        "country_code": valid_country_code,
+        "code": invalid_code_short
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid code
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    data = response.json()
+    assert data["success"] == False, "Expected success to be False for invalid code format"
+    
+    # Test with invalid code format (contains letters)
+    print("\nTesting with invalid code (contains letters):")
+    payload["code"] = invalid_code_letters
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid code
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    data = response.json()
+    assert data["success"] == False, "Expected success to be False for invalid code format"
+    
+    # Test with valid code format
+    print("\nTesting with valid code format:")
+    payload["code"] = valid_code
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for valid code
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True for valid code format"
+    assert "session_id" in data, "Expected session_id in response"
+    
+    # Return verified session_id
+    return data["session_id"]
+
+def test_check_session_endpoint(session_id):
+    """Test the /api/auth/check-session/{session_id} endpoint"""
+    print("\n=== Testing GET /api/auth/check-session/{session_id} ===")
+    
+    # Test with valid session_id
+    print("\nTesting with valid session_id:")
+    url = f"{BACKEND_URL}/api/auth/check-session/{session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for valid session
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    data = response.json()
+    assert data["valid"] == True, "Expected valid to be True for valid session"
+    assert "phone" in data, "Expected phone in response"
+    assert "country_code" in data, "Expected country_code in response"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    url = f"{BACKEND_URL}/api/auth/check-session/{invalid_session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    data = response.json()
+    assert data["valid"] == False, "Expected valid to be False for invalid session"
+
+def run_all_tests():
+    """Run all tests in sequence"""
+    try:
+        print(f"Starting backend API tests at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        # Test send code endpoint
+        session_id = test_send_code_endpoint()
+        print(f"Generated session_id: {session_id}")
+        
+        # Test verify code endpoint
+        verified_session_id = test_verify_code_endpoint(session_id)
+        print(f"Verified session_id: {verified_session_id}")
+        
+        # Test check session endpoint
+        test_check_session_endpoint(verified_session_id)
+        
+        print("\n=== All tests completed successfully! ===")
+        return True
+    except AssertionError as e:
+        print(f"\n❌ Test failed: {str(e)}")
+        return False
+    except Exception as e:
+        print(f"\n❌ Unexpected error: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    run_all_tests()
