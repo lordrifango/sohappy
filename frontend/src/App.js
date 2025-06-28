@@ -329,7 +329,7 @@ const AuthWrapper = () => {
     }
   }
 
-  return <TontyApp />;
+  return <BalanceProvider><TontyApp /></BalanceProvider>;
 };
 
 // Main App Component
