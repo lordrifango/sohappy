@@ -1909,8 +1909,26 @@ export const WithdrawModal = ({ isOpen, onClose, onBalanceChange, currentBalance
     setIsLoading(true);
     // Simulate code verification
     setTimeout(() => {
-      setIsLoading(false);
-      setStep(4);
+      try {
+        // Effectuer le retrait
+        const withdrawAmount = parseFloat(amount);
+        const methodName = paymentMethods.find(m => m.id === selectedMethod)?.name || 'Mobile Money';
+        
+        if (onBalanceChange) {
+          const result = onBalanceChange(withdrawAmount, 'withdraw', methodName);
+          setTransactionResult(result);
+          setStep(4);
+        } else {
+          // Fallback if no balance context
+          setStep(4);
+        }
+      } catch (error) {
+        console.error('Withdraw error:', error);
+        alert('Erreur lors du retrait: ' + error.message);
+        setStep(1); // Retour au début en cas d'erreur
+      } finally {
+        setIsLoading(false);
+      }
     }, 1500);
   };
 
