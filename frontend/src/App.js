@@ -235,6 +235,10 @@ const TontyApp = () => {
     console.log('Cagnotte créée:', newFund);
   };
 
+  // Obtenir toutes les tontines (celles du contexte premium + les mock data)
+  const { userTontines } = usePremium();
+  const allTontines = [...userTontines, ...mockTontines];
+
   // Fonction pour gérer les changements de solde
   const handleBalanceChange = (amount, type, method) => {
     try {
