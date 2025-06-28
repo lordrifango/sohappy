@@ -1880,13 +1880,14 @@ export const DepositModal = ({ isOpen, onClose, onBalanceChange }) => {
 };
 
 // Withdraw Modal
-export const WithdrawModal = ({ isOpen, onClose }) => {
+export const WithdrawModal = ({ isOpen, onClose, onBalanceChange, currentBalance = 1000000 }) => {
   const [step, setStep] = useState(1); // 1: amount & method, 2: phone, 3: SMS code, 4: success
   const [amount, setAmount] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [smsCode, setSmsCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [transactionResult, setTransactionResult] = useState(null);
 
   const paymentMethods = [
     { id: 'wave', name: 'Wave', icon: '🐧', color: 'bg-blue-500', time: '1-3 minutes' },
