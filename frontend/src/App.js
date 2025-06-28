@@ -268,7 +268,7 @@ const TontyApp = () => {
       />
 
       <FloatingActionButton 
-        onCreateTontine={() => setIsCreateTontineOpen(true)}
+        onCreateGoal={() => setIsGoalTypeSelectionOpen(true)}
         onAddContact={() => setIsAddContactOpen(true)}
         onSupport={() => setIsSupportOpen(true)}
       />
