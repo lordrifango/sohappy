@@ -37,6 +37,30 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+# Authentication Models
+class PhoneAuthRequest(BaseModel):
+    phone: str
+    country_code: str
+
+class VerifyCodeRequest(BaseModel):
+    phone: str
+    country_code: str
+    code: str
+
+class AuthResponse(BaseModel):
+    success: bool
+    message: str
+    session_id: Optional[str] = None
+
+class UserSession(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    phone: str
+    country_code: str
+    verification_code: str
+    is_verified: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: datetime = Field(default_factory=lambda: datetime.utcnow() + timedelta(minutes=5))
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
