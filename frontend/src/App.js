@@ -23,7 +23,9 @@ import {
   MembersListModal,
   UpcomingToursModal,
   DepositModal,
-  WithdrawModal
+  WithdrawModal,
+  PremiumModal,
+  PricingPage
 } from './components';
 
 const TontyApp = () => {
