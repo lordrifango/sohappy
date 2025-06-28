@@ -1092,6 +1092,574 @@ const TontineSuccessScreen = ({ tontineName, tontineId, onClose, onInviteContact
   </div>
 );
 
+//======= NOUVEAU MODAL DE SELECTION DU TYPE D'OBJECTIF =======
+
+// Goal Type Selection Modal
+export const GoalTypeSelectionModal = ({ isOpen, onClose, onSelectType }) => {
+  if (!isOpen) return null;
+
+  const goalTypes = [
+    {
+      id: 'personal',
+      title: 'Objectif Personnel',
+      description: 'Économisez pour un projet personnel (maison, voiture, voyage, etc.)',
+      icon: '🎯',
+      color: 'from-blue-500 to-blue-600',
+      features: ['Épargne individuelle', 'Suivi de progression', 'Rappels automatiques']
+    },
+    {
+      id: 'tontine',
+      title: 'Tontine',
+      description: 'Système d\'épargne rotatif avec un groupe d\'amis ou famille',
+      icon: '🏛️',
+      color: 'from-emerald-500 to-emerald-600',
+      features: ['Épargne collective', 'Tours de réception', 'Gestion de groupe']
+    },
+    {
+      id: 'fund',
+      title: 'Cagnotte',
+      description: 'Créez une cagnotte pour un événement ou une urgence',
+      icon: '💰',
+      color: 'from-purple-500 to-purple-600',
+      features: ['Contributions multiples', 'But spécifique', 'Partage facile']
+    }
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-t-3xl">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold">Créer un objectif</h2>
+              <p className="opacity-90 mt-1">Choisissez le type d'objectif que vous souhaitez créer</p>
+            </div>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        {/* Goal Types */}
+        <div className="p-6 space-y-4">
+          {goalTypes.map((type) => (
+            <button
+              key={type.id}
+              onClick={() => {
+                onSelectType(type.id);
+                onClose();
+              }}
+              className="w-full text-left border-2 border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:bg-emerald-50 transition-all group"
+            >
+              <div className="flex items-start space-x-4">
+                {/* Icon */}
+                <div className={`w-16 h-16 bg-gradient-to-r ${type.color} rounded-full flex items-center justify-center text-2xl shadow-lg`}>
+                  {type.icon}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">
+                    {type.title}
+                  </h3>
+                  <p className="text-gray-600 mt-1 mb-3">
+                    {type.description}
+                  </p>
+
+                  {/* Features */}
+                  <div className="flex flex-wrap gap-2">
+                    {type.features.map((feature, index) => (
+                      <span
+                        key={index}
+                        className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full group-hover:bg-emerald-100 group-hover:text-emerald-600 transition-colors"
+                      >
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Arrow */}
+                <div className="text-gray-400 group-hover:text-emerald-500 transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="p-6 pt-0">
+          <p className="text-sm text-gray-500 text-center">
+            Vous pourrez modifier ces paramètres plus tard dans les paramètres de votre objectif
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Personal Goal Modal
+export const PersonalGoalModal = ({ isOpen, onClose, onGoalCreated }) => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    targetAmount: '',
+    deadline: '',
+    category: 'savings',
+    reminderFrequency: 'weekly'
+  });
+
+  const categories = [
+    { id: 'savings', name: 'Épargne générale', icon: '💰', color: 'bg-green-500' },
+    { id: 'house', name: 'Achat maison', icon: '🏠', color: 'bg-blue-500' },
+    { id: 'car', name: 'Achat véhicule', icon: '🚗', color: 'bg-red-500' },
+    { id: 'travel', name: 'Voyage', icon: '✈️', color: 'bg-purple-500' },
+    { id: 'education', name: 'Éducation', icon: '📚', color: 'bg-indigo-500' },
+    { id: 'health', name: 'Santé', icon: '⚕️', color: 'bg-pink-500' },
+    { id: 'business', name: 'Business', icon: '💼', color: 'bg-yellow-500' },
+    { id: 'other', name: 'Autre', icon: '🎯', color: 'bg-gray-500' }
+  ];
+
+  const handleSubmit = () => {
+    const newGoal = {
+      id: `goal_${Date.now()}`,
+      type: 'personal',
+      title: formData.title,
+      description: formData.description,
+      targetAmount: parseFloat(formData.targetAmount),
+      currentAmount: 0,
+      deadline: formData.deadline,
+      category: formData.category,
+      reminderFrequency: formData.reminderFrequency,
+      progress: 0,
+      createdAt: new Date().toISOString()
+    };
+
+    if (onGoalCreated) {
+      onGoalCreated(newGoal);
+    }
+
+    // Reset form
+    setFormData({
+      title: '',
+      description: '',
+      targetAmount: '',
+      deadline: '',
+      category: 'savings',
+      reminderFrequency: 'weekly'
+    });
+    setStep(1);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-t-3xl">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-bold">Objectif Personnel</h2>
+              <p className="opacity-90 text-sm">Étape {step} sur 2</p>
+            </div>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6">
+          {step === 1 && (
+            <div className="space-y-6">
+              {/* Title */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nom de votre objectif *
+                </label>
+                <input
+                  type="text"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ex: Achat d'une voiture"
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                />
+              </div>
+
+              {/* Target Amount */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Montant cible (FCFA) *
+                </label>
+                <input
+                  type="number"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="1 000 000"
+                  value={formData.targetAmount}
+                  onChange={(e) => setFormData({...formData, targetAmount: e.target.value})}
+                />
+              </div>
+
+              {/* Deadline */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date limite (optionnel)
+                </label>
+                <input
+                  type="date"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.deadline}
+                  onChange={(e) => setFormData({...formData, deadline: e.target.value})}
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description (optionnel)
+                </label>
+                <textarea
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows="3"
+                  placeholder="Décrivez votre objectif..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                />
+              </div>
+
+              <div className="flex space-x-3 pt-4">
+                <button 
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50"
+                  onClick={onClose}
+                >
+                  Annuler
+                </button>
+                <button 
+                  className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50"
+                  disabled={!formData.title || !formData.targetAmount}
+                  onClick={() => setStep(2)}
+                >
+                  Suivant
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="space-y-6">
+              {/* Category Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Catégorie
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {categories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => setFormData({...formData, category: category.id})}
+                      className={`p-3 rounded-xl border-2 text-left transition-all ${
+                        formData.category === category.id
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">{category.icon}</span>
+                        <span className="text-sm font-medium">{category.name}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Reminder Frequency */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Fréquence des rappels
+                </label>
+                <div className="space-y-2">
+                  {[
+                    { id: 'daily', name: 'Quotidien' },
+                    { id: 'weekly', name: 'Hebdomadaire' },
+                    { id: 'monthly', name: 'Mensuel' },
+                    { id: 'none', name: 'Aucun rappel' }
+                  ].map((freq) => (
+                    <button
+                      key={freq.id}
+                      onClick={() => setFormData({...formData, reminderFrequency: freq.id})}
+                      className={`w-full p-3 rounded-xl border text-left transition-all ${
+                        formData.reminderFrequency === freq.id
+                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      {freq.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex space-x-3 pt-4">
+                <button 
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50"
+                  onClick={() => setStep(1)}
+                >
+                  Retour
+                </button>
+                <button 
+                  className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600"
+                  onClick={handleSubmit}
+                >
+                  Créer l'objectif
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Fund/Cagnotte Modal
+export const FundModal = ({ isOpen, onClose, onFundCreated }) => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    targetAmount: '',
+    deadline: '',
+    purpose: 'event',
+    isPublic: true,
+    allowAnonymous: false
+  });
+
+  const purposes = [
+    { id: 'event', name: 'Événement', icon: '🎉', color: 'bg-pink-500' },
+    { id: 'emergency', name: 'Urgence/Accident', icon: '🚨', color: 'bg-red-500' },
+    { id: 'medical', name: 'Frais médicaux', icon: '⚕️', color: 'bg-blue-500' },
+    { id: 'education', name: 'Éducation', icon: '📚', color: 'bg-indigo-500' },
+    { id: 'charity', name: 'Charité', icon: '❤️', color: 'bg-green-500' },
+    { id: 'project', name: 'Projet commun', icon: '🛠️', color: 'bg-orange-500' },
+    { id: 'travel', name: 'Voyage de groupe', icon: '✈️', color: 'bg-purple-500' },
+    { id: 'other', name: 'Autre', icon: '💰', color: 'bg-gray-500' }
+  ];
+
+  const handleSubmit = () => {
+    const newFund = {
+      id: `fund_${Date.now()}`,
+      type: 'fund',
+      title: formData.title,
+      description: formData.description,
+      targetAmount: parseFloat(formData.targetAmount),
+      currentAmount: 0,
+      deadline: formData.deadline,
+      purpose: formData.purpose,
+      isPublic: formData.isPublic,
+      allowAnonymous: formData.allowAnonymous,
+      contributors: [],
+      contributions: [],
+      progress: 0,
+      createdAt: new Date().toISOString(),
+      shareCode: Math.random().toString(36).substring(2, 8).toUpperCase()
+    };
+
+    if (onFundCreated) {
+      onFundCreated(newFund);
+    }
+
+    // Reset form
+    setFormData({
+      title: '',
+      description: '',
+      targetAmount: '',
+      deadline: '',
+      purpose: 'event',
+      isPublic: true,
+      allowAnonymous: false
+    });
+    setStep(1);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-t-3xl">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-bold">Créer une Cagnotte</h2>
+              <p className="opacity-90 text-sm">Étape {step} sur 2</p>
+            </div>
+            <button onClick={onClose} className="text-white hover:text-gray-200">
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6">
+          {step === 1 && (
+            <div className="space-y-6">
+              {/* Title */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nom de la cagnotte *
+                </label>
+                <input
+                  type="text"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="ex: Mariage de Marie et Paul"
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                />
+              </div>
+
+              {/* Target Amount */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Objectif (FCFA) *
+                </label>
+                <input
+                  type="number"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="500 000"
+                  value={formData.targetAmount}
+                  onChange={(e) => setFormData({...formData, targetAmount: e.target.value})}
+                />
+              </div>
+
+              {/* Deadline */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date limite *
+                </label>
+                <input
+                  type="date"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  value={formData.deadline}
+                  onChange={(e) => setFormData({...formData, deadline: e.target.value})}
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description *
+                </label>
+                <textarea
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  rows="3"
+                  placeholder="Expliquez le but de cette cagnotte..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                />
+              </div>
+
+              <div className="flex space-x-3 pt-4">
+                <button 
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50"
+                  onClick={onClose}
+                >
+                  Annuler
+                </button>
+                <button 
+                  className="flex-1 bg-purple-500 text-white py-3 rounded-xl font-medium hover:bg-purple-600 disabled:opacity-50"
+                  disabled={!formData.title || !formData.targetAmount || !formData.deadline || !formData.description}
+                  onClick={() => setStep(2)}
+                >
+                  Suivant
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="space-y-6">
+              {/* Purpose Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Catégorie
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {purposes.map((purpose) => (
+                    <button
+                      key={purpose.id}
+                      onClick={() => setFormData({...formData, purpose: purpose.id})}
+                      className={`p-3 rounded-xl border-2 text-left transition-all ${
+                        formData.purpose === purpose.id
+                          ? 'border-purple-500 bg-purple-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">{purpose.icon}</span>
+                        <span className="text-sm font-medium">{purpose.name}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Privacy Settings */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Paramètres de confidentialité
+                </label>
+                <div className="space-y-3">
+                  <label className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      checked={formData.isPublic}
+                      onChange={(e) => setFormData({...formData, isPublic: e.target.checked})}
+                      className="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                    />
+                    <span className="text-sm">Rendre cette cagnotte publique</span>
+                  </label>
+                  <label className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      checked={formData.allowAnonymous}
+                      onChange={(e) => setFormData({...formData, allowAnonymous: e.target.checked})}
+                      className="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                    />
+                    <span className="text-sm">Autoriser les contributions anonymes</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex space-x-3 pt-4">
+                <button 
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50"
+                  onClick={() => setStep(1)}
+                >
+                  Retour
+                </button>
+                <button 
+                  className="flex-1 bg-purple-500 text-white py-3 rounded-xl font-medium hover:bg-purple-600"
+                  onClick={handleSubmit}
+                >
+                  Créer la cagnotte
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+//======= FIN DES NOUVEAUX MODAUX =======
+
 // Add Contact Modal Component
 export const AddContactModal = ({ isOpen, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
