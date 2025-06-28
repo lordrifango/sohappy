@@ -1939,6 +1939,7 @@ export const WithdrawModal = ({ isOpen, onClose, onBalanceChange, currentBalance
     setPhoneNumber('');
     setSmsCode('');
     setIsLoading(false);
+    setTransactionResult(null);
   };
 
   const handleClose = () => {
