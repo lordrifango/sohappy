@@ -248,10 +248,6 @@ const TontyApp = () => {
     }
   };
 
-  const handleFundCreated = (newFund) => {
-    setFunds(prev => [newFund, ...prev]);
-    console.log('Cagnotte créée:', newFund);
-  };
 
   // Mock contacts data
   const mockContacts = [
