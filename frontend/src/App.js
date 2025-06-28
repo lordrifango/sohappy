@@ -190,30 +190,6 @@ const TontyApp = () => {
     }
   };
 
-  // Gestion de la sélection du type d'objectif
-  const handleGoalTypeSelection = (type) => {
-    setIsGoalTypeSelectionOpen(false);
-    switch(type) {
-      case 'personal':
-        setIsPersonalGoalOpen(true);
-        break;
-      case 'tontine':
-        setIsCreateTontineOpen(true);
-        break;
-      case 'fund':
-        setIsFundOpen(true);
-        break;
-      default:
-        break;
-    }
-  };
-
-  // Création d'objectifs
-  const handlePersonalGoalCreated = (newGoal) => {
-    setPersonalGoals(prev => [newGoal, ...prev]);
-    console.log('Objectif personnel créé:', newGoal);
-  };
-
   const handleFundCreated = (newFund) => {
     setFunds(prev => [newFund, ...prev]);
     console.log('Cagnotte créée:', newFund);
