@@ -194,9 +194,43 @@ const TontyApp = () => {
     alert('🎉 Cagnotte créée avec succès ! Elle est maintenant visible dans vos objectifs.');
   };
 
-  // Obtenir toutes les tontines (celles du contexte premium + les mock data)
-  const { userTontines } = usePremium();
-  const allTontines = [...userTontines, ...mockTontines];
+  // Obtenir tous les objectifs (tontines créées + mock tontines + objectifs personnels + cagnottes)
+  const { userTontines, userGoals, userFunds } = usePremium();
+  
+  // Transformer les objectifs personnels et cagnottes pour l'affichage
+  const transformedGoals = userGoals.map(goal => ({
+    ...goal,
+    type: 'personal_goal',
+    name: goal.title,
+    fullName: goal.title,
+    amount: goal.targetAmount,
+    currency: 'FCFA',
+    nextPayment: 'Objectif personnel',
+    remaining: `Échéance: ${goal.deadline}`,
+    progress: goal.progress || 0,
+    color: 'bg-indigo-500'
+  }));
+
+  const transformedFunds = userFunds.map(fund => ({
+    ...fund,
+    type: 'fund',
+    name: fund.title,
+    fullName: fund.title,
+    amount: fund.targetAmount,
+    currency: 'FCFA',
+    nextPayment: 'Cagnotte',
+    remaining: `Échéance: ${fund.deadline}`,
+    progress: fund.progress || 0,
+    color: 'bg-pink-500'
+  }));
+
+  // Combiner tous les objectifs avec un maximum de 3 mock tontines pour les non-premium
+  const allObjectives = [
+    ...userTontines.map(t => ({...t, type: 'tontine'})), 
+    ...transformedGoals,
+    ...transformedFunds,
+    ...mockTontines
+  ];
 
   // Handlers pour les modaux premium
   const handleUpgradeToPremium = () => {
