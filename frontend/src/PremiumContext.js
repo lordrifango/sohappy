@@ -179,7 +179,8 @@ export const PremiumProvider = ({ children }) => {
     // Statistiques
     tontinesCount: userTontines.length,
     goalsCount: userGoals.length,
-    fundsCount: userFunds.length
+    fundsCount: userFunds.length,
+    totalObjectivesCount: getTotalObjectivesCount()
   };
 
   return (
