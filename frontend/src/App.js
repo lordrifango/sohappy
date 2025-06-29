@@ -71,7 +71,7 @@ const TontyApp = () => {
   const [notifications, setNotifications] = useState(3);
   const [currency, setCurrency] = useState('FCFA'); // FCFA -> USD -> EUR -> FCFA
 
-  // Mock data pour les tontines
+  // Mock data pour les tontines (réduit à 3 pour respecter la limite gratuite)
   const mockTontines = [
     {
       id: 'tfk',
@@ -85,7 +85,8 @@ const TontyApp = () => {
       endDate: '15 Août 2025',
       remaining: 'Environ 1 mois restant',
       progress: 75,
-      color: 'bg-green-500'
+      color: 'bg-green-500',
+      type: 'tontine'
     },
     {
       id: 'gaa',
@@ -99,7 +100,8 @@ const TontyApp = () => {
       endDate: '1 Décembre 2025',
       remaining: 'Environ 5 mois restants',
       progress: 45,
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
+      type: 'tontine'
     },
     {
       id: 'eqb',
@@ -113,49 +115,8 @@ const TontyApp = () => {
       endDate: '15 Mai 2026',
       remaining: 'Environ 10 mois restants',
       progress: 30,
-      color: 'bg-purple-500'
-    },
-    {
-      id: 'tfc',
-      name: 'TFC',
-      fullName: 'Tontine Famille Coulibaly',
-      amount: '350 000',
-      currency: 'FCFA',
-      nextPayment: '1 Mars 2025',
-      membersCount: 7,
-      startDate: '1 Février 2025',
-      endDate: '1 Août 2025',
-      remaining: 'Environ 1 mois restant',
-      progress: 80,
-      color: 'bg-red-500'
-    },
-    {
-      id: 'fcb',
-      name: 'FCB',
-      fullName: 'Femmes Commerçantes Bietry',
-      amount: '200 000',
-      currency: 'FCFA',
-      nextPayment: '15 Mars 2025',
-      membersCount: 9,
-      startDate: '15 Février 2025',
-      endDate: '15 Octobre 2025',
-      remaining: 'Environ 3 mois restants',
-      progress: 55,
-      color: 'bg-yellow-500'
-    },
-    {
-      id: 'jek',
-      name: 'JEK',
-      fullName: 'Jeunes Entrepreneurs Koumassi',
-      amount: '150 000',
-      currency: 'FCFA',
-      nextPayment: '1 Avril 2025',
-      membersCount: 8,
-      startDate: '1 Mars 2025',
-      endDate: '1 Octobre 2025',
-      remaining: 'Environ 3 mois restants',
-      progress: 40,
-      color: 'bg-indigo-500'
+      color: 'bg-purple-500',
+      type: 'tontine'
     }
   ];
 
