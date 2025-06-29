@@ -50,11 +50,14 @@ export const Dashboard = ({
   limits = { tontines: 3, personalGoals: 1, funds: 1 },
   onUpgrade
 }) => {
-  const activeTontines = tontines.length;
+  const activeObjectives = tontines.length;
   const connectedMembers = 24;
   const upcomingTours = 21;
-  const maxTontines = 10;
-  const progressPercentage = (activeTontines / maxTontines) * 100;
+  
+  // Calculer la limite totale d'objectifs selon le statut premium
+  const totalObjectivesCount = tontinesCount + goalsCount + fundsCount;
+  const maxObjectives = isPremium ? 'Illimité' : limits.tontines;
+  const progressPercentage = isPremium ? 100 : (totalObjectivesCount / limits.tontines) * 100;
 
   const getCurrencySymbol = () => {
     switch(currency) {
