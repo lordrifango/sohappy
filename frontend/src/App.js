@@ -190,6 +190,8 @@ const TontyApp = () => {
   const handleFundCreated = (newFund) => {
     addFund(newFund);
     console.log('Cagnotte créée:', newFund);
+    // Afficher un message de succès
+    alert('🎉 Cagnotte créée avec succès ! Elle est maintenant visible dans vos objectifs.');
   };
 
   // Obtenir toutes les tontines (celles du contexte premium + les mock data)
