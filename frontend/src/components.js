@@ -112,7 +112,7 @@ export const Dashboard = ({
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm">Objectifs créés</span>
             <span className="text-sm">
-              {totalObjectivesCount}/{isPremium ? '∞' : limits.tontines}
+              {totalObjectivesCount}/{isPremium ? '∞' : limits.totalObjectives}
             </span>
           </div>
           <div className="w-full bg-white bg-opacity-20 rounded-full h-2">
