@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Implémenter un modèle freemium pour l'application Tonty avec des limitations pour les utilisateurs gratuits et un abonnement Premium à 5000 FCFA/mois. Interface d'upgrade avec modal Premium et page de tarification."
+user_problem_statement: "Modifier le tableau de bord des tontines pour être plus logique et réel sans mock data. Passer de 6 à 3 tontines actives de base avec barre de progression logique (1,2,3 ou illimité premium). Afficher la limite atteinte avant upgrade. Rendre les cagnottes visibles dans le dashboard 'mes objectifs' (renommé). Ajouter message de succès création cagnotte et possibilité de partage."
 
 backend:
   - task: "Authentication API Endpoints"
