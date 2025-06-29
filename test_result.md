@@ -370,6 +370,18 @@ frontend:
         agent: "main"
         comment: "Enhanced TontineCard to display different types of objectives with icons, type badges, and appropriate actions. Tontines show member info, cagnottes show contribution options, personal goals show saving options"
 
+  - task: "Fix Total Objectives Limit Bug"
+    implemented: true
+    working: "NA"
+    file: "PremiumContext.js, App.js, components.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "CRITICAL BUG FIX: User reported ability to create 4th objective while in free mode. Fixed logic to limit TOTAL objectives to 3 (instead of 3 tontines + 1 goal + 1 fund = 5 total). Updated FREE_LIMITS to use totalObjectives: 3, modified all canCreate functions to check total count, updated Dashboard to show unified count."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
