@@ -372,10 +372,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Premium Context Implementation"
-    - "Premium Modal Component"
-    - "Pricing Page Component"
-    - "Freemium Logic Integration"
+    - "Dashboard Logic Improvements"
+    - "Success Message for Fund Creation"
+    - "Sharing Functionality"
+    - "Enhanced Objective Display"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
