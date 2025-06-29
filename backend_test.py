@@ -3,6 +3,7 @@ import requests
 import json
 import time
 import re
+import statistics
 from datetime import datetime
 
 # Get the backend URL from the frontend .env file
