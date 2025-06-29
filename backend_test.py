@@ -152,6 +152,9 @@ def run_all_tests():
     try:
         print(f"Starting backend API tests at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
+        # Test MongoDB connectivity
+        test_mongodb_connectivity()
+        
         # Test send code endpoint
         session_id = test_send_code_endpoint()
         print(f"Generated session_id: {session_id}")
@@ -175,6 +178,63 @@ def run_all_tests():
     except Exception as e:
         print(f"\n❌ Unexpected error: {str(e)}")
         return False
+
+def test_mongodb_connectivity():
+    """Test MongoDB connectivity by checking if sessions are stored properly"""
+    print("\n=== Testing MongoDB Connectivity ===")
+    
+    # First, create a new session
+    url = f"{BACKEND_URL}/api/auth/send-code"
+    payload = {
+        "phone": "6505559999",
+        "country_code": "+1"
+    }
+    
+    print(f"Creating a new session via {url}")
+    response = requests.post(url, json=payload)
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    session_id = data["session_id"]
+    
+    # Verify the session by checking it exists
+    url = f"{BACKEND_URL}/api/auth/check-session/{session_id}"
+    print(f"Verifying session exists in MongoDB via {url}")
+    
+    # Wait a moment to ensure data is stored
+    time.sleep(0.5)
+    
+    response = requests.get(url)
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    # The session should exist but not be verified yet
+    data = response.json()
+    assert "valid" in data, "Expected 'valid' field in response"
+    assert data["valid"] == False, "Expected session to be invalid (not verified yet)"
+    
+    # Now verify the session
+    url = f"{BACKEND_URL}/api/auth/verify-code"
+    payload = {
+        "phone": "6505559999",
+        "country_code": "+1",
+        "code": "123456"
+    }
+    
+    print(f"Verifying the session via {url}")
+    response = requests.post(url, json=payload)
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    # Check that the session is now verified
+    url = f"{BACKEND_URL}/api/auth/check-session/{session_id}"
+    print(f"Checking that session is now verified via {url}")
+    
+    response = requests.get(url)
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["valid"] == True, "Expected session to be valid (verified)"
+    
+    print("MongoDB connectivity test passed - sessions are being stored and updated correctly")
 
 def run_performance_tests(num_iterations=5):
     """Run performance tests on all endpoints"""
