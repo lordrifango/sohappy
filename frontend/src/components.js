@@ -491,61 +491,150 @@ export const PricingPage = ({ isOpen, onClose, onSelectPremium }) => {
 };
 
 // Tontine Card Component
-export const TontineCard = ({ tontine, onClick }) => (
-  <div 
-    className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-all cursor-pointer border border-gray-100"
-    onClick={onClick}
-  >
-    <div className="flex items-start justify-between mb-3">
-      <div className="flex items-center space-x-3">
-        <div className={`w-12 h-12 ${tontine.color} rounded-full flex items-center justify-center text-white font-bold text-lg`}>
-          {tontine.name.substring(0, 2)}
+export const TontineCard = ({ tontine, onClick }) => {
+  const getTypeIcon = () => {
+    switch(tontine.type) {
+      case 'personal_goal': return '🎯';
+      case 'fund': return '💰';
+      case 'tontine': 
+      default: return '🏛️';
+    }
+  };
+
+  const getTypeLabel = () => {
+    switch(tontine.type) {
+      case 'personal_goal': return 'Objectif Personnel';
+      case 'fund': return 'Cagnotte';
+      case 'tontine': 
+      default: return 'Tontine';
+    }
+  };
+
+  const handleShare = (e) => {
+    e.stopPropagation(); // Empêche le click sur la carte
+    const shareText = `🎯 ${getTypeLabel()}: ${tontine.fullName}\n💰 Objectif: ${tontine.amount} ${tontine.currency}\n🔗 Rejoignez-moi sur Tonty !`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: tontine.fullName,
+        text: shareText,
+        url: window.location.href
+      });
+    } else {
+      // Fallback: copier dans le presse-papier
+      navigator.clipboard.writeText(shareText).then(() => {
+        alert('✅ Lien de partage copié dans le presse-papier !');
+      });
+    }
+  };
+
+  return (
+    <div 
+      className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-all cursor-pointer border border-gray-100"
+      onClick={onClick}
+    >
+      {/* En-tête avec icône de type */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-2">
+          <span className="text-lg">{getTypeIcon()}</span>
+          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+            {getTypeLabel()}
+          </span>
         </div>
-        <div>
-          <h4 className="font-semibold text-gray-800">{tontine.fullName}</h4>
-          <p className="text-sm text-gray-500">{tontine.membersCount} membres</p>
+        <button 
+          onClick={handleShare}
+          className="text-gray-400 hover:text-emerald-500 transition-colors"
+          title="Partager"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center space-x-3">
+          <div className={`w-12 h-12 ${tontine.color} rounded-full flex items-center justify-center text-white font-bold text-lg`}>
+            {tontine.name.substring(0, 2)}
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-800">{tontine.fullName}</h4>
+            <p className="text-sm text-gray-500">
+              {tontine.type === 'tontine' ? `${tontine.membersCount} membres` : 
+               tontine.type === 'fund' ? 'Cagnotte ouverte' : 'Personnel'}
+            </p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-sm text-gray-500">
+            {tontine.type === 'tontine' ? `Prochain: ${tontine.nextPayment}` : 
+             tontine.nextPayment}
+          </p>
+          <p className="text-lg font-bold text-gray-800">{tontine.amount} {tontine.currency}</p>
         </div>
       </div>
-      <div className="text-right">
-        <p className="text-sm text-gray-500">Prochain paiement: {tontine.nextPayment}</p>
-        <p className="text-lg font-bold text-gray-800">{tontine.amount} {tontine.currency}</p>
+      
+      {tontine.type === 'tontine' && tontine.startDate && tontine.endDate && (
+        <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
+          <span className="flex items-center">
+            <CalendarIcon className="w-4 h-4 mr-1" />
+            Du {tontine.startDate}
+          </span>
+          <span className="flex items-center">
+            <CalendarIcon className="w-4 h-4 mr-1" />
+            Au {tontine.endDate}
+          </span>
+        </div>
+      )}
+      
+      <div className="mb-3">
+        <div className="flex justify-between text-sm text-gray-600 mb-1">
+          <span>{tontine.remaining}</span>
+          <span>{tontine.progress}%</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${tontine.progress}%` }}
+          ></div>
+        </div>
       </div>
+      
+      {tontine.type === 'tontine' && (
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-emerald-600 font-medium">
+            C'est votre tour de recevoir le pot !
+          </span>
+          <button className="text-emerald-600 text-sm hover:underline">
+            👥 Voir les membres
+          </button>
+        </div>
+      )}
+      
+      {tontine.type === 'fund' && (
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-pink-600 font-medium">
+            Contribuez à cette cagnotte
+          </span>
+          <button className="text-pink-600 text-sm hover:underline">
+            💸 Contribuer
+          </button>
+        </div>
+      )}
+      
+      {tontine.type === 'personal_goal' && (
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-indigo-600 font-medium">
+            Votre objectif personnel
+          </span>
+          <button className="text-indigo-600 text-sm hover:underline">
+            💰 Épargner
+          </button>
+        </div>
+      )}
     </div>
-    
-    <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
-      <span className="flex items-center">
-        <CalendarIcon className="w-4 h-4 mr-1" />
-        Du {tontine.startDate}
-      </span>
-      <span className="flex items-center">
-        <CalendarIcon className="w-4 h-4 mr-1" />
-        Au {tontine.endDate}
-      </span>
-    </div>
-    
-    <div className="mb-3">
-      <div className="flex justify-between text-sm text-gray-600 mb-1">
-        <span>{tontine.remaining}</span>
-        <span>{tontine.progress}%</span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div 
-          className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
-          style={{ width: `${tontine.progress}%` }}
-        ></div>
-      </div>
-    </div>
-    
-    <div className="flex justify-between items-center">
-      <span className="text-sm text-emerald-600 font-medium">
-        C'est votre tour de recevoir le pot !
-      </span>
-      <button className="text-emerald-600 text-sm hover:underline">
-        👥 Voir les members
-      </button>
-    </div>
-  </div>
-);
+  );
+};
 
 // Members List Component
 export const MembersList = ({ tontine, members, onBack }) => (
