@@ -301,9 +301,7 @@ const TontyApp = () => {
                   balance={balance}
                   formatBalance={formatBalance}
                   isPremium={isPremium}
-                  tontinesCount={tontinesCount}
-                  goalsCount={goalsCount}
-                  fundsCount={fundsCount}
+                  totalObjectivesCount={totalObjectivesCount}
                   limits={FREE_LIMITS}
                   onUpgrade={() => setIsPricingPageOpen(true)}
                 />
