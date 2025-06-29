@@ -184,7 +184,7 @@ export const Dashboard = ({
               <div>
                 <h3 className="font-bold">Plan Gratuit</h3>
                 <p className="text-sm opacity-90">
-                  {tontinesCount}/{limits.tontines} tontines • {goalsCount}/{limits.personalGoals} objectif • {fundsCount}/{limits.funds} cagnotte
+                  {totalObjectivesCount}/{limits.totalObjectives} objectifs créés
                 </p>
               </div>
             </div>
