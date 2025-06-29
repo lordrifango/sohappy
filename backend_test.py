@@ -163,6 +163,10 @@ def run_all_tests():
         # Test check session endpoint
         test_check_session_endpoint(verified_session_id)
         
+        # Run performance tests
+        print("\n=== Running Performance Tests ===")
+        performance_test_results = run_performance_tests()
+        
         print("\n=== All tests completed successfully! ===")
         return True
     except AssertionError as e:
@@ -171,6 +175,65 @@ def run_all_tests():
     except Exception as e:
         print(f"\n❌ Unexpected error: {str(e)}")
         return False
+
+def run_performance_tests(num_iterations=5):
+    """Run performance tests on all endpoints"""
+    send_code_times = []
+    verify_code_times = []
+    check_session_times = []
+    
+    for i in range(num_iterations):
+        print(f"\nPerformance test iteration {i+1}/{num_iterations}")
+        
+        # Test send-code performance
+        start_time = time.time()
+        response = requests.post(
+            f"{BACKEND_URL}/api/auth/send-code", 
+            json={"phone": f"650555{i}234", "country_code": "+1"}
+        )
+        end_time = time.time()
+        send_code_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        session_id = response.json()["session_id"]
+        
+        # Test verify-code performance
+        start_time = time.time()
+        response = requests.post(
+            f"{BACKEND_URL}/api/auth/verify-code", 
+            json={"phone": f"650555{i}234", "country_code": "+1", "code": "123456"}
+        )
+        end_time = time.time()
+        verify_code_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        # Test check-session performance
+        start_time = time.time()
+        response = requests.get(f"{BACKEND_URL}/api/auth/check-session/{session_id}")
+        end_time = time.time()
+        check_session_times.append((end_time - start_time) * 1000)  # Convert to ms
+    
+    # Calculate and print statistics
+    print("\nPerformance Test Results (in milliseconds):")
+    print(f"  send-code:     avg={statistics.mean(send_code_times):.2f}ms, min={min(send_code_times):.2f}ms, max={max(send_code_times):.2f}ms")
+    print(f"  verify-code:   avg={statistics.mean(verify_code_times):.2f}ms, min={min(verify_code_times):.2f}ms, max={max(verify_code_times):.2f}ms")
+    print(f"  check-session: avg={statistics.mean(check_session_times):.2f}ms, min={min(check_session_times):.2f}ms, max={max(check_session_times):.2f}ms")
+    
+    return {
+        "send_code": {
+            "avg": statistics.mean(send_code_times),
+            "min": min(send_code_times),
+            "max": max(send_code_times)
+        },
+        "verify_code": {
+            "avg": statistics.mean(verify_code_times),
+            "min": min(verify_code_times),
+            "max": max(verify_code_times)
+        },
+        "check_session": {
+            "avg": statistics.mean(check_session_times),
+            "min": min(check_session_times),
+            "max": max(check_session_times)
+        }
+    }
 
 if __name__ == "__main__":
     run_all_tests()
