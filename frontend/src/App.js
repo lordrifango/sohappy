@@ -320,7 +320,7 @@ const TontyApp = () => {
               )}
               
               {activeTab === 'social' && (
-                <SocialFeed tontines={allTontines} />
+                <SocialFeed tontines={allObjectives} />
               )}
             </>
           } />
