@@ -44,10 +44,8 @@ export const Dashboard = ({
   balance = 1000000,
   formatBalance = (amount) => new Intl.NumberFormat('fr-FR').format(amount),
   isPremium = false,
-  tontinesCount = 0,
-  goalsCount = 0,
-  fundsCount = 0,
-  limits = { tontines: 3, personalGoals: 1, funds: 1 },
+  totalObjectivesCount = 0,
+  limits = { totalObjectives: 3 },
   onUpgrade
 }) => {
   const activeObjectives = tontines.length;
@@ -55,9 +53,8 @@ export const Dashboard = ({
   const upcomingTours = 21;
   
   // Calculer la limite totale d'objectifs selon le statut premium
-  const totalObjectivesCount = tontinesCount + goalsCount + fundsCount;
-  const maxObjectives = isPremium ? 'Illimité' : limits.tontines;
-  const progressPercentage = isPremium ? 100 : (totalObjectivesCount / limits.tontines) * 100;
+  const maxObjectives = isPremium ? 'Illimité' : limits.totalObjectives;
+  const progressPercentage = isPremium ? 100 : (totalObjectivesCount / limits.totalObjectives) * 100;
 
   const getCurrencySymbol = () => {
     switch(currency) {
