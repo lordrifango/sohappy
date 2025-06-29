@@ -99,17 +99,21 @@ export const PremiumProvider = ({ children }) => {
     }
   };
 
-  // Vérifier si l'utilisateur peut créer plus d'éléments
+  // Vérifier si l'utilisateur peut créer plus d'éléments (limite totale de 3 objectifs)
+  const getTotalObjectivesCount = () => {
+    return userTontines.length + userGoals.length + userFunds.length;
+  };
+
   const canCreateTontine = () => {
-    return isPremium || userTontines.length < FREE_LIMITS.tontines;
+    return isPremium || getTotalObjectivesCount() < FREE_LIMITS.totalObjectives;
   };
 
   const canCreateGoal = () => {
-    return isPremium || userGoals.length < FREE_LIMITS.personalGoals;
+    return isPremium || getTotalObjectivesCount() < FREE_LIMITS.totalObjectives;
   };
 
   const canCreateFund = () => {
-    return isPremium || userFunds.length < FREE_LIMITS.funds;
+    return isPremium || getTotalObjectivesCount() < FREE_LIMITS.totalObjectives;
   };
 
   // Ajouter des éléments avec sauvegarde
