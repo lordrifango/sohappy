@@ -21,9 +21,7 @@ export const PremiumProvider = ({ children }) => {
 
   // Limites pour utilisateurs gratuits
   const FREE_LIMITS = {
-    tontines: 3,
-    personalGoals: 1,
-    funds: 1,
+    totalObjectives: 3, // TOTAL de tous les objectifs (tontines + goals + funds)
     transactionHistory: 30 // jours
   };
 
