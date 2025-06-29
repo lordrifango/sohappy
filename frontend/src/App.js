@@ -38,9 +38,7 @@ const TontyApp = () => {
     addTontine, 
     addGoal, 
     addFund,
-    tontinesCount,
-    goalsCount,
-    fundsCount,
+    totalObjectivesCount,
     FREE_LIMITS,
     activatePremium
   } = usePremium();
