@@ -390,6 +390,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Fix Total Objectives Limit Bug"
     - "Dashboard Logic Improvements"
     - "Success Message for Fund Creation"
     - "Sharing Functionality"
