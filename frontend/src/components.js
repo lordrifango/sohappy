@@ -123,7 +123,7 @@ export const Dashboard = ({
               style={{ width: `${Math.min(progressPercentage, 100)}%` }}
             ></div>
           </div>
-          {!isPremium && totalObjectivesCount >= limits.tontines && (
+          {!isPremium && totalObjectivesCount >= limits.totalObjectives && (
             <p className="text-xs mt-1 text-red-200">
               ⚠️ Limite atteinte ! Passez à Premium pour créer plus d'objectifs
             </p>
