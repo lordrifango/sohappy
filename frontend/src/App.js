@@ -292,7 +292,7 @@ const TontyApp = () => {
             <>
               {activeTab === 'dashboard' && (
                 <Dashboard 
-                  tontines={allTontines}
+                  tontines={allObjectives}
                   onTontineSelect={handleTontineSelect}
                   currency={currency}
                   onCurrencyToggle={handleCurrencyToggle}
