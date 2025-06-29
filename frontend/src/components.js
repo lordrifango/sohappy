@@ -94,8 +94,8 @@ export const Dashboard = ({
         
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <p className="text-sm opacity-90">Tontines actives</p>
-            <p className="text-xl font-bold">{activeTontines}</p>
+            <p className="text-sm opacity-90">Objectifs actifs</p>
+            <p className="text-xl font-bold">{activeObjectives}</p>
           </div>
           <div>
             <button onClick={onMembersClick} className="text-left hover:bg-white hover:bg-opacity-10 p-2 rounded transition-all">
@@ -113,15 +113,24 @@ export const Dashboard = ({
         
         <div className="bg-white bg-opacity-10 rounded-lg p-3 mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm">Tontines actives</span>
-            <span className="text-sm">{activeTontines}/{maxTontines}</span>
+            <span className="text-sm">Objectifs créés</span>
+            <span className="text-sm">
+              {totalObjectivesCount}/{isPremium ? '∞' : limits.tontines}
+            </span>
           </div>
           <div className="w-full bg-white bg-opacity-20 rounded-full h-2">
             <div 
-              className="bg-white h-2 rounded-full transition-all duration-500"
-              style={{ width: `${progressPercentage}%` }}
+              className={`h-2 rounded-full transition-all duration-500 ${
+                progressPercentage >= 100 && !isPremium ? 'bg-red-400' : 'bg-white'
+              }`}
+              style={{ width: `${Math.min(progressPercentage, 100)}%` }}
             ></div>
           </div>
+          {!isPremium && totalObjectivesCount >= limits.tontines && (
+            <p className="text-xs mt-1 text-red-200">
+              ⚠️ Limite atteinte ! Passez à Premium pour créer plus d'objectifs
+            </p>
+          )}
         </div>
         
         <div className="text-right">
