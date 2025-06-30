@@ -1231,9 +1231,9 @@ export const FloatingActionButton = ({ onCreateGoal, onAddContact, onSupport }) 
               onCreateGoal();
               setIsOpen(false);
             }}
-            className="flex items-center justify-end space-x-3 bg-emerald-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-emerald-600 transition-all transform hover:scale-105"
+            className="flex items-center justify-end space-x-3 bg-violet-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-violet-600 transition-all transform hover:scale-105"
           >
-            <span className="text-sm font-medium">Créer un objectif</span>
+            <span className="text-sm font-medium">Lancer un projet</span>
             <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
               🎯
             </div>
@@ -1244,7 +1244,7 @@ export const FloatingActionButton = ({ onCreateGoal, onAddContact, onSupport }) 
               onAddContact();
               setIsOpen(false);
             }}
-            className="flex items-center justify-end space-x-3 bg-purple-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-purple-600 transition-all transform hover:scale-105"
+            className="flex items-center justify-end space-x-3 bg-indigo-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-indigo-600 transition-all transform hover:scale-105"
           >
             <span className="text-sm font-medium">Ajouter un contact</span>
             <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -1270,7 +1270,7 @@ export const FloatingActionButton = ({ onCreateGoal, onAddContact, onSupport }) 
       {/* Main FAB */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-14 h-14 bg-emerald-500 text-white rounded-full shadow-lg hover:bg-emerald-600 transition-all transform hover:scale-110 flex items-center justify-center ${
+        className={`w-14 h-14 bg-violet-500 text-white rounded-full shadow-lg hover:bg-violet-600 transition-all transform hover:scale-110 flex items-center justify-center ${
           isOpen ? 'rotate-45' : 'rotate-0'
         }`}
       >
