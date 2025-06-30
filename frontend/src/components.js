@@ -129,9 +129,17 @@ export const Dashboard = ({
             ></div>
           </div>
           {!isPremium && totalObjectivesCount >= limits.totalObjectives && (
-            <p className="text-xs mt-1 text-red-200">
-              ⚠️ Limite atteinte ! Passez à Premium pour créer plus d'objectifs
-            </p>
+            <div className="mt-3 flex items-center justify-between bg-red-500 bg-opacity-20 rounded-lg p-2">
+              <p className="text-xs text-red-200">
+                ⚠️ Limite atteinte !
+              </p>
+              <button 
+                onClick={onUpgrade}
+                className="bg-white text-violet-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-100 transition-colors"
+              >
+                Upgrade
+              </button>
+            </div>
           )}
         </div>
         
