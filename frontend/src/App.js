@@ -43,6 +43,8 @@ const TontyApp = () => {
     activatePremium
   } = usePremium();
   
+  // États pour les menus et modals
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedTontine, setSelectedTontine] = useState(null);
   
