@@ -80,7 +80,7 @@ export const Dashboard = ({
   return (
     <div className="p-4 space-y-6">
       {/* Balance Section */}
-      <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg">
+      <div className="bg-gradient-to-r from-violet-500 to-indigo-600 text-white p-6 rounded-2xl shadow-lg">
         <div className="text-right mb-2">
           <button 
             onClick={onCurrencyToggle}
@@ -90,24 +90,24 @@ export const Dashboard = ({
           </button>
         </div>
         <div className="mb-4">
-          <h2 className="text-lg font-medium opacity-90">Solde réel</h2>
+          <h2 className="text-lg font-medium opacity-90">Solde Actuel</h2>
           <h1 className="text-3xl font-bold">{getCurrencyValue()} {getCurrencySymbol()}</h1>
         </div>
         
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <p className="text-sm opacity-90">Objectifs actifs</p>
+            <p className="text-sm opacity-90">Projets en cours</p>
             <p className="text-xl font-bold">{activeObjectives}</p>
           </div>
           <div>
             <button onClick={onMembersClick} className="text-left hover:bg-white hover:bg-opacity-10 p-2 rounded transition-all">
-              <p className="text-sm opacity-90">Membres connectés</p>
+              <p className="text-sm opacity-90">Membres de votre réseau</p>
               <p className="text-xl font-bold">{connectedMembers}</p>
             </button>
           </div>
           <div>
             <button onClick={onUpcomingToursClick} className="text-left hover:bg-white hover:bg-opacity-10 p-2 rounded transition-all">
-              <p className="text-sm opacity-90">Mes tours à venir</p>
+              <p className="text-sm opacity-90">Votre Prochain Tour</p>
               <p className="text-xl font-bold">{upcomingTours}</p>
             </button>
           </div>
