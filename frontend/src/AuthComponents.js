@@ -202,7 +202,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://7e3f1fd4-cb0f-406a-87f7-681c8059dc13.preview.emergentagent.com';
 
   const handleVerifyCode = async () => {
     if (!code.trim()) {
