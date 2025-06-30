@@ -207,7 +207,7 @@ export const Dashboard = ({
       <div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold text-gray-800">Mes Objectifs</h3>
-          <button className="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors">
+          <button className="bg-violet-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-600 transition-colors">
             + Nouvel objectif
           </button>
         </div>
