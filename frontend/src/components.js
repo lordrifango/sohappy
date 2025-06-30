@@ -544,17 +544,51 @@ export const TontineCard = ({ tontine, onClick }) => {
     e.stopPropagation(); // Empêche le click sur la carte
     const shareText = `🎯 ${getTypeLabel()}: ${tontine.fullName}\n💰 Objectif: ${tontine.amount} ${tontine.currency}\n🔗 Rejoignez-moi sur Tonty !`;
     
-    if (navigator.share) {
-      navigator.share({
-        title: tontine.fullName,
-        text: shareText,
-        url: window.location.href
-      });
-    } else {
-      // Fallback: copier dans le presse-papier
-      navigator.clipboard.writeText(shareText).then(() => {
-        alert('✅ Lien de partage copié dans le presse-papier !');
-      });
+    try {
+      if (navigator.share && typeof navigator.share === 'function') {
+        navigator.share({
+          title: tontine.fullName,
+          text: shareText,
+          url: window.location.href
+        }).catch((error) => {
+          console.log('Partage annulé par l\'utilisateur');
+        });
+      } else {
+        // Fallback: copier dans le presse-papier
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard.writeText(shareText).then(() => {
+            alert('✅ Lien de partage copié dans le presse-papier !');
+          }).catch(() => {
+            // Fallback pour les anciens navigateurs
+            const textArea = document.createElement('textarea');
+            textArea.value = shareText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('✅ Lien de partage copié dans le presse-papier !');
+          });
+        } else {
+          // Fallback pour les anciens navigateurs
+          const textArea = document.createElement('textarea');
+          textArea.value = shareText;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          alert('✅ Lien de partage copié dans le presse-papier !');
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors du partage:', error);
+      // Fallback final
+      const textArea = document.createElement('textarea');
+      textArea.value = shareText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('✅ Lien de partage copié dans le presse-papier !');
     }
   };
 
