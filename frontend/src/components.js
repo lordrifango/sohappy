@@ -1720,15 +1720,6 @@ export const GoalTypeSelectionModal = ({ isOpen, onClose, onSelectType }) => {
     </div>
   );
 };
-        <div className="p-6 pt-0">
-          <p className="text-sm text-gray-500 text-center">
-            Vous pourrez modifier ces paramètres plus tard dans les paramètres de votre objectif
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // Personal Goal Modal
 export const PersonalGoalModal = ({ isOpen, onClose, onGoalCreated }) => {
