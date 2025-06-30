@@ -261,6 +261,26 @@ const TontyApp = () => {
   };
 
 
+  // Handlers pour le menu profil
+  const handleProfileClick = () => {
+    console.log('Profil cliqué');
+    // Ici on pourrait ouvrir un modal de profil
+  };
+
+  const handleSettingsClick = () => {
+    console.log('Paramètres cliqués');
+    // Ici on pourrait ouvrir un modal de paramètres
+  };
+
+  const handleSupportClick = () => {
+    setIsSupportOpen(true);
+  };
+
+  const handleLogoutClick = () => {
+    // Ici on déconnecterait l'utilisateur
+    console.log('Déconnexion');
+  };
+
   // Mock contacts data
   const mockContacts = [
     { id: 1, name: 'Amadou Diallo', status: 'En ligne', avatar: 'AD', color: 'bg-green-500', lastSeen: 'maintenant' },
