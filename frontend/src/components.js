@@ -1602,36 +1602,37 @@ const TontineSuccessScreen = ({ tontineName, tontineId, onClose, onInviteContact
   </div>
 );
 
-//======= NOUVEAU MODAL DE SELECTION DU TYPE D'OBJECTIF =======
-
-// Goal Type Selection Modal
+// Goal Type Selection Modal (Refonte pour plus de clarté)
 export const GoalTypeSelectionModal = ({ isOpen, onClose, onSelectType }) => {
   if (!isOpen) return null;
 
   const goalTypes = [
     {
-      id: 'personal',
-      title: 'Objectif Personnel',
-      description: 'Économisez pour un projet personnel (maison, voiture, voyage, etc.)',
-      icon: '🎯',
-      color: 'from-blue-500 to-blue-600',
-      features: ['Épargne individuelle', 'Suivi de progression', 'Rappels automatiques']
-    },
-    {
       id: 'tontine',
       title: 'Tontine',
-      description: 'Système d\'épargne rotatif avec un groupe d\'amis ou famille',
+      subtitle: 'Pour une épargne tournante classique avec votre groupe.',
+      description: 'Système d\'épargne rotatif traditionnel où chaque membre reçoit à son tour',
       icon: '🏛️',
-      color: 'from-emerald-500 to-emerald-600',
-      features: ['Épargne collective', 'Tours de réception', 'Gestion de groupe']
+      color: 'from-violet-500 to-violet-600',
+      tags: ['Épargne collective', 'Tours de réception']
     },
     {
       id: 'fund',
       title: 'Cagnotte',
-      description: 'Créez une cagnotte pour un événement ou une urgence',
+      subtitle: 'Pour collecter de l\'argent pour un événement ou une urgence.',
+      description: 'Collecte de fonds pour un projet commun ou une situation spécifique',
       icon: '💰',
-      color: 'from-purple-500 to-purple-600',
-      features: ['Contributions multiples', 'But spécifique', 'Partage facile']
+      color: 'from-emerald-500 to-emerald-600',
+      tags: ['Contributions multiples', 'Pot commun']
+    },
+    {
+      id: 'personal',
+      title: 'Projet d\'Achat Groupé',
+      subtitle: 'Pour épargner ensemble et acquérir un produit ou service spécifique.',
+      description: 'Économisez en groupe pour acheter quelque chose ensemble',
+      icon: '🛒',
+      color: 'from-blue-500 to-blue-600',
+      tags: ['Achat communautaire', 'Partenaires']
     }
   ];
 
@@ -1639,11 +1640,11 @@ export const GoalTypeSelectionModal = ({ isOpen, onClose, onSelectType }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-t-3xl">
+        <div className="bg-gradient-to-r from-violet-500 to-indigo-600 text-white p-6 rounded-t-3xl">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-bold">Créer un objectif</h2>
-              <p className="opacity-90 mt-1">Choisissez le type d'objectif que vous souhaitez créer</p>
+              <h2 className="text-2xl font-bold">Quel type de projet voulez-vous lancer ?</h2>
+              <p className="opacity-90 mt-1">Choisissez l'option qui correspond le mieux à vos besoins</p>
             </div>
             <button onClick={onClose} className="text-white hover:text-gray-200">
               <XMarkIcon className="w-6 h-6" />
@@ -1660,7 +1661,7 @@ export const GoalTypeSelectionModal = ({ isOpen, onClose, onSelectType }) => {
                 onSelectType(type.id);
                 onClose();
               }}
-              className="w-full text-left border-2 border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:bg-emerald-50 transition-all group"
+              className="w-full text-left border-2 border-gray-200 rounded-xl p-6 hover:border-violet-300 hover:bg-violet-50 transition-all group"
             >
               <div className="flex items-start space-x-4">
                 {/* Icon */}
@@ -1670,28 +1671,31 @@ export const GoalTypeSelectionModal = ({ isOpen, onClose, onSelectType }) => {
 
                 {/* Content */}
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">
+                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-violet-600 transition-colors">
                     {type.title}
                   </h3>
-                  <p className="text-gray-600 mt-1 mb-3">
+                  <p className="text-violet-600 font-medium mt-1">
+                    {type.subtitle}
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed">
                     {type.description}
                   </p>
 
-                  {/* Features */}
-                  <div className="flex flex-wrap gap-2">
-                    {type.features.map((feature, index) => (
+                  {/* Tags visuels */}
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {type.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full group-hover:bg-emerald-100 group-hover:text-emerald-600 transition-colors"
+                        className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full group-hover:bg-violet-100 group-hover:text-violet-600 transition-colors font-medium"
                       >
-                        {feature}
+                        {tag}
                       </span>
                     ))}
                   </div>
                 </div>
 
                 {/* Arrow */}
-                <div className="text-gray-400 group-hover:text-emerald-500 transition-colors">
+                <div className="text-gray-400 group-hover:text-violet-500 transition-colors">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -1702,6 +1706,20 @@ export const GoalTypeSelectionModal = ({ isOpen, onClose, onSelectType }) => {
         </div>
 
         {/* Footer */}
+        <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-3xl">
+          <div className="text-center">
+            <p className="text-sm text-gray-600 mb-2">
+              💡 <strong>Conseil :</strong> Vous pourrez toujours modifier les paramètres après la création
+            </p>
+            <p className="text-xs text-gray-500">
+              Besoin d'aide ? Consultez notre guide ou contactez le support
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
         <div className="p-6 pt-0">
           <p className="text-sm text-gray-500 text-center">
             Vous pourrez modifier ces paramètres plus tard dans les paramètres de votre objectif
