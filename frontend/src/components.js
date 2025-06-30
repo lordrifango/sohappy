@@ -1251,12 +1251,104 @@ export const BottomNavigation = ({ activeTab, onTabChange }) => (
   </div>
 );
 
-// Floating Action Button Component
-export const FloatingActionButton = ({ onCreateGoal, onAddContact, onSupport }) => {
+// Floating Action Button Component - Déplaçable par l'utilisateur
+export const FloatingActionButton = ({ onCreateGoal, onAddContact }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [position, setPosition] = useState({ x: window.innerWidth - 80, y: window.innerHeight - 160 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0, startX: 0, startY: 0 });
+
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return; // Seulement le clic gauche
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX,
+      y: e.clientY,
+      startX: position.x,
+      startY: position.y
+    });
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    
+    const deltaX = e.clientX - dragStart.x;
+    const deltaY = e.clientY - dragStart.y;
+    
+    const newX = Math.max(0, Math.min(window.innerWidth - 56, dragStart.startX + deltaX));
+    const newY = Math.max(0, Math.min(window.innerHeight - 56, dragStart.startY + deltaY));
+    
+    setPosition({ x: newX, y: newY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0];
+    setIsDragging(true);
+    setDragStart({
+      x: touch.clientX,
+      y: touch.clientY,
+      startX: position.x,
+      startY: position.y
+    });
+    e.preventDefault();
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - dragStart.x;
+    const deltaY = touch.clientY - dragStart.y;
+    
+    const newX = Math.max(0, Math.min(window.innerWidth - 56, dragStart.startX + deltaX));
+    const newY = Math.max(0, Math.min(window.innerHeight - 56, dragStart.startY + deltaY));
+    
+    setPosition({ x: newX, y: newY });
+    e.preventDefault();
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  const handleClick = () => {
+    // Seulement ouvrir/fermer si on ne fait pas de drag
+    if (!isDragging) {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  // Ajouter les événements globaux pour le drag
+  React.useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [isDragging, dragStart]);
 
   return (
-    <div className="fixed bottom-20 right-4 z-50">
+    <div 
+      className="fixed z-50"
+      style={{ 
+        left: `${position.x}px`, 
+        top: `${position.y}px`,
+        cursor: isDragging ? 'grabbing' : 'grab'
+      }}
+    >
       {/* Action Options */}
       {isOpen && (
         <div className="absolute bottom-16 right-0 space-y-3 animate-fade-in">
@@ -1285,31 +1377,31 @@ export const FloatingActionButton = ({ onCreateGoal, onAddContact, onSupport }) 
               👥
             </div>
           </button>
-          
-          <button
-            onClick={() => {
-              onSupport();
-              setIsOpen(false);
-            }}
-            className="flex items-center justify-end space-x-3 bg-orange-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-orange-600 transition-all transform hover:scale-105"
-          >
-            <span className="text-sm font-medium">Contacter le support</span>
-            <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              📞
-            </div>
-          </button>
         </div>
       )}
 
       {/* Main FAB */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
         className={`w-14 h-14 bg-violet-500 text-white rounded-full shadow-lg hover:bg-violet-600 transition-all transform hover:scale-110 flex items-center justify-center ${
           isOpen ? 'rotate-45' : 'rotate-0'
-        }`}
+        } ${isDragging ? 'scale-110' : ''}`}
+        style={{ 
+          userSelect: 'none',
+          touchAction: 'none'
+        }}
       >
         <PlusIcon className="w-6 h-6" />
       </button>
+      
+      {/* Indicateur de déplacement */}
+      {isDragging && (
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 bg-white px-2 py-1 rounded shadow">
+          Déplacer
+        </div>
+      )}
     </div>
   );
 };
