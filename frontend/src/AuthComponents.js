@@ -191,7 +191,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   const handleVerifyCode = async () => {
     if (!code.trim()) {
