@@ -1196,17 +1196,17 @@ export const BottomNavigation = ({ activeTab, onTabChange }) => (
     <div className="flex justify-around items-center">
       <button
         className={`flex flex-col items-center p-2 ${
-          activeTab === 'dashboard' ? 'text-emerald-600' : 'text-gray-500'
+          activeTab === 'dashboard' ? 'text-violet-600' : 'text-gray-500'
         }`}
         onClick={() => onTabChange('dashboard')}
       >
         <HomeIcon className="w-6 h-6" />
-        <span className="text-xs mt-1">Mes Tontines</span>
+        <span className="text-xs mt-1">Mes Objectifs</span>
       </button>
       
       <button
         className={`flex flex-col items-center p-2 ${
-          activeTab === 'social' ? 'text-emerald-600' : 'text-gray-500'
+          activeTab === 'social' ? 'text-violet-600' : 'text-gray-500'
         }`}
         onClick={() => onTabChange('social')}
       >
