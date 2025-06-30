@@ -1020,103 +1020,138 @@ const DiscussionsTab = ({ tontines }) => {
   );
 };
 
-// Community Tab
+// Community Tab (Refonte - sans gamification anxiogène)
 const CommunityTab = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Données de feed enrichies et positives
   const mockCommunityData = [
     {
       id: 1,
-      type: 'achievement',
-      user: 'Aminata K.',
-      avatar: 'AK',
-      color: 'bg-yellow-500',
-      title: 'Nouveau Badge obtenu !',
-      description: 'A obtenu le badge "Contributeur Régulier" 🏆',
-      time: '1h'
+      type: 'success',
+      user: 'Groupe TFK',
+      avatar: 'TFK',
+      color: 'bg-green-500',
+      title: 'Objectif atteint ! 🎉',
+      description: 'Le groupe TFK a atteint son objectif mensuel ! Félicitations à tous les membres !',
+      time: '2h'
     },
     {
       id: 2,
-      type: 'milestone',
-      user: 'Tontine FCB',
-      avatar: 'FCB',
-      color: 'bg-purple-500',
-      title: 'Objectif atteint !',
-      description: '50% de l\'objectif mensuel atteint 🎯',
-      time: '3h'
-    },
-    {
-      id: 3,
       type: 'welcome',
       user: 'Moussa C.',
       avatar: 'MC',
-      color: 'bg-green-500',
+      color: 'bg-blue-500',
       title: 'Nouveau membre !',
-      description: 'A rejoint la tontine TFK - Souhaitons lui la bienvenue ! 👋',
+      description: 'Bienvenue à Moussa qui a rejoint le groupe GAA ! 👋',
+      time: '4h'
+    },
+    {
+      id: 3,
+      type: 'milestone',
+      user: 'Groupe ÉQB',
+      avatar: 'ÉQB',
+      color: 'bg-purple-500',
+      title: 'Étape importante franchie',
+      description: 'Le groupe ÉQB a franchi les 75% de son objectif trimestriel ! 🎯',
       time: '1j'
+    },
+    {
+      id: 4,
+      type: 'achievement',
+      user: 'Aminata K.',
+      avatar: 'AK',
+      color: 'bg-orange-500',
+      title: 'Contribution régulière',
+      description: 'Aminata maintient sa régularité depuis 6 mois ! Bravo ! 🏆',
+      time: '2j'
+    },
+    {
+      id: 5,
+      type: 'sharing',
+      user: 'Ibrahim T.',
+      avatar: 'IT',
+      color: 'bg-indigo-500',
+      title: 'Partage d\'expérience',
+      description: 'Ibrahim a partagé ses conseils d\'épargne avec le groupe. Merci ! 💡',
+      time: '3j'
     }
   ];
 
   return (
     <div className="space-y-4">
-      {/* Community Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-          <div className="text-2xl font-bold text-emerald-600">156</div>
-          <div className="text-sm text-gray-600">Membres actifs</div>
-        </div>
-        <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-          <div className="text-2xl font-bold text-blue-600">23</div>
-          <div className="text-sm text-gray-600">Tontines actives</div>
-        </div>
-        <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-          <div className="text-2xl font-bold text-purple-600">89%</div>
-          <div className="text-sm text-gray-600">Taux de réussite</div>
+      {/* Barre de recherche */}
+      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Rechercher une personne ou un groupe"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-gray-50"
+          />
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
         </div>
       </div>
 
-      {/* Leaderboard */}
-      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-6">
-        <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
-          🏆 Classement de la semaine
+      {/* Feed d'Activité de la Communauté - Élément central */}
+      <div>
+        <h3 className="font-semibold text-gray-800 mb-4 flex items-center text-lg">
+          🌟 Feed d'Activité de la Communauté
         </h3>
         <div className="space-y-3">
-          {['Mariam K. - 850 pts', 'Fatou D. - 720 pts', 'Ibrahim T. - 680 pts'].map((item, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className={`w-8 h-8 ${
-                  index === 0 ? 'bg-yellow-500' : 
-                  index === 1 ? 'bg-gray-400' : 'bg-orange-500'
-                } rounded-full flex items-center justify-center text-white font-bold text-sm`}>
-                  {index + 1}
+          {mockCommunityData.map(activity => (
+            <div key={activity.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+              <div className="flex items-start space-x-3">
+                <div className={`w-12 h-12 ${activity.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                  {activity.avatar}
                 </div>
-                <span className="text-gray-700">{item}</span>
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h4 className="font-semibold text-gray-800">{activity.user}</h4>
+                    <span className="text-xs text-gray-500">•</span>
+                    <span className="text-xs text-gray-500">{activity.time}</span>
+                  </div>
+                  <h5 className="font-medium text-gray-700 mb-1">{activity.title}</h5>
+                  <p className="text-gray-600 text-sm leading-relaxed">{activity.description}</p>
+                  
+                  {/* Actions d'interaction */}
+                  <div className="flex items-center space-x-4 mt-3">
+                    <button className="flex items-center space-x-1 text-gray-500 hover:text-violet-500 text-sm transition-colors">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                      <span>J'aime</span>
+                    </button>
+                    <button className="flex items-center space-x-1 text-gray-500 hover:text-violet-500 text-sm transition-colors">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      <span>Commenter</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-              {index === 0 && <span className="text-yellow-500">👑</span>}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Community Activity */}
-      <div>
-        <h3 className="font-semibold text-gray-800 mb-4">Activité de la communauté</h3>
-        {mockCommunityData.map(activity => (
-          <div key={activity.id} className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100">
-            <div className="flex items-start space-x-3">
-              <div className={`w-10 h-10 ${activity.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
-                {activity.avatar}
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-1">
-                  <h4 className="font-semibold text-gray-800">{activity.user}</h4>
-                  <span className="text-xs text-gray-500">•</span>
-                  <span className="text-xs text-gray-500">{activity.time}</span>
-                </div>
-                <h5 className="font-medium text-gray-700 mb-1">{activity.title}</h5>
-                <p className="text-gray-600 text-sm">{activity.description}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Section d'encouragement à la participation */}
+      <div className="bg-gradient-to-r from-violet-50 to-indigo-50 rounded-xl p-6 border border-violet-200">
+        <div className="text-center">
+          <h4 className="font-semibold text-violet-800 mb-2">💫 Participez à la communauté !</h4>
+          <p className="text-violet-600 text-sm mb-4">
+            Partagez vos succès, encouragez vos amis et célébrez ensemble les objectifs atteints.
+          </p>
+          <button className="bg-violet-500 text-white px-6 py-2 rounded-xl hover:bg-violet-600 transition-colors">
+            Créer une publication
+          </button>
+        </div>
       </div>
     </div>
   );
