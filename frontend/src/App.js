@@ -304,6 +304,12 @@ const TontyApp = () => {
       <Header 
         notifications={notifications} 
         onNotificationClick={() => setIsNotificationsOpen(true)}
+        profileMenuProps={{
+          onProfileClick: handleProfileClick,
+          onSettingsClick: handleSettingsClick,
+          onSupportClick: handleSupportClick,
+          onLogoutClick: handleLogoutClick
+        }}
       />
       
       <main className="pb-20">
