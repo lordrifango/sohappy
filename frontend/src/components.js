@@ -1,5 +1,35 @@
 import React, { useState, useEffect } from 'react';
 
+// Profile Menu Component
+export const ProfileMenu = ({ isOpen, onClose, onProfileClick, onSettingsClick, onSupportClick, onLogoutClick }) => {
+  if (!isOpen) return null;
+
+  const menuItems = [
+    { id: 'profile', label: 'Mon Profil', icon: '👤', onClick: onProfileClick },
+    { id: 'settings', label: 'Paramètres du compte', icon: '⚙️', onClick: onSettingsClick },
+    { id: 'support', label: 'Aide & Support', icon: '🆘', onClick: onSupportClick },
+    { id: 'logout', label: 'Déconnexion', icon: '🚪', onClick: onLogoutClick }
+  ];
+
+  return (
+    <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+      {menuItems.map((item, index) => (
+        <button
+          key={item.id}
+          onClick={() => {
+            item.onClick();
+            onClose();
+          }}
+          className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+        >
+          <span className="text-lg">{item.icon}</span>
+          <span className="text-gray-700 font-medium">{item.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+};
+
 // Header Component
 export const Header = ({ notifications, onNotificationClick, onProfileClick }) => (
   <header className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 shadow-lg">
