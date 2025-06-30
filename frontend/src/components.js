@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 // Header Component
-export const Header = ({ notifications, onNotificationClick }) => (
-  <header className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-4 shadow-lg">
+export const Header = ({ notifications, onNotificationClick, onProfileClick }) => (
+  <header className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 shadow-lg">
     <div className="flex justify-between items-center">
       <div className="flex items-center space-x-2">
         <h1 className="text-2xl font-bold">Tonty</h1>
@@ -21,10 +21,15 @@ export const Header = ({ notifications, onNotificationClick }) => (
             )}
           </button>
         </div>
-        <div className="flex items-center space-x-2 bg-orange-500 px-3 py-1 rounded-full text-sm">
-          <UserIcon className="w-4 h-4" />
-          <span>Utilisateur</span>
-          <span className="bg-red-500 px-2 py-0.5 rounded-full text-xs">DEMO</span>
+        {/* Nouveau menu profil */}
+        <div className="relative">
+          <button
+            onClick={onProfileClick}
+            className="flex items-center space-x-2 hover:bg-white hover:bg-opacity-10 px-3 py-2 rounded-full text-sm transition-colors"
+          >
+            <UserIcon className="w-5 h-5" />
+            <span>Menu</span>
+          </button>
         </div>
       </div>
     </div>
