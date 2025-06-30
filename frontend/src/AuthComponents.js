@@ -25,7 +25,7 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
   const [error, setError] = useState('');
   const [showCountryList, setShowCountryList] = useState(false);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://7e3f1fd4-cb0f-406a-87f7-681c8059dc13.preview.emergentagent.com';
 
   const handleSendCode = async () => {
     if (!phoneNumber.trim()) {
