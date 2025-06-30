@@ -25,7 +25,7 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
   const [error, setError] = useState('');
   const [showCountryList, setShowCountryList] = useState(false);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   const handleSendCode = async () => {
     if (!phoneNumber.trim()) {
