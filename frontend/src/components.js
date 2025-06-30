@@ -984,33 +984,66 @@ const DiscussionsTab = ({ tontines }) => {
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-gray-800 mb-4">Discussions par Tontine</h3>
       
-      {/* Tontine groups list */}
+      {/* Tontine groups list - Mini-dashboards informatifs */}
       {tontines && tontines.map(tontine => (
         <div 
           key={tontine.id}
           onClick={() => setSelectedTontine(tontine)}
-          className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all"
+          className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all"
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className={`w-12 h-12 ${tontine.color} rounded-full flex items-center justify-center text-white font-bold`}>
-                {tontine.name}
+            <div className="flex items-center space-x-4 flex-1">
+              {/* Groupe d'avatars des membres */}
+              <div className="flex items-center">
+                <div className="flex -space-x-2">
+                  {Array.from({length: Math.min(tontine.membersCount, 3)}).map((_, i) => (
+                    <div 
+                      key={i}
+                      className={`w-10 h-10 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold ${
+                        ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'][i]
+                      }`}
+                    >
+                      {String.fromCharCode(65 + i)}
+                    </div>
+                  ))}
+                  {tontine.membersCount > 3 && (
+                    <div className="w-10 h-10 bg-gray-400 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                      +{tontine.membersCount - 3}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-800">{tontine.fullName}</h4>
-                <p className="text-sm text-gray-500">{tontine.membersCount} membres</p>
-                <p className="text-xs text-gray-400">
-                  {mockDiscussionsByTontine[tontine.id] ? 
-                    `${mockDiscussionsByTontine[tontine.id].length} message(s)` : 
-                    'Aucun message'
-                  }
-                </p>
+              
+              {/* Informations du groupe */}
+              <div className="flex-1">
+                <h4 className="font-semibold text-gray-800 text-lg">{tontine.fullName}</h4>
+                <div className="flex items-center space-x-4 mt-1">
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Cotisation:</span> {tontine.amount} {tontine.currency}/mois
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Prochain tour:</span> {tontine.nextPayment}
+                  </p>
+                </div>
+                <div className="flex items-center space-x-3 mt-2">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    {tontine.membersCount} membres
+                  </span>
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {mockDiscussionsByTontine[tontine.id] ? 
+                      `${mockDiscussionsByTontine[tontine.id].length} message(s)` : 
+                      'Aucun message'
+                    }
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col items-end">
+            
+            {/* Indicateur et flèche */}
+            <div className="flex flex-col items-end space-y-2">
               <ChevronRightIcon className="w-5 h-5 text-gray-400" />
               {mockDiscussionsByTontine[tontine.id] && mockDiscussionsByTontine[tontine.id].length > 0 && (
-                <div className="w-3 h-3 bg-blue-500 rounded-full mt-1"></div>
+                <div className="w-3 h-3 bg-violet-500 rounded-full animate-pulse"></div>
               )}
             </div>
           </div>
