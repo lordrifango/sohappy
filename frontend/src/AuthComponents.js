@@ -75,11 +75,11 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-600 mb-2">Tonty</h1>
+          <h1 className="text-4xl font-bold text-violet-600 mb-2">Tonty</h1>
           <p className="text-gray-600 text-lg">
             Atteignez vos objectifs ensemble, en toute confiance.
           </p>
@@ -95,7 +95,7 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
             <button
               type="button"
               onClick={() => setShowCountryList(!showCountryList)}
-              className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
+              className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white"
             >
               <div className="flex items-center space-x-3">
                 <span className="text-2xl">{selectedCountry.flag}</span>
@@ -142,7 +142,7 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="Votre numéro"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-r-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-r-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                 disabled={isLoading}
               />
             </div>
@@ -159,7 +159,7 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
           <button
             onClick={handleSendCode}
             disabled={isLoading || !phoneNumber.trim()}
-            className="w-full bg-emerald-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-violet-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-violet-700 focus:ring-4 focus:ring-violet-500 focus:ring-opacity-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center justify-center space-x-2">
@@ -242,7 +242,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -255,8 +255,8 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
             </svg>
           </button>
           
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
           </div>
@@ -265,7 +265,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
           <p className="text-gray-600">
             Saisissez le code reçu au
           </p>
-          <p className="font-semibold text-emerald-600">
+          <p className="font-semibold text-violet-600">
             {phoneData.countryCode} {phoneData.phone}
           </p>
         </div>
@@ -281,7 +281,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
               value={code}
               onChange={handleCodeChange}
               placeholder="000000"
-              className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-center text-2xl font-mono tracking-widest"
+              className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent text-center text-2xl font-mono tracking-widest"
               maxLength={6}
               disabled={isLoading}
             />
@@ -301,7 +301,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
           <button
             onClick={handleVerifyCode}
             disabled={isLoading || code.length !== 6}
-            className="w-full bg-emerald-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-violet-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-violet-700 focus:ring-4 focus:ring-violet-500 focus:ring-opacity-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center justify-center space-x-2">
@@ -320,7 +320,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
           <div className="text-center">
             <button
               onClick={onBackToPhone}
-              className="text-emerald-600 hover:text-emerald-700 font-medium"
+              className="text-violet-600 hover:text-violet-700 font-medium"
             >
               Renvoyer le code
             </button>
