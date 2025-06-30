@@ -172,8 +172,8 @@ export const Dashboard = ({
         </button>
       </div>
 
-      {/* Premium Status */}
-      {isPremium ? (
+      {/* Premium Status - Déplacé et simplifié */}
+      {isPremium && (
         <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-xl shadow-lg mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -187,26 +187,6 @@ export const Dashboard = ({
               <p className="text-sm opacity-90">Objectifs illimités</p>
               <p className="font-bold">Actif</p>
             </div>
-          </div>
-        </div>
-      ) : (
-        <div className="bg-gradient-to-r from-gray-600 to-gray-700 text-white p-4 rounded-xl shadow-lg mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <span className="text-xl">📊</span>
-              <div>
-                <h3 className="font-bold">Plan Gratuit</h3>
-                <p className="text-sm opacity-90">
-                  {totalObjectivesCount}/{limits.totalObjectives} objectifs créés
-                </p>
-              </div>
-            </div>
-            <button 
-              onClick={onUpgrade}
-              className="bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-lg font-medium text-sm transition-colors"
-            >
-              Upgrade
-            </button>
           </div>
         </div>
       )}
