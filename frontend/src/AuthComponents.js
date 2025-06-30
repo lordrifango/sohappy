@@ -43,6 +43,9 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
     setIsLoading(true);
     setError('');
 
+    console.log('Backend URL:', backendUrl);
+    console.log('Sending request with data:', { phone: cleanPhone, country_code: selectedCountry.code });
+
     try {
       const response = await fetch(`${backendUrl}/api/auth/send-code`, {
         method: 'POST',
@@ -55,7 +58,15 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
         })
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (data.success) {
         onCodeSent({
@@ -67,8 +78,8 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
         setError(data.message || 'Erreur lors de l\'envoi du code');
       }
     } catch (err) {
-      setError('Erreur de connexion. Veuillez réessayer.');
       console.error('Send code error:', err);
+      setError(`Erreur de connexion: ${err.message}. Veuillez réessayer.`);
     } finally {
       setIsLoading(false);
     }
