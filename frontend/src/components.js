@@ -31,40 +31,50 @@ export const ProfileMenu = ({ isOpen, onClose, onProfileClick, onSettingsClick, 
 };
 
 // Header Component
-export const Header = ({ notifications, onNotificationClick, onProfileClick }) => (
-  <header className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 shadow-lg">
-    <div className="flex justify-between items-center">
-      <div className="flex items-center space-x-2">
-        <h1 className="text-2xl font-bold">Tonty</h1>
-      </div>
-      <div className="flex items-center space-x-4">
-        <div className="relative">
-          <button 
-            onClick={onNotificationClick}
-            className="p-2 hover:bg-white hover:bg-opacity-10 rounded-full transition-colors"
-          >
-            <BellIcon className="w-6 h-6" />
-            {notifications > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
-                {notifications}
-              </span>
-            )}
-          </button>
+export const Header = ({ notifications, onNotificationClick, onProfileClick, profileMenuProps }) => {
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  return (
+    <header className="bg-gradient-to-r from-violet-500 to-indigo-600 text-white p-4 shadow-lg">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <h1 className="text-2xl font-bold">Tonty</h1>
         </div>
-        {/* Nouveau menu profil */}
-        <div className="relative">
-          <button
-            onClick={onProfileClick}
-            className="flex items-center space-x-2 hover:bg-white hover:bg-opacity-10 px-3 py-2 rounded-full text-sm transition-colors"
-          >
-            <UserIcon className="w-5 h-5" />
-            <span>Menu</span>
-          </button>
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <button 
+              onClick={onNotificationClick}
+              className="p-2 hover:bg-white hover:bg-opacity-10 rounded-full transition-colors"
+            >
+              <BellIcon className="w-6 h-6" />
+              {notifications > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                  {notifications}
+                </span>
+              )}
+            </button>
+          </div>
+          {/* Menu profil */}
+          <div className="relative">
+            <button
+              onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+              className="flex items-center space-x-2 hover:bg-white hover:bg-opacity-10 px-3 py-2 rounded-full text-sm transition-colors"
+            >
+              <UserIcon className="w-5 h-5" />
+              <span>Menu</span>
+            </button>
+            
+            <ProfileMenu 
+              isOpen={isProfileMenuOpen}
+              onClose={() => setIsProfileMenuOpen(false)}
+              {...profileMenuProps}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 // Dashboard Component
 export const Dashboard = ({ 
