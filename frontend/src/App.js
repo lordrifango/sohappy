@@ -365,7 +365,6 @@ const TontyApp = () => {
 
       <FloatingActionButton 
         onCreateGoal={() => setIsGoalTypeSelectionOpen(true)}
-        onAddContact={() => setIsAddContactOpen(true)}
       />
 
       {/* Modals */}
