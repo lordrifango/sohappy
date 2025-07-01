@@ -308,14 +308,7 @@ const TontyApp = () => {
     { id: 5, name: 'Ibrahim Sylla', status: 'Hors ligne', avatar: 'IS', color: 'bg-red-500', lastSeen: 'il y a 1h' }
   ];
 
-  // Mock upcoming tours data
-  const mockUpcomingTours = [
-    { id: 1, tontine: 'TFK', type: 'À payer', amount: '250 000 FCFA', date: '15 Février 2025', color: 'bg-red-500' },
-    { id: 2, tontine: 'GAA', type: 'À recevoir', amount: '100 000 FCFA', date: '1 Mars 2025', color: 'bg-green-500' },
-    { id: 3, tontine: 'ÉQB', type: 'À payer', amount: '500 000 FCFA', date: '15 Avril 2025', color: 'bg-red-500' },
-    { id: 4, tontine: 'TFC', type: 'À payer', amount: '350 000 FCFA', date: '1 Mars 2025', color: 'bg-red-500' },
-    { id: 5, tontine: 'FCB', type: 'À recevoir', amount: '200 000 FCFA', date: '15 Mars 2025', color: 'bg-green-500' }
-  ];
+
 
   return (
     <div className="min-h-screen bg-gray-50">
