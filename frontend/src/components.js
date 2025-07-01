@@ -91,11 +91,11 @@ export const Dashboard = ({
   isPremium = false,
   totalObjectivesCount = 0,
   limits = { totalObjectives: 3 },
-  onUpgrade
+  onUpgrade,
+  nextTour = null
 }) => {
   const activeObjectives = tontines.length;
   const connectedMembers = 24;
-  const upcomingTours = 21;
   
   // Calculer la limite totale d'objectifs selon le statut premium
   const maxObjectives = isPremium ? 'Illimité' : limits.totalObjectives;
