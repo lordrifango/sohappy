@@ -150,7 +150,21 @@ export const Dashboard = ({
           <div className="bg-indigo-50 rounded-xl p-4 text-center">
             <button onClick={onUpcomingToursClick} className="w-full text-center hover:bg-indigo-100 rounded-lg p-1 transition-all">
               <p className="text-sm text-indigo-600 font-medium mb-1">Votre Prochain Tour</p>
-              <p className="text-2xl font-bold text-indigo-700">{upcomingTours}</p>
+              {nextTour ? (
+                <div className="space-y-1">
+                  <p className="text-lg font-bold text-indigo-700">{nextTour.date}</p>
+                  <p className="text-sm font-semibold text-indigo-600">{nextTour.amount}</p>
+                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                    nextTour.type === 'À payer' 
+                      ? 'bg-red-100 text-red-700' 
+                      : 'bg-green-100 text-green-700'
+                  }`}>
+                    {nextTour.type}
+                  </span>
+                </div>
+              ) : (
+                <p className="text-2xl font-bold text-indigo-700">Aucun</p>
+              )}
             </button>
           </div>
         </div>
