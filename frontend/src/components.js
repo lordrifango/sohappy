@@ -1266,9 +1266,8 @@ export const BottomNavigation = ({ activeTab, onTabChange }) => (
   </div>
 );
 
-// Floating Action Button Component - Déplaçable par l'utilisateur
-export const FloatingActionButton = ({ onCreateGoal, onAddContact }) => {
-  const [isOpen, setIsOpen] = useState(false);
+// Floating Action Button Component - Simplifié selon directives v2.0
+export const FloatingActionButton = ({ onCreateGoal }) => {
   const [position, setPosition] = useState({ x: window.innerWidth - 80, y: window.innerHeight - 160 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0, startX: 0, startY: 0 });
@@ -1332,9 +1331,9 @@ export const FloatingActionButton = ({ onCreateGoal, onAddContact }) => {
   };
 
   const handleClick = () => {
-    // Seulement ouvrir/fermer si on ne fait pas de drag
+    // Aller directement à la création de projet si pas de drag
     if (!isDragging) {
-      setIsOpen(!isOpen);
+      onCreateGoal();
     }
   };
 
@@ -1364,49 +1363,19 @@ export const FloatingActionButton = ({ onCreateGoal, onAddContact }) => {
         cursor: isDragging ? 'grabbing' : 'grab'
       }}
     >
-      {/* Action Options */}
-      {isOpen && (
-        <div className="absolute bottom-16 right-0 space-y-3 animate-fade-in">
-          <button
-            onClick={() => {
-              onCreateGoal();
-              setIsOpen(false);
-            }}
-            className="flex items-center justify-end space-x-3 bg-violet-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-violet-600 transition-all transform hover:scale-105"
-          >
-            <span className="text-sm font-medium">Lancer un projet</span>
-            <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              🎯
-            </div>
-          </button>
-          
-          <button
-            onClick={() => {
-              onAddContact();
-              setIsOpen(false);
-            }}
-            className="flex items-center justify-end space-x-3 bg-indigo-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-indigo-600 transition-all transform hover:scale-105"
-          >
-            <span className="text-sm font-medium">Ajouter un contact</span>
-            <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              👥
-            </div>
-          </button>
-        </div>
-      )}
-
-      {/* Main FAB */}
+      {/* Main FAB - Directement à la création */}
       <button
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         className={`w-14 h-14 bg-violet-500 text-white rounded-full shadow-lg hover:bg-violet-600 transition-all transform hover:scale-110 flex items-center justify-center ${
-          isOpen ? 'rotate-45' : 'rotate-0'
-        } ${isDragging ? 'scale-110' : ''}`}
+          isDragging ? 'scale-110' : ''
+        }`}
         style={{ 
           userSelect: 'none',
           touchAction: 'none'
         }}
+        title="Créer un nouveau projet"
       >
         <PlusIcon className="w-6 h-6" />
       </button>
