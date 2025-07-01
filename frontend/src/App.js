@@ -71,15 +71,6 @@ const TontyApp = () => {
   const [notifications, setNotifications] = useState(3);
   const [currency, setCurrency] = useState('FCFA'); // FCFA -> USD -> EUR -> FCFA
 
-  // Mock upcoming tours data
-  const mockUpcomingTours = [
-    { id: 1, tontine: 'TFK', type: 'À payer', amount: '250 000 FCFA', date: '15 Février 2025', color: 'bg-red-500' },
-    { id: 2, tontine: 'GAA', type: 'À recevoir', amount: '100 000 FCFA', date: '1 Mars 2025', color: 'bg-green-500' },
-    { id: 3, tontine: 'ÉQB', type: 'À payer', amount: '500 000 FCFA', date: '15 Avril 2025', color: 'bg-red-500' },
-    { id: 4, tontine: 'TFC', type: 'À payer', amount: '350 000 FCFA', date: '1 Mars 2025', color: 'bg-red-500' },
-    { id: 5, tontine: 'FCB', type: 'À recevoir', amount: '200 000 FCFA', date: '15 Mars 2025', color: 'bg-green-500' }
-  ];
-
   // Fonction pour obtenir le prochain tour (le plus proche dans le temps)
   const getNextTour = () => {
     if (!mockUpcomingTours.length) return null;
