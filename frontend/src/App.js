@@ -312,7 +312,7 @@ const TontyApp = () => {
         }}
       />
       
-      <main className="pb-20">
+      <main className="pb-20 bg-gray-50">
         <Routes>
           <Route path="/" element={
             <>
