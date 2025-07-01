@@ -118,75 +118,88 @@ export const Dashboard = ({
   };
 
   return (
-    <div className="p-4 space-y-6">
-      {/* Balance Section */}
-      <div className="bg-gradient-to-r from-violet-500 to-indigo-600 text-white p-6 rounded-2xl shadow-lg">
-        <div className="text-right mb-2">
+    <div className="p-4 space-y-6 bg-gray-50 min-h-full">
+      {/* Carte 1 - Solde Actuel */}
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="text-right mb-3">
           <button 
             onClick={onCurrencyToggle}
-            className="text-sm opacity-90 hover:opacity-100 bg-white bg-opacity-10 px-2 py-1 rounded-full transition-all"
+            className="text-sm text-violet-600 hover:text-violet-700 bg-violet-50 hover:bg-violet-100 px-3 py-1 rounded-full transition-all font-medium"
           >
             {getCurrencySymbol()}
           </button>
         </div>
-        <div className="mb-4">
-          <h2 className="text-lg font-medium opacity-90">Solde Actuel</h2>
-          <h1 className="text-3xl font-bold">{getCurrencyValue()} {getCurrencySymbol()}</h1>
+        <div className="text-center">
+          <h2 className="text-lg font-medium text-gray-600 mb-2">Solde Actuel</h2>
+          <h1 className="text-4xl font-bold text-gray-800 mb-1">{getCurrencyValue()}</h1>
+          <p className="text-sm text-gray-500 font-medium">{getCurrencySymbol()}</p>
         </div>
-        
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>
-            <p className="text-sm opacity-90">Projets en cours</p>
-            <p className="text-xl font-bold">{activeObjectives}</p>
+      </div>
+
+      {/* Carte 2 - Aperçu de mes Projets */}
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <span className="text-violet-500 mr-2">📊</span>
+          Aperçu de mes Projets
+        </h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-violet-50 rounded-xl p-4 text-center">
+            <p className="text-sm text-violet-600 font-medium mb-1">Projets en cours</p>
+            <p className="text-2xl font-bold text-violet-700">{activeObjectives}</p>
           </div>
-          <div>
-            <button onClick={onMembersClick} className="text-left hover:bg-white hover:bg-opacity-10 p-2 rounded transition-all">
-              <p className="text-sm opacity-90">Membres de votre réseau</p>
-              <p className="text-xl font-bold">{connectedMembers}</p>
+          <div className="bg-indigo-50 rounded-xl p-4 text-center">
+            <button onClick={onUpcomingToursClick} className="w-full text-center hover:bg-indigo-100 rounded-lg p-1 transition-all">
+              <p className="text-sm text-indigo-600 font-medium mb-1">Votre Prochain Tour</p>
+              <p className="text-2xl font-bold text-indigo-700">{upcomingTours}</p>
             </button>
           </div>
-          <div>
-            <button onClick={onUpcomingToursClick} className="text-left hover:bg-white hover:bg-opacity-10 p-2 rounded transition-all">
-              <p className="text-sm opacity-90">Votre Prochain Tour</p>
-              <p className="text-xl font-bold">{upcomingTours}</p>
-            </button>
-          </div>
         </div>
-        
-        <div className="bg-white bg-opacity-10 rounded-lg p-3 mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm">Objectifs créés</span>
-            <span className="text-sm">
+        <div className="mt-4 bg-emerald-50 rounded-xl p-4 text-center">
+          <button onClick={onMembersClick} className="w-full text-center hover:bg-emerald-100 rounded-lg p-1 transition-all">
+            <p className="text-sm text-emerald-600 font-medium mb-1">Membres de votre réseau</p>
+            <p className="text-2xl font-bold text-emerald-700">{connectedMembers}</p>
+          </button>
+        </div>
+      </div>
+
+      {/* Carte 3 - Suivi d'Objectifs */}
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <span className="text-violet-500 mr-2">🎯</span>
+          Suivi d'Objectifs
+        </h3>
+        <div className="bg-gray-50 rounded-xl p-4">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-medium text-gray-700">Objectifs créés</span>
+            <span className="text-sm font-bold text-gray-800">
               {totalObjectivesCount}/{isPremium ? '∞' : limits.totalObjectives}
             </span>
           </div>
-          <div className="w-full bg-white bg-opacity-20 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
             <div 
-              className={`h-2 rounded-full transition-all duration-500 ${
-                progressPercentage >= 100 && !isPremium ? 'bg-red-400' : 'bg-white'
+              className={`h-3 rounded-full transition-all duration-500 ${
+                progressPercentage >= 100 && !isPremium ? 'bg-red-400' : 'bg-violet-500'
               }`}
               style={{ width: `${Math.min(progressPercentage, 100)}%` }}
             ></div>
           </div>
-          {!isPremium && totalObjectivesCount >= limits.totalObjectives && (
-            <div className="mt-3 flex items-center justify-between bg-red-500 bg-opacity-20 rounded-lg p-2">
-              <p className="text-xs text-red-200">
+          {!isPremium && totalObjectivesCount >= limits.totalObjectives ? (
+            <div className="mt-3 flex items-center justify-between bg-red-50 border border-red-200 rounded-lg p-3">
+              <p className="text-sm text-red-700 font-medium">
                 ⚠️ Limite atteinte !
               </p>
               <button 
                 onClick={onUpgrade}
-                className="bg-white text-violet-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-100 transition-colors"
+                className="bg-red-500 text-white px-4 py-2 rounded-full text-xs font-medium hover:bg-red-600 transition-colors"
               >
                 Upgrade
               </button>
             </div>
+          ) : (
+            <p className="text-xs text-gray-500 text-center mt-2">
+              {isPremium ? 'Objectifs illimités ✨' : `${limits.totalObjectives - totalObjectivesCount} objectifs restants`}
+            </p>
           )}
-        </div>
-        
-        <div className="text-right">
-          <button className="text-sm underline opacity-90 hover:opacity-100">
-            Voir tableau de bord détaillé →
-          </button>
         </div>
       </div>
 
