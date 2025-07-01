@@ -97,6 +97,9 @@ export const Dashboard = ({
   const activeObjectives = tontines.length;
   const connectedMembers = 24;
   
+  // Debug: vérifier les données du prochain tour
+  console.log('nextTour data:', nextTour);
+  
   // Calculer la limite totale d'objectifs selon le statut premium
   const maxObjectives = isPremium ? 'Illimité' : limits.totalObjectives;
   const progressPercentage = isPremium ? 100 : (totalObjectivesCount / limits.totalObjectives) * 100;
