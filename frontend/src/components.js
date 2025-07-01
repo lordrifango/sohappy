@@ -1073,12 +1073,14 @@ const DiscussionsTab = ({ tontines }) => {
                   </p>
                 </div>
                 <div className="flex items-center space-x-3 mt-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    {tontine.membersCount} membres
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
+                    👥 {tontine.membersCount} {tontine.membersCount === 1 ? 'membre' : 'membres'}
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {mockDiscussionsByTontine[tontine.id] ? 
-                      `${mockDiscussionsByTontine[tontine.id].length} message(s)` : 
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-700 border border-violet-200">
+                    💬 {mockDiscussionsByTontine[tontine.id] ? 
+                      mockDiscussionsByTontine[tontine.id].length === 1 ? 
+                        '1 message' : 
+                        `${mockDiscussionsByTontine[tontine.id].length} messages` : 
                       'Aucun message'
                     }
                   </span>
