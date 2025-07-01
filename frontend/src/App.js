@@ -98,24 +98,6 @@ const TontyApp = () => {
 
   const nextTour = getNextTour();
 
-  // Fonction pour obtenir le prochain tour (le plus proche dans le temps)
-  const getNextTour = () => {
-    if (!mockUpcomingTours.length) return null;
-    
-    // Convertir les dates et trouver la plus proche
-    const now = new Date();
-    const toursWithDates = mockUpcomingTours.map(tour => ({
-      ...tour,
-      dateObj: new Date(tour.date.split(' ').reverse().join('-')) // Conversion approximative pour le tri
-    }));
-    
-    // Tri par date et retour du premier
-    const sortedTours = toursWithDates.sort((a, b) => a.dateObj - b.dateObj);
-    return sortedTours[0] || mockUpcomingTours[0]; // Fallback au premier si problème de tri
-  };
-
-  const nextTour = getNextTour();
-
   // Mock data pour les tontines (réduit à 3 pour respecter la limite gratuite)
   const mockTontines = [
     {
