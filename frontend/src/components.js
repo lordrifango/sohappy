@@ -933,20 +933,20 @@ const DiscussionsTab = ({ tontines }) => {
 
           {/* Members preview */}
           <div className="border-t border-gray-200 pt-3">
-            <p className="text-sm font-medium text-gray-700 mb-2">Membres actifs</p>
-            <div className="flex -space-x-2">
+            <p className="text-sm font-medium text-gray-700 mb-3">Membres actifs</p>
+            <div className="flex items-center -space-x-1">
               {Array.from({length: Math.min(selectedTontine.membersCount, 6)}).map((_, i) => (
                 <div 
                   key={i}
-                  className={`w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold ${
-                    ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500'][i]
+                  className={`w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-md hover:scale-110 transition-transform ${
+                    ['bg-gradient-to-br from-red-400 to-red-600', 'bg-gradient-to-br from-blue-400 to-blue-600', 'bg-gradient-to-br from-green-400 to-green-600', 'bg-gradient-to-br from-yellow-400 to-yellow-600', 'bg-gradient-to-br from-purple-400 to-purple-600', 'bg-gradient-to-br from-pink-400 to-pink-600'][i]
                   }`}
                 >
                   {String.fromCharCode(65 + i)}
                 </div>
               ))}
               {selectedTontine.membersCount > 6 && (
-                <div className="w-8 h-8 bg-gray-400 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                <div className="w-9 h-9 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-md hover:scale-110 transition-transform">
                   +{selectedTontine.membersCount - 6}
                 </div>
               )}
