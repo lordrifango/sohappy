@@ -352,6 +352,7 @@ const TontyApp = () => {
                   totalObjectivesCount={totalObjectivesCount}
                   limits={FREE_LIMITS}
                   onUpgrade={() => setIsPricingPageOpen(true)}
+                  nextTour={nextTour}
                 />
               )}
               
