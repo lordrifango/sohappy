@@ -1042,19 +1042,19 @@ const DiscussionsTab = ({ tontines }) => {
             <div className="flex items-center space-x-4 flex-1">
               {/* Groupe d'avatars des membres */}
               <div className="flex items-center">
-                <div className="flex -space-x-2">
+                <div className="flex items-center -space-x-1">
                   {Array.from({length: Math.min(tontine.membersCount, 3)}).map((_, i) => (
                     <div 
                       key={i}
-                      className={`w-10 h-10 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold ${
-                        ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'][i]
+                      className={`w-11 h-11 rounded-full border-3 border-white flex items-center justify-center text-white text-sm font-bold shadow-lg hover:scale-105 transition-transform ${
+                        ['bg-gradient-to-br from-red-400 to-red-600', 'bg-gradient-to-br from-blue-400 to-blue-600', 'bg-gradient-to-br from-green-400 to-green-600', 'bg-gradient-to-br from-yellow-400 to-yellow-600'][i]
                       }`}
                     >
                       {String.fromCharCode(65 + i)}
                     </div>
                   ))}
                   {tontine.membersCount > 3 && (
-                    <div className="w-10 h-10 bg-gray-400 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-11 h-11 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full border-3 border-white flex items-center justify-center text-white text-sm font-bold shadow-lg hover:scale-105 transition-transform">
                       +{tontine.membersCount - 3}
                     </div>
                   )}
