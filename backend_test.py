@@ -166,6 +166,214 @@ def test_check_session_endpoint(session_id):
     data = response.json()
     assert data["valid"] == False, "Expected valid to be False for invalid session"
 
+def create_and_verify_session(phone, country_code):
+    """Helper function to create and verify a session"""
+    # Create session
+    response = requests.post(
+        f"{BACKEND_URL}/api/auth/send-code", 
+        json={"phone": phone, "country_code": country_code}
+    )
+    session_id = response.json()["session_id"]
+    
+    # Verify session
+    requests.post(
+        f"{BACKEND_URL}/api/auth/verify-code", 
+        json={"phone": phone, "country_code": country_code, "code": "123456"}
+    )
+    
+    return session_id
+
+def test_profile_create_endpoint(session_id):
+    """Test the /api/profile/create endpoint"""
+    print("\n=== Testing POST /api/profile/create ===")
+    
+    # Test with valid session_id and profile data
+    print("\nTesting with valid session_id and profile data:")
+    url = f"{BACKEND_URL}/api/profile/create?session_id={session_id}"
+    
+    print(f"Sending request to {url} with payload: {valid_profile_data}")
+    response = requests.post(url, json=valid_profile_data)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "profile" in data, "Expected profile in response"
+    assert data["profile"] is not None, "Expected profile to not be None"
+    assert data["profile"]["first_name"] == valid_profile_data["first_name"], "First name doesn't match"
+    assert data["profile"]["last_name"] == valid_profile_data["last_name"], "Last name doesn't match"
+    
+    # Test creating duplicate profile (should fail)
+    print("\nTesting duplicate profile creation (should fail):")
+    response = requests.post(url, json=valid_profile_data)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for duplicate profile
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    data = response.json()
+    assert data["success"] == False, "Expected success to be False for duplicate profile"
+    assert "Un profil existe déjà" in data["message"], "Expected duplicate profile error message"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    url = f"{BACKEND_URL}/api/profile/create?session_id={invalid_session_id}"
+    
+    print(f"Sending request to {url} with payload: {valid_profile_data}")
+    response = requests.post(url, json=valid_profile_data)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    # Test with missing required fields
+    print("\nTesting with missing required fields:")
+    url = f"{BACKEND_URL}/api/profile/create?session_id={session_id}"
+    invalid_profile_data = {
+        # Missing first_name and last_name
+        "city": "Paris",
+        "country": "France"
+    }
+    
+    print(f"Sending request to {url} with payload: {invalid_profile_data}")
+    response = requests.post(url, json=invalid_profile_data)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for missing required fields
+    assert response.status_code == 422, f"Expected status code 422, got {response.status_code}"
+    
+    return True
+
+def test_profile_get_endpoint(session_id):
+    """Test the /api/profile/{session_id} GET endpoint"""
+    print("\n=== Testing GET /api/profile/{session_id} ===")
+    
+    # Test with valid session_id
+    print("\nTesting with valid session_id:")
+    url = f"{BACKEND_URL}/api/profile/{session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "profile" in data, "Expected profile in response"
+    assert data["profile"] is not None, "Expected profile to not be None"
+    assert data["profile"]["first_name"] == valid_profile_data["first_name"], "First name doesn't match"
+    assert data["profile"]["last_name"] == valid_profile_data["last_name"], "Last name doesn't match"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    url = f"{BACKEND_URL}/api/profile/{invalid_session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    # Test with non-existent profile (create a new session without profile)
+    print("\nTesting with session that has no profile:")
+    # Create a new session
+    new_phone = "6505557777"
+    new_session_id = create_and_verify_session(new_phone, valid_country_code)
+    
+    url = f"{BACKEND_URL}/api/profile/{new_session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for non-existent profile
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    data = response.json()
+    assert data["success"] == False, "Expected success to be False for non-existent profile"
+    assert "Profil non trouvé" in data["message"], "Expected profile not found message"
+    
+    return True
+
+def test_profile_update_endpoint(session_id):
+    """Test the /api/profile/{session_id} PUT endpoint"""
+    print("\n=== Testing PUT /api/profile/{session_id} ===")
+    
+    # Test with valid session_id and update data
+    print("\nTesting with valid session_id and update data:")
+    url = f"{BACKEND_URL}/api/profile/{session_id}"
+    
+    print(f"Sending request to {url} with payload: {update_profile_data}")
+    response = requests.put(url, json=update_profile_data)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "profile" in data, "Expected profile in response"
+    assert data["profile"] is not None, "Expected profile to not be None"
+    assert data["profile"]["first_name"] == update_profile_data["first_name"], "Updated first name doesn't match"
+    assert data["profile"]["city"] == update_profile_data["city"], "Updated city doesn't match"
+    assert data["profile"]["occupation"] == update_profile_data["occupation"], "Updated occupation doesn't match"
+    # Fields not in update_profile_data should remain unchanged
+    assert data["profile"]["last_name"] == valid_profile_data["last_name"], "Last name should remain unchanged"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    url = f"{BACKEND_URL}/api/profile/{invalid_session_id}"
+    
+    print(f"Sending request to {url} with payload: {update_profile_data}")
+    response = requests.put(url, json=update_profile_data)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    # Test with non-existent profile (create a new session without profile)
+    print("\nTesting with session that has no profile:")
+    # Create a new session
+    new_phone = "6505558888"
+    new_session_id = create_and_verify_session(new_phone, valid_country_code)
+    
+    url = f"{BACKEND_URL}/api/profile/{new_session_id}"
+    
+    print(f"Sending request to {url} with payload: {update_profile_data}")
+    response = requests.put(url, json=update_profile_data)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for non-existent profile
+    assert response.status_code == 404, f"Expected status code 404, got {response.status_code}"
+    
+    return True
+
 def run_all_tests():
     """Run all tests in sequence"""
     try:
