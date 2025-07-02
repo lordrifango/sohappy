@@ -878,7 +878,8 @@ export const SocialFeed = ({ tontines }) => {
 };
 
 // Discussions Tab - Now organized by Tontine groups
-const DiscussionsTab = ({ tontines }) => {
+const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
+  const { t } = useTranslation();
   const [selectedTontine, setSelectedTontine] = useState(null);
   
   // Mock discussions organized by tontine
