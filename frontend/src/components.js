@@ -135,7 +135,7 @@ export const Dashboard = ({
           </button>
         </div>
         <div className="text-center mb-6">
-          <h2 className="text-lg font-medium text-gray-600 mb-2">Solde Actuel</h2>
+          <h2 className="text-lg font-medium text-gray-600 mb-2">{t('dashboard.current_balance')}</h2>
           <h1 className="text-4xl font-bold text-gray-800 mb-1">{getCurrencyValue()}</h1>
           <p className="text-sm text-gray-500 font-medium">{getCurrencySymbol()}</p>
         </div>
