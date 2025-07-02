@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import './i18n'; // Import i18n configuration
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
+import { ProfileProvider, useProfile } from './ProfileContext';
+import { TutorialProvider, useTutorial } from './TutorialContext';
 import { BalanceProvider, useBalance } from './BalanceContext';
 import { PremiumProvider, usePremium } from './PremiumContext';
 import { PhoneLoginScreen, SMSVerificationScreen } from './AuthComponents';
+import { ProfileCreationScreen, ProfileEditModal } from './ProfileComponents';
+import { useTranslation } from 'react-i18next';
+import { useLanguageInitializer } from './LanguageSwitcher';
 import { 
   Header, 
   Dashboard, 
