@@ -123,8 +123,8 @@ export const Dashboard = ({
 
   return (
     <div className="p-4 space-y-6 bg-gray-50 min-h-full">
-      {/* Carte 1 - Solde Actuel */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+      {/* Carte 1 - Solde Actuel avec Actions */}
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 balance-actions">
         <div className="text-right mb-3">
           <button 
             onClick={onCurrencyToggle}
@@ -133,10 +133,28 @@ export const Dashboard = ({
             {getCurrencySymbol()}
           </button>
         </div>
-        <div className="text-center">
+        <div className="text-center mb-6">
           <h2 className="text-lg font-medium text-gray-600 mb-2">Solde Actuel</h2>
           <h1 className="text-4xl font-bold text-gray-800 mb-1">{getCurrencyValue()}</h1>
           <p className="text-sm text-gray-500 font-medium">{getCurrencySymbol()}</p>
+        </div>
+        
+        {/* Action Buttons intégrés dans la carte solde */}
+        <div className="flex space-x-3">
+          <button 
+            onClick={onDepositClick}
+            className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 px-4 rounded-xl font-medium hover:from-green-600 hover:to-emerald-600 transition-all shadow-md flex items-center justify-center space-x-2"
+          >
+            <span className="text-lg">↗️</span>
+            <span>Déposer</span>
+          </button>
+          <button 
+            onClick={onWithdrawClick}
+            className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-600 hover:to-indigo-600 transition-all shadow-md flex items-center justify-center space-x-2"
+          >
+            <span className="text-lg">↙️</span>
+            <span>Retirer</span>
+          </button>
         </div>
       </div>
 
