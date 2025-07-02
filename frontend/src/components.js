@@ -193,7 +193,7 @@ export const Dashboard = ({
         </div>
         <div className="mt-4 bg-emerald-50 rounded-xl p-4 text-center">
           <button onClick={onMembersClick} className="w-full text-center hover:bg-emerald-100 rounded-lg p-1 transition-all">
-            <p className="text-sm text-emerald-600 font-medium mb-1">Membres de votre réseau</p>
+            <p className="text-sm text-emerald-600 font-medium mb-1">{t('dashboard.network_members')}</p>
             <p className="text-2xl font-bold text-emerald-700">{connectedMembers}</p>
           </button>
         </div>
