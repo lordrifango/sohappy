@@ -258,6 +258,11 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
+        {/* Language Switcher */}
+        <div className="absolute top-4 right-4">
+          <LanguageSwitcher />
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <button
@@ -275,9 +280,9 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
             </svg>
           </div>
           
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Vérification SMS</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('auth.sms_title')}</h2>
           <p className="text-gray-600">
-            Saisissez le code reçu au
+            {t('auth.sms_subtitle')}
           </p>
           <p className="font-semibold text-violet-600">
             {phoneData.countryCode} {phoneData.phone}
@@ -288,7 +293,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Code de vérification
+              {t('auth.code_placeholder')}
             </label>
             <input
               type="text"
@@ -300,7 +305,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
               disabled={isLoading}
             />
             <p className="text-sm text-gray-500 mt-2 text-center">
-              Code à 6 chiffres
+              {t('auth.code_placeholder')}
             </p>
           </div>
 
@@ -323,10 +328,10 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                <span>Vérification...</span>
+                <span>{t('common.loading')}</span>
               </div>
             ) : (
-              'Vérifier le code'
+              t('auth.verify_code')
             )}
           </button>
 
@@ -336,7 +341,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
               onClick={onBackToPhone}
               className="text-violet-600 hover:text-violet-700 font-medium"
             >
-              Renvoyer le code
+              {t('auth.resend_code')}
             </button>
           </div>
         </div>
