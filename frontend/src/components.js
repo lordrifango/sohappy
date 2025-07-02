@@ -207,7 +207,7 @@ export const Dashboard = ({
         </h3>
         <div className="bg-gray-50 rounded-xl p-4">
           <div className="flex justify-between items-center mb-3">
-            <span className="text-sm font-medium text-gray-700">Objectifs créés</span>
+            <span className="text-sm font-medium text-gray-700">{t('dashboard.objectives_created')}</span>
             <span className="text-sm font-bold text-gray-800">
               {totalObjectivesCount}/{isPremium ? '∞' : limits.totalObjectives}
             </span>
