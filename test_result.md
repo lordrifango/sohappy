@@ -456,11 +456,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Fix Total Objectives Limit Bug"
-    - "Dashboard Logic Improvements"
-    - "Success Message for Fund Creation"
-    - "Sharing Functionality"
-    - "Enhanced Objective Display"
+    - "Profile Creation API"
+    - "Profile Retrieval API"
+    - "Profile Update API"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
