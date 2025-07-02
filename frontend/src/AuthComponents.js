@@ -200,15 +200,16 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
 };
 
 export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBackToPhone }) => {
+  const { t } = useTranslation();
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://ec8cf41e-fc2f-4f0b-a825-333abc61afac.preview.emergentagent.com';
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const handleVerifyCode = async () => {
     if (!code.trim()) {
-      setError('Veuillez saisir le code reçu');
+      setError(t('auth.code_placeholder'));
       return;
     }
 
@@ -237,10 +238,10 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
           countryCode: phoneData.countryCode
         });
       } else {
-        setError(data.message || 'Code incorrect');
+        setError(data.message || t('auth.verification_failed'));
       }
     } catch (err) {
-      setError('Erreur de connexion. Veuillez réessayer.');
+      setError(t('auth.verification_failed'));
       console.error('Verify code error:', err);
     } finally {
       setIsLoading(false);
