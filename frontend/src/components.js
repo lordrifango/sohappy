@@ -203,7 +203,7 @@ export const Dashboard = ({
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
           <span className="text-violet-500 mr-2">🎯</span>
-          Suivi d'Objectifs
+          {t('dashboard.objectives_tracking')}
         </h3>
         <div className="bg-gray-50 rounded-xl p-4">
           <div className="flex justify-between items-center mb-3">
