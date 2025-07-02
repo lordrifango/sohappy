@@ -44,8 +44,8 @@ export const TutorialProvider = ({ children }) => {
       id: 'balance',
       title: t('tutorial.balance_title'),
       message: t('tutorial.balance_message'),
-      target: '.balance-actions', // Target deposit/withdraw buttons
-      position: 'top'
+      target: '.balance-actions', // Target la carte solde complète avec boutons intégrés
+      position: 'bottom'
     },
     {
       id: 'social',
