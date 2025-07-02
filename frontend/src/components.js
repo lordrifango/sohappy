@@ -1048,7 +1048,7 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
                   </button>
                   <button className="flex items-center space-x-1 text-gray-500 hover:text-green-500 text-sm">
                     <ShareIcon className="w-4 h-4" />
-                    <span>Partager</span>
+                    <span>{t('social.share')}</span>
                   </button>
                 </div>
               </div>
