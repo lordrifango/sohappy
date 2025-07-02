@@ -1004,7 +1004,7 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
             </div>
             <input 
               type="text" 
-              placeholder={`Partagez quelque chose avec ${selectedTontine.name}...`}
+              placeholder={`${t('social.share_placeholder')} ${selectedTontine.name}...`}
               className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
