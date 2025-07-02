@@ -481,6 +481,9 @@ def run_performance_tests(num_iterations=5):
     send_code_times = []
     verify_code_times = []
     check_session_times = []
+    profile_create_times = []
+    profile_get_times = []
+    profile_update_times = []
     
     for i in range(num_iterations):
         print(f"\nPerformance test iteration {i+1}/{num_iterations}")
@@ -510,12 +513,45 @@ def run_performance_tests(num_iterations=5):
         response = requests.get(f"{BACKEND_URL}/api/auth/check-session/{session_id}")
         end_time = time.time()
         check_session_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        # Test profile-create performance
+        start_time = time.time()
+        profile_data = {
+            "first_name": f"User{i}",
+            "last_name": f"Test{i}",
+            "date_of_birth": "1990-01-01",
+            "gender": "male",
+            "city": "Paris",
+            "country": "France"
+        }
+        response = requests.post(f"{BACKEND_URL}/api/profile/create?session_id={session_id}", json=profile_data)
+        end_time = time.time()
+        profile_create_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        # Test profile-get performance
+        start_time = time.time()
+        response = requests.get(f"{BACKEND_URL}/api/profile/{session_id}")
+        end_time = time.time()
+        profile_get_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        # Test profile-update performance
+        start_time = time.time()
+        update_data = {
+            "city": f"NewCity{i}",
+            "occupation": f"Occupation{i}"
+        }
+        response = requests.put(f"{BACKEND_URL}/api/profile/{session_id}", json=update_data)
+        end_time = time.time()
+        profile_update_times.append((end_time - start_time) * 1000)  # Convert to ms
     
     # Calculate and print statistics
     print("\nPerformance Test Results (in milliseconds):")
-    print(f"  send-code:     avg={statistics.mean(send_code_times):.2f}ms, min={min(send_code_times):.2f}ms, max={max(send_code_times):.2f}ms")
-    print(f"  verify-code:   avg={statistics.mean(verify_code_times):.2f}ms, min={min(verify_code_times):.2f}ms, max={max(verify_code_times):.2f}ms")
-    print(f"  check-session: avg={statistics.mean(check_session_times):.2f}ms, min={min(check_session_times):.2f}ms, max={max(check_session_times):.2f}ms")
+    print(f"  send-code:      avg={statistics.mean(send_code_times):.2f}ms, min={min(send_code_times):.2f}ms, max={max(send_code_times):.2f}ms")
+    print(f"  verify-code:    avg={statistics.mean(verify_code_times):.2f}ms, min={min(verify_code_times):.2f}ms, max={max(verify_code_times):.2f}ms")
+    print(f"  check-session:  avg={statistics.mean(check_session_times):.2f}ms, min={min(check_session_times):.2f}ms, max={max(check_session_times):.2f}ms")
+    print(f"  profile-create: avg={statistics.mean(profile_create_times):.2f}ms, min={min(profile_create_times):.2f}ms, max={max(profile_create_times):.2f}ms")
+    print(f"  profile-get:    avg={statistics.mean(profile_get_times):.2f}ms, min={min(profile_get_times):.2f}ms, max={max(profile_get_times):.2f}ms")
+    print(f"  profile-update: avg={statistics.mean(profile_update_times):.2f}ms, min={min(profile_update_times):.2f}ms, max={max(profile_update_times):.2f}ms")
     
     return {
         "send_code": {
@@ -532,6 +568,21 @@ def run_performance_tests(num_iterations=5):
             "avg": statistics.mean(check_session_times),
             "min": min(check_session_times),
             "max": max(check_session_times)
+        },
+        "profile_create": {
+            "avg": statistics.mean(profile_create_times),
+            "min": min(profile_create_times),
+            "max": max(profile_create_times)
+        },
+        "profile_get": {
+            "avg": statistics.mean(profile_get_times),
+            "min": min(profile_get_times),
+            "max": max(profile_get_times)
+        },
+        "profile_update": {
+            "avg": statistics.mean(profile_update_times),
+            "min": min(profile_update_times),
+            "max": max(profile_update_times)
         }
     }
 
