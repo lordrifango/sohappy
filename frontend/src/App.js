@@ -301,8 +301,12 @@ const TontyApp = () => {
 
   // Handlers pour le menu profil
   const handleProfileClick = () => {
-    console.log('Profil cliqué');
-    // Ici on pourrait ouvrir un modal de profil
+    setIsProfileEditOpen(true);
+  };
+
+  const handleProfileUpdated = (updatedProfile) => {
+    // Profile will be automatically updated by the ProfileContext
+    alert(t('profile.profile_updated'));
   };
 
   const handleSettingsClick = () => {
