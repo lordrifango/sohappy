@@ -481,15 +481,6 @@ const TontyApp = () => {
         onClose={() => setIsPricingPageOpen(false)}
         onSelectPremium={handleSelectPremium}
       />
-
-      {/* Profile Edit Modal */}
-      <ProfileEditModal 
-        isOpen={isProfileEditOpen}
-        onClose={() => setIsProfileEditOpen(false)}
-        sessionId={sessionId}
-        currentProfile={profile}
-        onProfileUpdated={handleProfileUpdated}
-      />
     </div>
   );
 };
