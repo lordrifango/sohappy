@@ -18,7 +18,7 @@ export const TutorialProvider = ({ children }) => {
   const [hasCompletedTutorial, setHasCompletedTutorial] = useState(false);
 
   // Tutorial steps configuration - using useMemo to ensure i18n is ready
-  const tutorialSteps = React.useMemo(() => [
+  const tutorialSteps = useMemo(() => [
     {
       id: 'welcome',
       title: t('tutorial.welcome_title'),
