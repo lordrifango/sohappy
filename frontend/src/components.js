@@ -975,7 +975,7 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
 
           {/* Members preview */}
           <div className="border-t border-gray-200 pt-3">
-            <p className="text-sm font-medium text-gray-700 mb-3">Membres actifs</p>
+            <p className="text-sm font-medium text-gray-700 mb-3">{t('social.active_members')}</p>
             <div className="flex items-center -space-x-1">
               {Array.from({length: Math.min(selectedTontine.membersCount, 6)}).map((_, i) => (
                 <div 
