@@ -1116,14 +1116,14 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
                 </div>
                 <div className="flex items-center space-x-3 mt-2">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
-                    👥 {tontine.membersCount} {tontine.membersCount === 1 ? 'membre' : 'membres'}
+                    👥 {tontine.membersCount} {tontine.membersCount === 1 ? t('social.member') : t('social.members')}
                   </span>
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-700 border border-violet-200">
                     💬 {mockDiscussionsByTontine[tontine.id] ? 
                       mockDiscussionsByTontine[tontine.id].length === 1 ? 
-                        '1 message' : 
-                        `${mockDiscussionsByTontine[tontine.id].length} messages` : 
-                      'Aucun message'
+                        `1 ${t('social.message')}` : 
+                        `${mockDiscussionsByTontine[tontine.id].length} ${t('social.messages')}` : 
+                      `${t('dashboard.none')} ${t('social.message')}`
                     }
                   </span>
                 </div>
