@@ -61,6 +61,55 @@ class UserSession(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     expires_at: datetime = Field(default_factory=lambda: datetime.utcnow() + timedelta(minutes=5))
 
+# User Profile Models
+class UserProfile(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    phone: str
+    country_code: str
+    first_name: str
+    last_name: str
+    date_of_birth: Optional[str] = None
+    gender: Optional[str] = None  # 'male', 'female', 'other'
+    city: Optional[str] = None
+    country: Optional[str] = None
+    occupation: Optional[str] = None
+    avatar_base64: Optional[str] = None  # Base64 encoded image
+    language: str = "fr"  # Default to French
+    currency: str = "FCFA"  # Default currency
+    has_completed_tutorial: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserProfileCreate(BaseModel):
+    first_name: str
+    last_name: str
+    date_of_birth: Optional[str] = None
+    gender: Optional[str] = None
+    city: Optional[str] = None
+    country: Optional[str] = None
+    occupation: Optional[str] = None
+    avatar_base64: Optional[str] = None
+    language: str = "fr"
+    currency: str = "FCFA"
+
+class UserProfileUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    gender: Optional[str] = None
+    city: Optional[str] = None
+    country: Optional[str] = None
+    occupation: Optional[str] = None
+    avatar_base64: Optional[str] = None
+    language: Optional[str] = None
+    currency: Optional[str] = None
+    has_completed_tutorial: Optional[bool] = None
+
+class ProfileResponse(BaseModel):
+    success: bool
+    message: str
+    profile: Optional[UserProfile] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
