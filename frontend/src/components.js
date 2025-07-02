@@ -239,22 +239,6 @@ export const Dashboard = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex space-x-4">
-        <button 
-          onClick={onDepositClick}
-          className="flex-1 bg-violet-500 text-white py-3 px-6 rounded-xl font-medium hover:bg-violet-600 transition-colors shadow-lg btn-press"
-        >
-          + Déposer
-        </button>
-        <button 
-          onClick={onWithdrawClick}
-          className="flex-1 border-2 border-violet-500 text-violet-600 py-3 px-6 rounded-xl font-medium hover:bg-violet-50 transition-colors btn-press"
-        >
-          ↓ Retirer
-        </button>
-      </div>
-
       <div className="text-center">
         <button className="text-violet-600 text-sm hover:underline">
           Voir les tontines à thèmes
