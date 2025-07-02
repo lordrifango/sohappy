@@ -948,19 +948,19 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
           {/* Tontine details */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">Montant par tour</p>
+              <p className="text-xs text-gray-500 mb-1">{t('social.amount_per_turn')}</p>
               <p className="font-bold text-gray-800">{selectedTontine.amount} {selectedTontine.currency}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">Prochain paiement</p>
+              <p className="text-xs text-gray-500 mb-1">{t('social.next_turn')}</p>
               <p className="font-medium text-gray-800">{selectedTontine.nextPayment}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">Période</p>
+              <p className="text-xs text-gray-500 mb-1">{t('social.period')}</p>
               <p className="text-sm text-gray-700">{selectedTontine.startDate} - {selectedTontine.endDate}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">Progression</p>
+              <p className="text-xs text-gray-500 mb-1">{t('social.progress')}</p>
               <div className="flex items-center space-x-2">
                 <div className="flex-1 bg-gray-200 rounded-full h-2">
                   <div 
