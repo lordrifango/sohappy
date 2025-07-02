@@ -24,6 +24,25 @@ invalid_code_short = "12345"  # Not 6 digits
 invalid_code_letters = "12345a"  # Contains letters
 valid_code = "123456"  # Any 6 digits should work
 
+# Profile test data
+valid_profile_data = {
+    "first_name": "Jean",
+    "last_name": "Dupont",
+    "date_of_birth": "1990-01-01",
+    "gender": "male",
+    "city": "Paris",
+    "country": "France",
+    "occupation": "Engineer",
+    "language": "fr",
+    "currency": "FCFA"
+}
+
+update_profile_data = {
+    "first_name": "Jean-Pierre",
+    "city": "Lyon",
+    "occupation": "Senior Engineer"
+}
+
 def test_send_code_endpoint():
     """Test the /api/auth/send-code endpoint"""
     print("\n=== Testing POST /api/auth/send-code ===")
