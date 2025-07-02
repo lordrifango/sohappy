@@ -398,10 +398,12 @@ const TontyApp = ({ sessionId }) => {
             setSelectedTontine(null);
           }
         }}
+        className="bottom-navigation"
       />
 
       <FloatingActionButton 
         onCreateGoal={() => setIsGoalTypeSelectionOpen(true)}
+        className="floating-action-button"
       />
 
       {/* Modals */}
