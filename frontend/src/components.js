@@ -1061,8 +1061,8 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
             <div className="text-gray-400 mb-4">
               <ChatBubbleLeftIcon className="w-16 h-16 mx-auto" />
             </div>
-            <h3 className="text-lg font-medium text-gray-800 mb-2">Aucune discussion pour le moment</h3>
-            <p className="text-gray-600">Soyez le premier à démarrer une conversation dans ce groupe !</p>
+            <h3 className="text-lg font-medium text-gray-800 mb-2">{t('social.no_discussions_title')}</h3>
+            <p className="text-gray-600">{t('social.no_discussions_message')}</p>
           </div>
         )}
       </div>
