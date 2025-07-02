@@ -21,32 +21,30 @@ const countries = [
 ];
 
 export const PhoneLoginScreen = ({ onCodeSent }) => {
+  const { t } = useTranslation();
   const [selectedCountry, setSelectedCountry] = useState(countries[1]); // Côte d'Ivoire par défaut
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCountryList, setShowCountryList] = useState(false);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://ec8cf41e-fc2f-4f0b-a825-333abc61afac.preview.emergentagent.com';
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const handleSendCode = async () => {
     if (!phoneNumber.trim()) {
-      setError('Veuillez saisir votre numéro de téléphone');
+      setError(t('auth.invalid_phone'));
       return;
     }
 
     // Validation basique du numéro
     const cleanPhone = phoneNumber.replace(/\s+/g, '');
     if (cleanPhone.length < 8) {
-      setError('Numéro de téléphone trop court');
+      setError(t('auth.invalid_phone'));
       return;
     }
 
     setIsLoading(true);
     setError('');
-
-    console.log('Backend URL:', backendUrl);
-    console.log('Sending request with data:', { phone: cleanPhone, country_code: selectedCountry.code });
 
     try {
       const response = await fetch(`${backendUrl}/api/auth/send-code`, {
@@ -60,15 +58,11 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
         })
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (data.success) {
         onCodeSent({
@@ -77,11 +71,11 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
           sessionId: data.session_id
         });
       } else {
-        setError(data.message || 'Erreur lors de l\'envoi du code');
+        setError(data.message || t('auth.verification_failed'));
       }
     } catch (err) {
       console.error('Send code error:', err);
-      setError(`Erreur de connexion: ${err.message}. Veuillez réessayer.`);
+      setError(t('auth.verification_failed'));
     } finally {
       setIsLoading(false);
     }
@@ -90,11 +84,17 @@ export const PhoneLoginScreen = ({ onCodeSent }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
+        {/* Language Switcher */}
+        <div className="absolute top-4 right-4">
+          <LanguageSwitcher />
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-violet-600 mb-2">Tonty</h1>
-          <p className="text-gray-600 text-lg">
-            Atteignez vos objectifs ensemble, en toute confiance.
+          <h1 className="text-4xl font-bold text-violet-600 mb-2">{t('app.name')}</h1>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">{t('auth.phone_login_title')}</h2>
+          <p className="text-gray-600">
+            {t('auth.phone_login_subtitle')}
           </p>
         </div>
 
