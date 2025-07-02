@@ -482,16 +482,54 @@ const TontyApp = () => {
 
 // Authentication Wrapper Component
 const AuthWrapper = () => {
-  const { isAuthenticated, loading, login } = useAuth();
+  const { t } = useTranslation();
+  const { isAuthenticated, loading, login, sessionId } = useAuth();
+  const { profile, hasProfile, loading: profileLoading, loadProfile } = useProfile();
+  const { startTutorial, hasCompletedTutorial } = useTutorial();
+  const { initializeLanguage } = useLanguageInitializer();
+  
   const [authStep, setAuthStep] = useState('phone'); // 'phone' or 'verify'
   const [phoneData, setPhoneData] = useState(null);
+  const [showProfileCreation, setShowProfileCreation] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
 
-  if (loading) {
+  // Load profile when authenticated
+  useEffect(() => {
+    if (isAuthenticated && sessionId) {
+      loadProfile(sessionId);
+    }
+  }, [isAuthenticated, sessionId]);
+
+  // Initialize language from profile
+  useEffect(() => {
+    if (profile) {
+      initializeLanguage(profile);
+    }
+  }, [profile]);
+
+  // Check if tutorial should be shown
+  useEffect(() => {
+    if (hasProfile && profile && !profile.has_completed_tutorial && !hasCompletedTutorial) {
+      setShowTutorial(true);
+    }
+  }, [hasProfile, profile, hasCompletedTutorial]);
+
+  const handleProfileCreated = (newProfile) => {
+    setShowProfileCreation(false);
+    // Start tutorial after profile creation
+    if (!newProfile.has_completed_tutorial) {
+      setTimeout(() => {
+        startTutorial();
+      }, 1000);
+    }
+  };
+
+  if (loading || (isAuthenticated && profileLoading)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center">
         <div className="text-white text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-lg">Chargement...</p>
+          <p className="text-lg">{t('app.loading')}</p>
         </div>
       </div>
     );
@@ -523,7 +561,26 @@ const AuthWrapper = () => {
     }
   }
 
-  return <PremiumProvider><BalanceProvider><TontyApp /></BalanceProvider></PremiumProvider>;
+  // Show profile creation if user doesn't have a profile
+  if (isAuthenticated && !profileLoading && !hasProfile) {
+    return (
+      <ProfileCreationScreen 
+        sessionId={sessionId}
+        onProfileCreated={handleProfileCreated}
+      />
+    );
+  }
+
+  // Show main app
+  return (
+    <TutorialProvider>
+      <PremiumProvider>
+        <BalanceProvider>
+          <TontyApp />
+        </BalanceProvider>
+      </PremiumProvider>
+    </TutorialProvider>
+  );
 };
 
 // Main App Component
