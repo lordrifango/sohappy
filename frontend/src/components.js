@@ -146,14 +146,14 @@ export const Dashboard = ({
             className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 px-4 rounded-xl font-medium hover:from-green-600 hover:to-emerald-600 transition-all shadow-md flex items-center justify-center space-x-2"
           >
             <span className="text-lg">↗️</span>
-            <span>Déposer</span>
+            <span>{t('dashboard.deposit')}</span>
           </button>
           <button 
             onClick={onWithdrawClick}
             className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-600 hover:to-indigo-600 transition-all shadow-md flex items-center justify-center space-x-2"
           >
             <span className="text-lg">↙️</span>
-            <span>Retirer</span>
+            <span>{t('dashboard.withdraw')}</span>
           </button>
         </div>
       </div>
