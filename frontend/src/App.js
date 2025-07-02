@@ -588,7 +588,9 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AuthWrapper />
+        <ProfileProvider>
+          <AuthWrapper />
+        </ProfileProvider>
       </AuthProvider>
     </BrowserRouter>
   );
