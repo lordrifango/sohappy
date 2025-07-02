@@ -581,7 +581,7 @@ const AuthWrapper = () => {
     <TutorialProvider>
       <PremiumProvider>
         <BalanceProvider>
-          <TontyApp />
+          <TontyApp sessionId={sessionId} />
         </BalanceProvider>
       </PremiumProvider>
     </TutorialProvider>
