@@ -95,6 +95,7 @@ export const Dashboard = ({
   onUpgrade,
   nextTour = null
 }) => {
+  const { t } = useTranslation();
   const activeObjectives = tontines.length;
   const connectedMembers = 24;
   
