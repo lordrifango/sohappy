@@ -252,6 +252,163 @@ async def check_session(session_id: str):
         logger.error(f"Error checking session: {str(e)}")
         return {"valid": False, "message": "Erreur serveur"}
 
+# User Profile endpoints
+@api_router.post("/profile/create", response_model=ProfileResponse)
+async def create_user_profile(request: UserProfileCreate, session_id: str):
+    """
+    Create a user profile after authentication
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Check if profile already exists
+        existing_profile = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if existing_profile:
+            return ProfileResponse(
+                success=False,
+                message="Un profil existe déjà pour ce numéro"
+            )
+        
+        # Create new profile
+        profile_data = request.dict()
+        profile_data.update({
+            "id": str(uuid.uuid4()),
+            "phone": session.phone,
+            "country_code": session.country_code,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        })
+        
+        profile = UserProfile(**profile_data)
+        await db.user_profiles.insert_one(profile.dict())
+        
+        logger.info(f"Created profile for {session.country_code}{session.phone}")
+        
+        return ProfileResponse(
+            success=True,
+            message="Profil créé avec succès",
+            profile=profile
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating profile: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la création du profil")
+
+@api_router.get("/profile/{session_id}", response_model=ProfileResponse)
+async def get_user_profile(session_id: str):
+    """
+    Get user profile by session ID
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Get profile
+        profile_data = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if not profile_data:
+            return ProfileResponse(
+                success=False,
+                message="Profil non trouvé"
+            )
+        
+        profile = UserProfile(**profile_data)
+        
+        return ProfileResponse(
+            success=True,
+            message="Profil récupéré avec succès",
+            profile=profile
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting profile: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération du profil")
+
+@api_router.put("/profile/{session_id}", response_model=ProfileResponse)
+async def update_user_profile(session_id: str, request: UserProfileUpdate):
+    """
+    Update user profile
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Get existing profile
+        existing_profile = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if not existing_profile:
+            raise HTTPException(status_code=404, detail="Profil non trouvé")
+        
+        # Update profile
+        update_data = {k: v for k, v in request.dict().items() if v is not None}
+        update_data["updated_at"] = datetime.utcnow()
+        
+        await db.user_profiles.update_one(
+            {"phone": session.phone, "country_code": session.country_code},
+            {"$set": update_data}
+        )
+        
+        # Get updated profile
+        updated_profile_data = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        updated_profile = UserProfile(**updated_profile_data)
+        
+        logger.info(f"Updated profile for {session.country_code}{session.phone}")
+        
+        return ProfileResponse(
+            success=True,
+            message="Profil mis à jour avec succès",
+            profile=updated_profile
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating profile: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour du profil")
+
 # Include the router in the main app
 app.include_router(api_router)
 
