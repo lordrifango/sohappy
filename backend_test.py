@@ -382,6 +382,8 @@ def run_all_tests():
         # Test MongoDB connectivity
         test_mongodb_connectivity()
         
+        # Test authentication endpoints
+        print("\n=== Testing Authentication Endpoints ===")
         # Test send code endpoint
         session_id = test_send_code_endpoint()
         print(f"Generated session_id: {session_id}")
@@ -392,6 +394,17 @@ def run_all_tests():
         
         # Test check session endpoint
         test_check_session_endpoint(verified_session_id)
+        
+        # Test profile endpoints
+        print("\n=== Testing Profile Endpoints ===")
+        # Test profile creation
+        test_profile_create_endpoint(verified_session_id)
+        
+        # Test profile retrieval
+        test_profile_get_endpoint(verified_session_id)
+        
+        # Test profile update
+        test_profile_update_endpoint(verified_session_id)
         
         # Run performance tests
         print("\n=== Running Performance Tests ===")
