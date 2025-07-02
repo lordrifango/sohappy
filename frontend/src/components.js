@@ -1108,10 +1108,10 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
                 <h4 className="font-semibold text-gray-800 text-lg">{tontine.fullName}</h4>
                 <div className="flex items-center space-x-4 mt-1">
                   <p className="text-sm text-gray-600">
-                    <span className="font-medium">Cotisation:</span> {tontine.amount} {tontine.currency}/mois
+                    <span className="font-medium">{t('social.amount_per_turn')}:</span> {tontine.amount} {tontine.currency}{t('social.month')}
                   </p>
                   <p className="text-sm text-gray-600">
-                    <span className="font-medium">Prochain tour:</span> {tontine.nextPayment}
+                    <span className="font-medium">{t('social.next_turn')}:</span> {tontine.nextPayment}
                   </p>
                 </div>
                 <div className="flex items-center space-x-3 mt-2">
