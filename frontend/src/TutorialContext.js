@@ -17,8 +17,8 @@ export const TutorialProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [hasCompletedTutorial, setHasCompletedTutorial] = useState(false);
 
-  // Tutorial steps configuration
-  const tutorialSteps = [
+  // Tutorial steps configuration - using useMemo to ensure i18n is ready
+  const tutorialSteps = React.useMemo(() => [
     {
       id: 'welcome',
       title: t('tutorial.welcome_title'),
@@ -54,7 +54,7 @@ export const TutorialProvider = ({ children }) => {
       target: '.bottom-navigation', // Target the social tab
       position: 'top'
     }
-  ];
+  ], [t]);
 
   const startTutorial = () => {
     setIsActive(true);
