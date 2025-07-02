@@ -223,18 +223,18 @@ export const Dashboard = ({
           {!isPremium && totalObjectivesCount >= limits.totalObjectives ? (
             <div className="mt-3 flex items-center justify-between bg-red-50 border border-red-200 rounded-lg p-3">
               <p className="text-sm text-red-700 font-medium">
-                ⚠️ Limite atteinte !
+                ⚠️ {t('dashboard.limit_reached')}
               </p>
               <button 
                 onClick={onUpgrade}
                 className="bg-red-500 text-white px-4 py-2 rounded-full text-xs font-medium hover:bg-red-600 transition-colors"
               >
-                Upgrade
+                {t('dashboard.upgrade')}
               </button>
             </div>
           ) : (
             <p className="text-xs text-gray-500 text-center mt-2">
-              {isPremium ? 'Objectifs illimités ✨' : `${limits.totalObjectives - totalObjectivesCount} objectifs restants`}
+              {isPremium ? t('dashboard.unlimited_objectives') : `${limits.totalObjectives - totalObjectivesCount} ${t('dashboard.objectives_remaining')}`}
             </p>
           )}
         </div>
