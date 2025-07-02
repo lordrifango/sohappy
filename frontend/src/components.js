@@ -167,12 +167,12 @@ export const Dashboard = ({
         </h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-violet-50 rounded-xl p-4 text-center">
-            <p className="text-sm text-violet-600 font-medium mb-1">Projets en cours</p>
+            <p className="text-sm text-violet-600 font-medium mb-1">{t('dashboard.ongoing_projects')}</p>
             <p className="text-2xl font-bold text-violet-700">{activeObjectives}</p>
           </div>
           <div className="bg-indigo-50 rounded-xl p-4 text-center">
             <button onClick={onUpcomingToursClick} className="w-full text-center hover:bg-indigo-100 rounded-lg p-1 transition-all">
-              <p className="text-sm text-indigo-600 font-medium mb-1">Votre Prochain Tour</p>
+              <p className="text-sm text-indigo-600 font-medium mb-1">{t('dashboard.next_tour')}</p>
               {nextTour ? (
                 <div className="space-y-1">
                   <p className="text-lg font-bold text-indigo-700">{nextTour.date}</p>
@@ -186,7 +186,7 @@ export const Dashboard = ({
                   </span>
                 </div>
               ) : (
-                <p className="text-2xl font-bold text-indigo-700">Aucun</p>
+                <p className="text-2xl font-bold text-indigo-700">{t('dashboard.none')}</p>
               )}
             </button>
           </div>
