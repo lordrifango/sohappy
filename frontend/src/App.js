@@ -35,7 +35,11 @@ import {
 } from './components';
 
 const TontyApp = () => {
+  const { t } = useTranslation();
   const { balance, formatBalance, deposit, withdraw } = useBalance();
+  const { profile, hasProfile } = useProfile();
+  const { startTutorial, hasCompletedTutorial } = useTutorial();
+  const { initializeLanguage } = useLanguageInitializer();
   const { 
     isPremium, 
     canCreateTontine, 
