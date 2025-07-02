@@ -55,6 +55,7 @@ const TontyApp = () => {
   
   // États pour les menus et modals
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isProfileEditOpen, setIsProfileEditOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedTontine, setSelectedTontine] = useState(null);
   
