@@ -34,7 +34,7 @@ import {
   PricingPage
 } from './components';
 
-const TontyApp = () => {
+const TontyApp = ({ sessionId }) => {
   const { t } = useTranslation();
   const { balance, formatBalance, deposit, withdraw } = useBalance();
   const { profile, hasProfile } = useProfile();
