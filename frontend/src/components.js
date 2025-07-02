@@ -1011,10 +1011,10 @@ const DiscussionsTab = ({ tontines, searchQuery = '' }) => {
           <div className="flex justify-between items-center">
             <div className="flex space-x-4 text-gray-500">
               <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
-                📷 <span>Photo</span>
+                📷 <span>{t('social.photo')}</span>
               </button>
               <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
-                📊 <span>Sondage</span>
+                📊 <span>{t('social.poll')}</span>
               </button>
             </div>
             <button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-600">
