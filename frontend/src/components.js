@@ -1307,31 +1307,35 @@ const CommunityTab = () => {
 };
 
 // Bottom Navigation Component
-export const BottomNavigation = ({ activeTab, onTabChange }) => (
-  <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 shadow-lg">
-    <div className="flex justify-around items-center">
-      <button
-        className={`flex flex-col items-center p-2 ${
-          activeTab === 'dashboard' ? 'text-violet-600' : 'text-gray-500'
-        }`}
-        onClick={() => onTabChange('dashboard')}
-      >
-        <HomeIcon className="w-6 h-6" />
-        <span className="text-xs mt-1">Mes Objectifs</span>
-      </button>
-      
-      <button
-        className={`flex flex-col items-center p-2 ${
-          activeTab === 'social' ? 'text-violet-600' : 'text-gray-500'
-        }`}
-        onClick={() => onTabChange('social')}
-      >
-        <UsersIcon className="w-6 h-6" />
-        <span className="text-xs mt-1">Réseau Tonty</span>
-      </button>
+export const BottomNavigation = ({ activeTab, onTabChange }) => {
+  const { t } = useTranslation();
+  
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 shadow-lg">
+      <div className="flex justify-around items-center">
+        <button
+          className={`flex flex-col items-center p-2 ${
+            activeTab === 'dashboard' ? 'text-violet-600' : 'text-gray-500'
+          }`}
+          onClick={() => onTabChange('dashboard')}
+        >
+          <HomeIcon className="w-6 h-6" />
+          <span className="text-xs mt-1">{t('dashboard.my_objectives')}</span>
+        </button>
+        
+        <button
+          className={`flex flex-col items-center p-2 ${
+            activeTab === 'social' ? 'text-violet-600' : 'text-gray-500'
+          }`}
+          onClick={() => onTabChange('social')}
+        >
+          <UsersIcon className="w-6 h-6" />
+          <span className="text-xs mt-1">{t('navigation.tonty_network')}</span>
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Floating Action Button Component - Simplifié selon directives v2.0
 export const FloatingActionButton = ({ onCreateGoal }) => {
