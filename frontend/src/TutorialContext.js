@@ -158,6 +158,7 @@ const TutorialOverlay = () => {
   } = useTutorial();
   const [targetElement, setTargetElement] = useState(null);
   const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 });
+  const [isSearching, setIsSearching] = useState(false);
 
   const currentStepData = tutorialSteps[currentStep];
 
