@@ -606,17 +606,19 @@ const AuthWrapper = () => {
 // Authenticated App Component - handles tutorial logic
 const AuthenticatedApp = ({ sessionId }) => {
   const { profile } = useProfile();
-  const { startTutorial, hasCompletedTutorial } = useTutorial();
+  const { startTutorial, hasCompletedTutorial, isActive } = useTutorial();
   const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialStarted, setTutorialStarted] = useState(false);
 
-  // Check if tutorial should be shown
+  // Check if tutorial should be shown - only once when profile loads
   useEffect(() => {
-    if (profile && !profile.has_completed_tutorial && !hasCompletedTutorial) {
+    if (profile && !profile.has_completed_tutorial && !hasCompletedTutorial && !tutorialStarted && !isActive) {
+      setTutorialStarted(true);
       setTimeout(() => {
         startTutorial();
       }, 1000);
     }
-  }, [profile, hasCompletedTutorial, startTutorial]);
+  }, [profile, hasCompletedTutorial]); // Removed startTutorial and isActive from dependencies
 
   return <TontyApp sessionId={sessionId} />;
 };
