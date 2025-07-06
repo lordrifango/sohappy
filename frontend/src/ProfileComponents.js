@@ -74,20 +74,13 @@ export const ProfileCreationScreen = ({ onProfileCreated, sessionId }) => {
     setError('');
 
     try {
-      const response = await fetch(`${backendUrl}/api/profile/create?session_id=${sessionId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        onProfileCreated(data.profile);
+      const result = await createProfile(sessionId, formData);
+      
+      if (result.success) {
+        console.log('Profile created successfully:', result.profile);
+        onProfileCreated(result.profile);
       } else {
-        setError(data.message);
+        setError(result.message || 'Erreur lors de la création du profil');
       }
     } catch (error) {
       console.error('Error creating profile:', error);
