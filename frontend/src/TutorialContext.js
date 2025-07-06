@@ -162,66 +162,105 @@ const TutorialOverlay = () => {
   const currentStepData = tutorialSteps[currentStep];
 
   useEffect(() => {
-    if (currentStepData.target) {
-      // Wait a bit for DOM to be ready
-      setTimeout(() => {
-        const element = document.querySelector(currentStepData.target);
-        setTargetElement(element);
+    console.log(`🎓 Tutorial step ${currentStep + 1}/${tutorialSteps.length}: ${currentStepData?.id}`);
+    
+    const updatePosition = () => {
+      if (currentStepData?.target) {
+        // Wait for DOM to be ready and allow multiple attempts
+        let attempts = 0;
+        const maxAttempts = 10;
         
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        const findElement = () => {
+          attempts++;
+          console.log(`🎯 Searching for element: ${currentStepData.target} (attempt ${attempts})`);
           
-          // Calculate position based on target and desired position
-          let top, left;
+          const element = document.querySelector(currentStepData.target);
           
-          switch (currentStepData.position) {
-            case 'bottom':
-              top = rect.bottom + scrollTop + 10;
-              left = rect.left + scrollLeft + (rect.width / 2) - 200; // Center tooltip
-              break;
-            case 'top':
-              top = rect.top + scrollTop - 10 - 200; // Tooltip height approximation
-              left = rect.left + scrollLeft + (rect.width / 2) - 200;
-              break;
-            case 'left':
-              top = rect.top + scrollTop + (rect.height / 2) - 100;
-              left = rect.left + scrollLeft - 420;
-              break;
-            case 'right':
-              top = rect.top + scrollTop + (rect.height / 2) - 100;
-              left = rect.right + scrollLeft + 10;
-              break;
-            default:
-              top = rect.top + scrollTop + rect.height + 10;
-              left = rect.left + scrollLeft;
+          if (element) {
+            console.log(`✅ Found element: ${currentStepData.target}`);
+            setTargetElement(element);
+            
+            const rect = element.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            
+            // Calculate position based on target and desired position
+            let top, left;
+            
+            switch (currentStepData.position) {
+              case 'bottom':
+                top = rect.bottom + scrollTop + 20;
+                left = rect.left + scrollLeft + (rect.width / 2) - 200; // Center tooltip
+                break;
+              case 'top':
+                top = rect.top + scrollTop - 220; // Tooltip height approximation
+                left = rect.left + scrollLeft + (rect.width / 2) - 200;
+                break;
+              case 'left':
+                top = rect.top + scrollTop + (rect.height / 2) - 100;
+                left = rect.left + scrollLeft - 420;
+                break;
+              case 'right':
+                top = rect.top + scrollTop + (rect.height / 2) - 100;
+                left = rect.right + scrollLeft + 20;
+                break;
+              default:
+                top = rect.top + scrollTop + rect.height + 20;
+                left = rect.left + scrollLeft;
+            }
+            
+            // Ensure tooltip stays within viewport
+            top = Math.max(20, Math.min(top, window.innerHeight - 240));
+            left = Math.max(20, Math.min(left, window.innerWidth - 420));
+            
+            setOverlayPosition({ top, left });
+            
+            // Scroll element into view smoothly
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'center'
+            });
+          } else {
+            console.log(`❌ Element not found: ${currentStepData.target}`);
+            if (attempts < maxAttempts) {
+              setTimeout(findElement, 200);
+            } else {
+              console.log(`⚠️ Giving up on element: ${currentStepData.target}`);
+              // Center the tooltip if element not found
+              setTargetElement(null);
+              setOverlayPosition({
+                top: window.innerHeight / 2 - 150,
+                left: window.innerWidth / 2 - 200
+              });
+            }
           }
-          
-          // Ensure tooltip stays within viewport
-          top = Math.max(10, Math.min(top, window.innerHeight - 220));
-          left = Math.max(10, Math.min(left, window.innerWidth - 420));
-          
-          setOverlayPosition({ top, left });
-          
-          // Scroll element into view
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'center'
-          });
-        } else {
-          console.warn(`Tutorial target element not found: ${currentStepData.target}`);
-        }
-      }, 500); // Give DOM time to render
-    } else {
-      // Center the tooltip for steps without targets (like welcome)
-      setOverlayPosition({
-        top: window.innerHeight / 2 - 150,
-        left: window.innerWidth / 2 - 200
-      });
-    }
-  }, [currentStep, currentStepData]);
+        };
+        
+        // Start searching for element
+        setTimeout(findElement, 100);
+      } else {
+        // Center the tooltip for steps without targets (like welcome)
+        console.log(`🎯 Centering tooltip for step: ${currentStepData?.id}`);
+        setTargetElement(null);
+        setOverlayPosition({
+          top: window.innerHeight / 2 - 150,
+          left: window.innerWidth / 2 - 200
+        });
+      }
+    };
+
+    updatePosition();
+    
+    // Also update position on resize
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, [currentStep, currentStepData, tutorialSteps.length]);
+
+  if (!currentStepData) {
+    console.log('❌ No current step data');
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 z-[9999]">
@@ -231,7 +270,7 @@ const TutorialOverlay = () => {
       {/* Highlight target element */}
       {targetElement && (
         <div
-          className="absolute border-4 border-violet-500 rounded-lg pointer-events-none"
+          className="absolute border-4 border-violet-500 rounded-lg pointer-events-none animate-pulse"
           style={{
             top: targetElement.getBoundingClientRect().top + window.pageYOffset - 4,
             left: targetElement.getBoundingClientRect().left + window.pageXOffset - 4,
@@ -244,7 +283,7 @@ const TutorialOverlay = () => {
       
       {/* Tutorial tooltip */}
       <div
-        className="absolute bg-white rounded-2xl shadow-2xl p-6 w-96 border border-gray-200"
+        className="absolute bg-white rounded-2xl shadow-2xl p-6 w-96 border border-gray-200 z-[10000]"
         style={{
           top: overlayPosition.top,
           left: overlayPosition.left
@@ -256,7 +295,7 @@ const TutorialOverlay = () => {
             {tutorialSteps.map((_, index) => (
               <div
                 key={index}
-                className={`w-3 h-3 rounded-full ${
+                className={`w-3 h-3 rounded-full transition-colors ${
                   index <= currentStep ? 'bg-violet-500' : 'bg-gray-300'
                 }`}
               />
@@ -264,7 +303,7 @@ const TutorialOverlay = () => {
           </div>
           <button
             onClick={skipTutorial}
-            className="text-gray-500 hover:text-gray-700 text-sm"
+            className="text-gray-500 hover:text-gray-700 text-sm font-medium"
           >
             {t('tutorial.skip')}
           </button>
@@ -281,22 +320,25 @@ const TutorialOverlay = () => {
         </div>
         
         {/* Navigation buttons */}
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <button
             onClick={previousStep}
             disabled={currentStep === 0}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {t('tutorial.previous')}
           </button>
           
-          <div className="text-sm text-gray-500 flex items-center">
+          <div className="text-sm text-gray-500 flex items-center font-medium">
             {currentStep + 1} / {tutorialSteps.length}
           </div>
           
           <button
-            onClick={nextStep}
-            className="px-6 py-2 bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition-colors"
+            onClick={() => {
+              console.log(`🎓 Next button clicked, current step: ${currentStep}`);
+              nextStep();
+            }}
+            className="px-6 py-2 bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition-colors font-medium"
           >
             {currentStep === tutorialSteps.length - 1 ? t('tutorial.finish') : t('tutorial.next')}
           </button>
