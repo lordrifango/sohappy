@@ -1350,7 +1350,7 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
     : position;
 
   const handleMouseDown = (e) => {
-    if (e.button !== 0) return; // Seulement le clic gauche
+    if (e.button !== 0 || tutorialActive) return; // Disable dragging during tutorial
     setIsDragging(true);
     setDragStart({
       x: e.clientX,
@@ -1362,7 +1362,7 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging) return;
+    if (!isDragging || tutorialActive) return;
     
     const deltaX = e.clientX - dragStart.x;
     const deltaY = e.clientY - dragStart.y;
@@ -1374,10 +1374,12 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
   };
 
   const handleMouseUp = () => {
+    if (tutorialActive) return;
     setIsDragging(false);
   };
 
   const handleTouchStart = (e) => {
+    if (tutorialActive) return; // Disable dragging during tutorial
     const touch = e.touches[0];
     setIsDragging(true);
     setDragStart({
@@ -1390,7 +1392,7 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
   };
 
   const handleTouchMove = (e) => {
-    if (!isDragging) return;
+    if (!isDragging || tutorialActive) return;
     
     const touch = e.touches[0];
     const deltaX = touch.clientX - dragStart.x;
@@ -1404,6 +1406,7 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
   };
 
   const handleTouchEnd = () => {
+    if (tutorialActive) return;
     setIsDragging(false);
   };
 
