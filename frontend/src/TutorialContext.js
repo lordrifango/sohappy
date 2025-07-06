@@ -298,6 +298,7 @@ const TutorialOverlay = () => {
         // Center the tooltip for steps without targets (like welcome)
         console.log(`🎯 Centering tooltip for step: ${currentStepData?.id}`);
         setTargetElement(null);
+        setIsSearching(false);
         const isMobile = window.innerWidth <= 768;
         const tooltipWidth = isMobile ? Math.min(340, window.innerWidth - 40) : 400;
         const tooltipHeight = isMobile ? 280 : 220;
