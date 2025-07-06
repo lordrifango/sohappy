@@ -523,11 +523,12 @@ const AuthWrapper = () => {
     }
   }, [profile]);
 
-  const handleProfileCreated = (newProfile) => {
+  const handleProfileCreated = async (newProfile) => {
     setShowProfileCreation(false);
+    console.log('Profile created, forcing reload...');
     // Force reload of profile to update the ProfileContext
     if (sessionId) {
-      loadProfile(sessionId);
+      await loadProfile(sessionId);
     }
   };
 
