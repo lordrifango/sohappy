@@ -160,52 +160,57 @@ const TutorialOverlay = () => {
 
   useEffect(() => {
     if (currentStepData.target) {
-      const element = document.querySelector(currentStepData.target);
-      setTargetElement(element);
-      
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+      // Wait a bit for DOM to be ready
+      setTimeout(() => {
+        const element = document.querySelector(currentStepData.target);
+        setTargetElement(element);
         
-        // Calculate position based on target and desired position
-        let top, left;
-        
-        switch (currentStepData.position) {
-          case 'bottom':
-            top = rect.bottom + scrollTop + 10;
-            left = rect.left + scrollLeft + (rect.width / 2) - 200; // Center tooltip
-            break;
-          case 'top':
-            top = rect.top + scrollTop - 10 - 200; // Tooltip height approximation
-            left = rect.left + scrollLeft + (rect.width / 2) - 200;
-            break;
-          case 'left':
-            top = rect.top + scrollTop + (rect.height / 2) - 100;
-            left = rect.left + scrollLeft - 420;
-            break;
-          case 'right':
-            top = rect.top + scrollTop + (rect.height / 2) - 100;
-            left = rect.right + scrollLeft + 10;
-            break;
-          default:
-            top = rect.top + scrollTop + rect.height + 10;
-            left = rect.left + scrollLeft;
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+          
+          // Calculate position based on target and desired position
+          let top, left;
+          
+          switch (currentStepData.position) {
+            case 'bottom':
+              top = rect.bottom + scrollTop + 10;
+              left = rect.left + scrollLeft + (rect.width / 2) - 200; // Center tooltip
+              break;
+            case 'top':
+              top = rect.top + scrollTop - 10 - 200; // Tooltip height approximation
+              left = rect.left + scrollLeft + (rect.width / 2) - 200;
+              break;
+            case 'left':
+              top = rect.top + scrollTop + (rect.height / 2) - 100;
+              left = rect.left + scrollLeft - 420;
+              break;
+            case 'right':
+              top = rect.top + scrollTop + (rect.height / 2) - 100;
+              left = rect.right + scrollLeft + 10;
+              break;
+            default:
+              top = rect.top + scrollTop + rect.height + 10;
+              left = rect.left + scrollLeft;
+          }
+          
+          // Ensure tooltip stays within viewport
+          top = Math.max(10, Math.min(top, window.innerHeight - 220));
+          left = Math.max(10, Math.min(left, window.innerWidth - 420));
+          
+          setOverlayPosition({ top, left });
+          
+          // Scroll element into view
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+          });
+        } else {
+          console.warn(`Tutorial target element not found: ${currentStepData.target}`);
         }
-        
-        // Ensure tooltip stays within viewport
-        top = Math.max(10, Math.min(top, window.innerHeight - 220));
-        left = Math.max(10, Math.min(left, window.innerWidth - 420));
-        
-        setOverlayPosition({ top, left });
-        
-        // Scroll element into view
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
-        });
-      }
+      }, 500); // Give DOM time to render
     } else {
       // Center the tooltip for steps without targets (like welcome)
       setOverlayPosition({
