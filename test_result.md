@@ -252,15 +252,18 @@ frontend:
 
   - task: "SMS Verification Screen"
     implemented: true
-    working: "NA"
+    working: true
     file: "AuthComponents.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created SMS verification screen with 6-digit code input and validation"
+      - working: true
+        agent: "testing"
+        comment: "SMS verification screen is working correctly. It displays the phone number, accepts a 6-digit code, and properly validates the code format. After successful verification, the user is correctly redirected to either the profile creation page (for new users) or the dashboard (for existing users). The redirection after verification is working as expected, fixing the previously reported bug."
 
   - task: "App Integration with Authentication"
     implemented: true
