@@ -626,17 +626,11 @@ const AuthenticatedApp = ({ sessionId }) => {
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Temporary test route for tutorial */}
-        <Route path="/test-tutorial" element={<TutorialTestPage />} />
-        <Route path="/*" element={
-          <AuthProvider>
-            <ProfileProvider>
-              <AuthWrapper />
-            </ProfileProvider>
-          </AuthProvider>
-        } />
-      </Routes>
+      <AuthProvider>
+        <ProfileProvider>
+          <AuthWrapper />
+        </ProfileProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 };
