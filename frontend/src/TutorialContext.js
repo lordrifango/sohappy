@@ -318,10 +318,12 @@ const TutorialOverlay = () => {
       
       {/* Tutorial tooltip */}
       <div
-        className="absolute bg-white rounded-2xl shadow-2xl p-6 w-96 border border-gray-200 z-[10000]"
+        className="absolute bg-white rounded-2xl shadow-2xl border border-gray-200 z-[10000] max-w-[calc(100vw-2rem)] w-full sm:w-96"
         style={{
           top: overlayPosition.top,
-          left: overlayPosition.left
+          left: overlayPosition.left,
+          width: window.innerWidth <= 768 ? Math.min(340, window.innerWidth - 40) : 400,
+          padding: window.innerWidth <= 768 ? '1rem' : '1.5rem'
         }}
       >
         {/* Progress indicator */}
