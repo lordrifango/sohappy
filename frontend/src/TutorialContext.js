@@ -166,6 +166,7 @@ const TutorialOverlay = () => {
     console.log(`🎓 Tutorial step ${currentStep + 1}/${tutorialSteps.length}: ${currentStepData?.id}`);
     
     const updatePosition = () => {
+      setIsSearching(true);
       if (currentStepData?.target) {
         // Wait for DOM to be ready and allow multiple attempts - increased for better reliability
         let attempts = 0;
