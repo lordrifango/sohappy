@@ -251,7 +251,7 @@ export const Dashboard = ({
 
       <div className="text-center">
         <button className="text-violet-600 text-sm hover:underline">
-          Voir les tontines à thèmes
+          {t('dashboard.see_themed_tontines')}
         </button>
       </div>
 
