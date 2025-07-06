@@ -409,6 +409,7 @@ const TontyApp = ({ sessionId }) => {
       <FloatingActionButton 
         onCreateGoal={() => setIsGoalTypeSelectionOpen(true)}
         className="floating-action-button"
+        tutorialActive={hasCompletedTutorial ? false : true}
       />
 
       {/* Modals */}
