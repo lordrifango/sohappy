@@ -232,6 +232,7 @@ export const SMSVerificationScreen = ({ phoneData, onVerificationSuccess, onBack
       const data = await response.json();
 
       if (data.success) {
+        // Immédiatement appeler la fonction de succès pour déclencher la redirection
         onVerificationSuccess({
           sessionId: data.session_id,
           phone: phoneData.phone,
