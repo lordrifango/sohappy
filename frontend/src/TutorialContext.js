@@ -59,6 +59,7 @@ export const TutorialProvider = ({ children }) => {
   const startTutorial = () => {
     setIsActive(true);
     setCurrentStep(0);
+    setHasCompletedTutorial(false); // Reset completion status when replaying
   };
 
   const nextStep = () => {
