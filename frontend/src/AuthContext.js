@@ -52,11 +52,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = (sessionId, phone, countryCode) => {
+    console.log('Login called with:', { sessionId, phone, countryCode });
     setIsAuthenticated(true);
     setSessionId(sessionId);
     setUserPhone(phone);
     setUserCountry(countryCode);
     localStorage.setItem('tonty_session_id', sessionId);
+    
+    // Force re-render by triggering a state update
+    setLoading(false);
   };
 
   const logout = () => {
