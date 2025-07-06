@@ -327,12 +327,12 @@ const TutorialOverlay = () => {
         }}
       >
         {/* Progress indicator */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-2">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <div className="flex space-x-1 sm:space-x-2">
             {tutorialSteps.map((_, index) => (
               <div
                 key={index}
-                className={`w-3 h-3 rounded-full transition-colors ${
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
                   index <= currentStep ? 'bg-violet-500' : 'bg-gray-300'
                 }`}
               />
@@ -340,33 +340,33 @@ const TutorialOverlay = () => {
           </div>
           <button
             onClick={skipTutorial}
-            className="text-gray-500 hover:text-gray-700 text-sm font-medium"
+            className="text-gray-500 hover:text-gray-700 text-xs sm:text-sm font-medium"
           >
             {t('tutorial.skip')}
           </button>
         </div>
         
         {/* Content */}
-        <div className="mb-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-3">
+        <div className="mb-4 sm:mb-6">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 sm:mb-3">
             {currentStepData.title}
           </h3>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
             {currentStepData.message}
           </p>
         </div>
         
         {/* Navigation buttons */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-2">
           <button
             onClick={previousStep}
             disabled={currentStep === 0}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+            className="px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base text-gray-600 hover:text-gray-800 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {t('tutorial.previous')}
           </button>
           
-          <div className="text-sm text-gray-500 flex items-center font-medium">
+          <div className="text-xs sm:text-sm text-gray-500 flex items-center font-medium">
             {currentStep + 1} / {tutorialSteps.length}
           </div>
           
@@ -375,7 +375,7 @@ const TutorialOverlay = () => {
               console.log(`🎓 Next button clicked, current step: ${currentStep}`);
               nextStep();
             }}
-            className="px-6 py-2 bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition-colors font-medium"
+            className="px-4 py-2 sm:px-6 sm:py-2 text-sm sm:text-base bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition-colors font-medium"
           >
             {currentStep === tutorialSteps.length - 1 ? t('tutorial.finish') : t('tutorial.next')}
           </button>
