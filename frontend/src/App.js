@@ -309,6 +309,10 @@ const TontyApp = ({ sessionId }) => {
     alert(t('profile.profile_updated'));
   };
 
+  const handleReplayTutorial = () => {
+    startTutorial();
+  };
+
   const handleSettingsClick = () => {
     console.log('Paramètres cliqués');
     // Ici on pourrait ouvrir un modal de paramètres
