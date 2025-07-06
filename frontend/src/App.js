@@ -525,6 +525,10 @@ const AuthWrapper = () => {
 
   const handleProfileCreated = (newProfile) => {
     setShowProfileCreation(false);
+    // Force reload of profile to update the ProfileContext
+    if (sessionId) {
+      loadProfile(sessionId);
+    }
   };
 
   const handleVerificationSuccess = (data) => {
