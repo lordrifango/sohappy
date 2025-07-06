@@ -379,6 +379,12 @@ const TutorialOverlay = () => {
           <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
             {currentStepData.message}
           </p>
+          {isSearching && currentStepData.target && (
+            <div className="mt-3 flex items-center text-xs sm:text-sm text-violet-600">
+              <div className="animate-spin w-4 h-4 border-2 border-violet-600 border-t-transparent rounded-full mr-2"></div>
+              Recherche de l'élément...
+            </div>
+          )}
         </div>
         
         {/* Navigation buttons */}
