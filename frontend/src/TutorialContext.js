@@ -166,9 +166,9 @@ const TutorialOverlay = () => {
     
     const updatePosition = () => {
       if (currentStepData?.target) {
-        // Wait for DOM to be ready and allow multiple attempts
+        // Wait for DOM to be ready and allow multiple attempts - increased for better reliability
         let attempts = 0;
-        const maxAttempts = 10;
+        const maxAttempts = 20; // Increased attempts
         
         const findElement = () => {
           attempts++;
@@ -184,68 +184,103 @@ const TutorialOverlay = () => {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
             
+            // Check if we're on mobile
+            const isMobile = window.innerWidth <= 768;
+            const tooltipWidth = isMobile ? Math.min(340, window.innerWidth - 40) : 400;
+            const tooltipHeight = isMobile ? 280 : 220;
+            
             // Calculate position based on target and desired position
             let top, left;
             
-            switch (currentStepData.position) {
-              case 'bottom':
-                top = rect.bottom + scrollTop + 20;
-                left = rect.left + scrollLeft + (rect.width / 2) - 200; // Center tooltip
-                break;
-              case 'top':
-                top = rect.top + scrollTop - 220; // Tooltip height approximation
-                left = rect.left + scrollLeft + (rect.width / 2) - 200;
-                break;
-              case 'left':
-                top = rect.top + scrollTop + (rect.height / 2) - 100;
-                left = rect.left + scrollLeft - 420;
-                break;
-              case 'right':
-                top = rect.top + scrollTop + (rect.height / 2) - 100;
-                left = rect.right + scrollLeft + 20;
-                break;
-              default:
-                top = rect.top + scrollTop + rect.height + 20;
-                left = rect.left + scrollLeft;
+            if (isMobile) {
+              // On mobile, always center horizontally and position vertically based on target
+              left = Math.max(20, (window.innerWidth - tooltipWidth) / 2);
+              
+              switch (currentStepData.position) {
+                case 'top':
+                  top = Math.max(20, rect.top + scrollTop - tooltipHeight - 20);
+                  break;
+                case 'bottom':
+                  top = Math.min(window.innerHeight - tooltipHeight - 20, rect.bottom + scrollTop + 20);
+                  break;
+                default:
+                  // For mobile, prefer bottom positioning
+                  if (rect.bottom + scrollTop + tooltipHeight + 40 < window.innerHeight) {
+                    top = rect.bottom + scrollTop + 20;
+                  } else {
+                    top = Math.max(20, rect.top + scrollTop - tooltipHeight - 20);
+                  }
+              }
+            } else {
+              // Desktop positioning logic
+              switch (currentStepData.position) {
+                case 'bottom':
+                  top = rect.bottom + scrollTop + 20;
+                  left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2); // Center tooltip
+                  break;
+                case 'top':
+                  top = rect.top + scrollTop - tooltipHeight - 20;
+                  left = rect.left + scrollLeft + (rect.width / 2) - (tooltipWidth / 2);
+                  break;
+                case 'left':
+                  top = rect.top + scrollTop + (rect.height / 2) - (tooltipHeight / 2);
+                  left = rect.left + scrollLeft - tooltipWidth - 20;
+                  break;
+                case 'right':
+                  top = rect.top + scrollTop + (rect.height / 2) - (tooltipHeight / 2);
+                  left = rect.right + scrollLeft + 20;
+                  break;
+                default:
+                  top = rect.top + scrollTop + rect.height + 20;
+                  left = rect.left + scrollLeft;
+              }
             }
             
             // Ensure tooltip stays within viewport
-            top = Math.max(20, Math.min(top, window.innerHeight - 240));
-            left = Math.max(20, Math.min(left, window.innerWidth - 420));
+            top = Math.max(20, Math.min(top, window.innerHeight - tooltipHeight - 20));
+            left = Math.max(20, Math.min(left, window.innerWidth - tooltipWidth - 20));
             
             setOverlayPosition({ top, left });
             
-            // Scroll element into view smoothly
+            // Scroll element into view smoothly with better options for mobile
             element.scrollIntoView({
               behavior: 'smooth',
-              block: 'center',
+              block: isMobile ? 'start' : 'center',
               inline: 'center'
             });
           } else {
             console.log(`❌ Element not found: ${currentStepData.target}`);
             if (attempts < maxAttempts) {
-              setTimeout(findElement, 200);
+              setTimeout(findElement, 300); // Increased delay between attempts
             } else {
               console.log(`⚠️ Giving up on element: ${currentStepData.target}`);
               // Center the tooltip if element not found
               setTargetElement(null);
+              const isMobile = window.innerWidth <= 768;
+              const tooltipWidth = isMobile ? Math.min(340, window.innerWidth - 40) : 400;
+              const tooltipHeight = isMobile ? 280 : 220;
+              
               setOverlayPosition({
-                top: window.innerHeight / 2 - 150,
-                left: window.innerWidth / 2 - 200
+                top: Math.max(20, (window.innerHeight - tooltipHeight) / 2),
+                left: Math.max(20, (window.innerWidth - tooltipWidth) / 2)
               });
             }
           }
         };
         
-        // Start searching for element
-        setTimeout(findElement, 100);
+        // Start searching for element with longer initial delay
+        setTimeout(findElement, 500);
       } else {
         // Center the tooltip for steps without targets (like welcome)
         console.log(`🎯 Centering tooltip for step: ${currentStepData?.id}`);
         setTargetElement(null);
+        const isMobile = window.innerWidth <= 768;
+        const tooltipWidth = isMobile ? Math.min(340, window.innerWidth - 40) : 400;
+        const tooltipHeight = isMobile ? 280 : 220;
+        
         setOverlayPosition({
-          top: window.innerHeight / 2 - 150,
-          left: window.innerWidth / 2 - 200
+          top: Math.max(20, (window.innerHeight - tooltipHeight) / 2),
+          left: Math.max(20, (window.innerWidth - tooltipWidth) / 2)
         });
       }
     };
