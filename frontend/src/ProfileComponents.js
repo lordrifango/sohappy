@@ -22,8 +22,6 @@ export const ProfileCreationScreen = ({ onProfileCreated, sessionId }) => {
   const [error, setError] = useState('');
   const [avatarPreview, setAvatarPreview] = useState('');
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
