@@ -279,7 +279,7 @@ export const Dashboard = ({
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold text-gray-800">{t('dashboard.my_objectives')}</h3>
           <button className="bg-violet-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-600 transition-colors">
-            + Créer un nouveau projet
+            + {t('objectives.create_objective')}
           </button>
         </div>
         
