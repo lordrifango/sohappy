@@ -43,6 +43,10 @@ export const Header = ({ notifications, onNotificationClick, onProfileClick, pro
           <h1 className="text-2xl font-bold">Tonty</h1>
         </div>
         <div className="flex items-center space-x-4">
+          {/* Language Switcher */}
+          <div className="relative">
+            <LanguageSwitcher />
+          </div>
           <div className="relative">
             <button 
               onClick={onNotificationClick}
