@@ -67,7 +67,8 @@
     "upgrade": "Upgrade",
     "deposit": "Déposer",
     "withdraw": "Retirer",
-    "none": "Aucun"
+    "none": "Aucun",
+    "see_themed_tontines": "Voir les tontines à thèmes"
   },
   "objectives": {
     "create_title": "Quel type de projet voulez-vous lancer?",
