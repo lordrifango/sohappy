@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 // Profile Menu Component
 export const ProfileMenu = ({ isOpen, onClose, onProfileClick, onSettingsClick, onSupportClick, onLogoutClick }) => {
