@@ -76,15 +76,18 @@ export const ProfileCreationScreen = ({ onProfileCreated, sessionId }) => {
       
       if (result.success) {
         console.log('Profile created successfully:', result.profile);
+        // Keep loading state true to prevent multiple submissions
+        // onProfileCreated will handle the redirect
         onProfileCreated(result.profile);
+        // Don't set loading to false here to prevent re-enabling the button
       } else {
         setError(result.message || 'Erreur lors de la création du profil');
+        setLoading(false); // Only reset loading on error
       }
     } catch (error) {
       console.error('Error creating profile:', error);
       setError('Erreur lors de la création du profil');
-    } finally {
-      setLoading(false);
+      setLoading(false); // Only reset loading on error
     }
   };
 
