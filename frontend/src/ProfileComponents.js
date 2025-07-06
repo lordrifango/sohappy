@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useProfile } from './ProfileContext';
 
 // Profile Creation Component
 export const ProfileCreationScreen = ({ onProfileCreated, sessionId }) => {
   const { t } = useTranslation();
+  const { createProfile } = useProfile();
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
