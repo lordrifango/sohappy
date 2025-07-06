@@ -11,7 +11,6 @@ import { PhoneLoginScreen, SMSVerificationScreen } from './AuthComponents';
 import { ProfileCreationScreen, ProfileEditModal } from './ProfileComponents';
 import { useTranslation } from 'react-i18next';
 import { useLanguageInitializer } from './LanguageSwitcher';
-import { TutorialTestPage } from './TutorialTest'; // Import test page
 import { 
   Header, 
   Dashboard, 
