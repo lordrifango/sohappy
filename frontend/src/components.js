@@ -1338,11 +1338,16 @@ export const BottomNavigation = ({ activeTab, onTabChange }) => {
 };
 
 // Floating Action Button Component - Simplifié selon directives v2.0
-export const FloatingActionButton = ({ onCreateGoal }) => {
+export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) => {
   const { t } = useTranslation();
   const [position, setPosition] = useState({ x: window.innerWidth - 80, y: window.innerHeight - 160 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0, startX: 0, startY: 0 });
+
+  // Use fixed position during tutorial for easier targeting
+  const effectivePosition = tutorialActive 
+    ? { x: window.innerWidth - 80, y: window.innerHeight - 160 }
+    : position;
 
   const handleMouseDown = (e) => {
     if (e.button !== 0) return; // Seulement le clic gauche
