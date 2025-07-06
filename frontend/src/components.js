@@ -1447,7 +1447,7 @@ export const FloatingActionButton = ({ onCreateGoal }) => {
           userSelect: 'none',
           touchAction: 'none'
         }}
-        title="Créer un nouveau projet"
+        title={t('objectives.create_objective')}
       >
         <PlusIcon className="w-6 h-6" />
       </button>
