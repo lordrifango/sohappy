@@ -1438,9 +1438,9 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
     <div 
       className="fixed z-50"
       style={{ 
-        left: `${position.x}px`, 
-        top: `${position.y}px`,
-        cursor: isDragging ? 'grabbing' : 'grab'
+        left: `${effectivePosition.x}px`, 
+        top: `${effectivePosition.y}px`,
+        cursor: (isDragging && !tutorialActive) ? 'grabbing' : tutorialActive ? 'default' : 'grab'
       }}
     >
       {/* Main FAB - Directement à la création */}
@@ -1449,11 +1449,11 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         className={`w-14 h-14 bg-violet-500 text-white rounded-full shadow-lg hover:bg-violet-600 transition-all transform hover:scale-110 flex items-center justify-center ${
-          isDragging ? 'scale-110' : ''
-        }`}
+          isDragging && !tutorialActive ? 'scale-110' : ''
+        } ${tutorialActive ? 'ring-4 ring-violet-300 animate-pulse' : ''}`}
         style={{ 
           userSelect: 'none',
-          touchAction: 'none'
+          touchAction: tutorialActive ? 'auto' : 'none'
         }}
         title={t('objectives.create_objective')}
       >
@@ -1461,7 +1461,7 @@ export const FloatingActionButton = ({ onCreateGoal, tutorialActive = false }) =
       </button>
       
       {/* Indicateur de déplacement */}
-      {isDragging && (
+      {isDragging && !tutorialActive && (
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 bg-white px-2 py-1 rounded shadow">
           {t('common.move')}
         </div>
