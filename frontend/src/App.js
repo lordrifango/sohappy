@@ -345,6 +345,7 @@ const TontyApp = ({ sessionId }) => {
         onNotificationClick={() => setIsNotificationsOpen(true)}
         profileMenuProps={{
           onProfileClick: handleProfileClick,
+          onReplayTutorial: handleReplayTutorial,
           onSettingsClick: handleSettingsClick,
           onSupportClick: handleSupportClick,
           onLogoutClick: handleLogoutClick
