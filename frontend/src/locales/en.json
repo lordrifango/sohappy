@@ -46,6 +46,7 @@
   },
   "menu": {
     "my_profile": "My Profile",
+    "replay_tutorial": "Replay tutorial",
     "account_settings": "Account Settings",
     "help_support": "Help & Support",
     "logout": "Logout",
