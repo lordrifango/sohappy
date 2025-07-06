@@ -267,15 +267,18 @@ frontend:
 
   - task: "App Integration with Authentication"
     implemented: true
-    working: "NA"
+    working: true
     file: "App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Modified App.js to integrate authentication flow - users must authenticate before accessing Tonty app"
+      - working: true
+        agent: "testing"
+        comment: "App integration with authentication is working correctly. The AuthWrapper component properly manages the authentication flow, redirecting unauthenticated users to the login screen and authenticated users to either the profile creation page or the main app. The session persistence works correctly, and the loading states are properly displayed during transitions."
 
   - task: "Balance Management System"
     implemented: true
