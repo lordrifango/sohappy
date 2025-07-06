@@ -509,6 +509,7 @@ const AuthWrapper = () => {
   const [phoneData, setPhoneData] = useState(null);
   const [showProfileCreation, setShowProfileCreation] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   // Load profile when authenticated
   useEffect(() => {
@@ -541,7 +542,16 @@ const AuthWrapper = () => {
     }
   };
 
-  if (loading || (isAuthenticated && profileLoading)) {
+  const handleVerificationSuccess = (data) => {
+    setIsVerifying(true);
+    login(data.sessionId, data.phone, data.countryCode);
+    // Reset auth step to ensure proper navigation
+    setAuthStep('phone');
+    setPhoneData(null);
+    setIsVerifying(false);
+  };
+
+  if (loading || (isAuthenticated && profileLoading) || isVerifying) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center">
         <div className="text-white text-center">
@@ -566,9 +576,7 @@ const AuthWrapper = () => {
       return (
         <SMSVerificationScreen 
           phoneData={phoneData}
-          onVerificationSuccess={(data) => {
-            login(data.sessionId, data.phone, data.countryCode);
-          }}
+          onVerificationSuccess={handleVerificationSuccess}
           onBackToPhone={() => {
             setAuthStep('phone');
             setPhoneData(null);
