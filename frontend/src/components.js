@@ -37,6 +37,7 @@ export const ProfileMenu = ({ isOpen, onClose, onProfileClick, onSettingsClick, 
 
 // Header Component
 export const Header = ({ notifications, onNotificationClick, onProfileClick, profileMenuProps }) => {
+  const { t } = useTranslation();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   return (
@@ -70,7 +71,7 @@ export const Header = ({ notifications, onNotificationClick, onProfileClick, pro
               className="flex items-center space-x-2 hover:bg-white hover:bg-opacity-10 px-3 py-2 rounded-full text-sm transition-colors"
             >
               <UserIcon className="w-5 h-5" />
-              <span>Menu</span>
+              <span>{t('menu.menu')}</span>
             </button>
             
             <ProfileMenu 
