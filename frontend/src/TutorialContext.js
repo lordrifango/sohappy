@@ -175,11 +175,32 @@ const TutorialOverlay = () => {
           attempts++;
           console.log(`🎯 Searching for element: ${currentStepData.target} (attempt ${attempts})`);
           
-          const element = document.querySelector(currentStepData.target);
+          let element = document.querySelector(currentStepData.target);
+          
+          // Special handling for floating action button which might be in a dynamic position
+          if (!element && currentStepData.target === '.floating-action-button') {
+            // Try different selectors for FAB
+            element = document.querySelector('[title*="Créer"]') || 
+                     document.querySelector('button[class*="violet-500"][class*="rounded-full"]') ||
+                     document.querySelector('.fixed.z-50 button');
+            if (element) {
+              console.log(`✅ Found FAB using alternative selector`);
+            }
+          }
+          
+          // Special handling for bottom navigation
+          if (!element && currentStepData.target === '.bottom-navigation') {
+            element = document.querySelector('.fixed.bottom-0') || 
+                     document.querySelector('[class*="bottom-0"][class*="fixed"]');
+            if (element) {
+              console.log(`✅ Found bottom navigation using alternative selector`);
+            }
+          }
           
           if (element) {
             console.log(`✅ Found element: ${currentStepData.target}`);
             setTargetElement(element);
+            setIsSearching(false);
             
             const rect = element.getBoundingClientRect();
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
