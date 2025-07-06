@@ -1455,7 +1455,7 @@ export const FloatingActionButton = ({ onCreateGoal }) => {
       {/* Indicateur de déplacement */}
       {isDragging && (
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 bg-white px-2 py-1 rounded shadow">
-          Déplacer
+          {t('common.move')}
         </div>
       )}
     </div>
