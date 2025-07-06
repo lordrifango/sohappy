@@ -502,13 +502,11 @@ const AuthWrapper = () => {
   const { t } = useTranslation();
   const { isAuthenticated, loading, login, sessionId } = useAuth();
   const { profile, hasProfile, loading: profileLoading, loadProfile } = useProfile();
-  const { startTutorial, hasCompletedTutorial } = useTutorial();
   const { initializeLanguage } = useLanguageInitializer();
   
   const [authStep, setAuthStep] = useState('phone'); // 'phone' or 'verify'
   const [phoneData, setPhoneData] = useState(null);
   const [showProfileCreation, setShowProfileCreation] = useState(false);
-  const [showTutorial, setShowTutorial] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
 
   // Load profile when authenticated
@@ -525,21 +523,8 @@ const AuthWrapper = () => {
     }
   }, [profile]);
 
-  // Check if tutorial should be shown
-  useEffect(() => {
-    if (hasProfile && profile && !profile.has_completed_tutorial && !hasCompletedTutorial) {
-      setShowTutorial(true);
-    }
-  }, [hasProfile, profile, hasCompletedTutorial]);
-
   const handleProfileCreated = (newProfile) => {
     setShowProfileCreation(false);
-    // Start tutorial after profile creation
-    if (!newProfile.has_completed_tutorial) {
-      setTimeout(() => {
-        startTutorial();
-      }, 1000);
-    }
   };
 
   const handleVerificationSuccess = (data) => {
@@ -596,16 +581,34 @@ const AuthWrapper = () => {
     );
   }
 
-  // Show main app
+  // Show main app wrapped with all needed providers
   return (
     <TutorialProvider>
       <PremiumProvider>
         <BalanceProvider>
-          <TontyApp sessionId={sessionId} />
+          <AuthenticatedApp sessionId={sessionId} />
         </BalanceProvider>
       </PremiumProvider>
     </TutorialProvider>
   );
+};
+
+// Authenticated App Component - handles tutorial logic
+const AuthenticatedApp = ({ sessionId }) => {
+  const { profile } = useProfile();
+  const { startTutorial, hasCompletedTutorial } = useTutorial();
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  // Check if tutorial should be shown
+  useEffect(() => {
+    if (profile && !profile.has_completed_tutorial && !hasCompletedTutorial) {
+      setTimeout(() => {
+        startTutorial();
+      }, 1000);
+    }
+  }, [profile, hasCompletedTutorial, startTutorial]);
+
+  return <TontyApp sessionId={sessionId} />;
 };
 
 // Main App Component
