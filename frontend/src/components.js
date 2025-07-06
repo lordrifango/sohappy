@@ -3,14 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 // Profile Menu Component
-export const ProfileMenu = ({ isOpen, onClose, onProfileClick, onSettingsClick, onSupportClick, onLogoutClick }) => {
+export const ProfileMenu = ({ isOpen, onClose, onProfileClick, onSettingsClick, onSupportClick, onLogoutClick, onReplayTutorial }) => {
+  const { t } = useTranslation();
+  
   if (!isOpen) return null;
 
   const menuItems = [
-    { id: 'profile', label: 'Mon Profil', icon: '👤', onClick: onProfileClick },
-    { id: 'settings', label: 'Paramètres du compte', icon: '⚙️', onClick: onSettingsClick },
-    { id: 'support', label: 'Aide & Support', icon: '🆘', onClick: onSupportClick },
-    { id: 'logout', label: 'Déconnexion', icon: '🚪', onClick: onLogoutClick }
+    { id: 'profile', label: t('menu.my_profile'), icon: '👤', onClick: onProfileClick },
+    { id: 'tutorial', label: t('menu.replay_tutorial'), icon: '🎓', onClick: onReplayTutorial },
+    { id: 'settings', label: t('menu.account_settings'), icon: '⚙️', onClick: onSettingsClick },
+    { id: 'support', label: t('menu.help_support'), icon: '🆘', onClick: onSupportClick },
+    { id: 'logout', label: t('menu.logout'), icon: '🚪', onClick: onLogoutClick }
   ];
 
   return (
@@ -19,7 +22,7 @@ export const ProfileMenu = ({ isOpen, onClose, onProfileClick, onSettingsClick, 
         <button
           key={item.id}
           onClick={() => {
-            item.onClick();
+            item.onClick && item.onClick();
             onClose();
           }}
           className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
