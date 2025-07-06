@@ -46,6 +46,7 @@
   },
   "menu": {
     "my_profile": "Mon Profil",
+    "replay_tutorial": "Rejouer le tutoriel",
     "account_settings": "Paramètres du compte",
     "help_support": "Aide & Support",
     "logout": "Déconnexion",
