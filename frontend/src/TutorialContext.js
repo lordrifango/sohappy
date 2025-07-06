@@ -27,10 +27,10 @@ export const TutorialProvider = ({ children }) => {
       position: 'center'
     },
     {
-      id: 'dashboard',
-      title: t('tutorial.dashboard_title'),
-      message: t('tutorial.dashboard_message'),
-      target: '.dashboard-balance', // Target the balance card
+      id: 'balance',
+      title: t('tutorial.balance_title'),
+      message: t('tutorial.balance_message'),
+      target: '.balance-actions', // Target la carte solde complète avec boutons intégrés
       position: 'bottom'
     },
     {
@@ -41,48 +41,51 @@ export const TutorialProvider = ({ children }) => {
       position: 'left'
     },
     {
-      id: 'balance',
-      title: t('tutorial.balance_title'),
-      message: t('tutorial.balance_message'),
-      target: '.balance-actions', // Target la carte solde complète avec boutons intégrés
-      position: 'bottom'
-    },
-    {
       id: 'social',
       title: t('tutorial.social_title'),
       message: t('tutorial.social_message'),
-      target: '.bottom-navigation', // Target the social tab
+      target: '.bottom-navigation', // Target the bottom navigation
       position: 'top'
     }
   ], [t]);
 
   const startTutorial = () => {
-    setIsActive(true);
-    setCurrentStep(0);
+    console.log('🎓 Starting tutorial...');
     setHasCompletedTutorial(false); // Reset completion status when replaying
+    setCurrentStep(0);
+    setIsActive(true);
   };
 
   const nextStep = () => {
+    console.log(`🎓 Current step: ${currentStep}, Total steps: ${tutorialSteps.length}`);
+    
     if (currentStep < tutorialSteps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      const newStep = currentStep + 1;
+      console.log(`🎓 Moving to step: ${newStep}`);
+      setCurrentStep(newStep);
     } else {
+      console.log('🎓 Tutorial completed');
       completeTutorial();
     }
   };
 
   const previousStep = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      const newStep = currentStep - 1;
+      console.log(`🎓 Moving back to step: ${newStep}`);
+      setCurrentStep(newStep);
     }
   };
 
   const skipTutorial = () => {
+    console.log('🎓 Tutorial skipped');
     setIsActive(false);
     setHasCompletedTutorial(true);
     localStorage.setItem('tonty_tutorial_completed', 'true');
   };
 
   const completeTutorial = () => {
+    console.log('🎓 Tutorial completed');
     setIsActive(false);
     setHasCompletedTutorial(true);
     localStorage.setItem('tonty_tutorial_completed', 'true');
