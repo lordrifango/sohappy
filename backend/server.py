@@ -80,6 +80,22 @@ class UserProfile(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+# Network Models
+class NetworkMember(BaseModel):
+    id: str
+    avatar_url: Optional[str] = None
+    initials: str
+    full_name: str
+    trust_link: str
+    member_since: Optional[str] = None
+    common_tontines: List[str] = []
+    collaboration_duration: str = "0 mois"
+
+class NetworkResponse(BaseModel):
+    success: bool
+    message: str
+    members: List[NetworkMember] = []
+
 class UserProfileCreate(BaseModel):
     first_name: str
     last_name: str
