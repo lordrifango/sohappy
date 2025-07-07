@@ -439,18 +439,29 @@ def run_all_tests():
         
         # Test profile endpoints
         print("\n=== Testing Profile Endpoints ===")
-        # Test profile creation
-        test_profile_create_endpoint(verified_session_id)
+        
+        # Create a new session with a unique phone number for profile tests
+        unique_phone = f"650555{int(time.time()) % 10000}"
+        print(f"\nCreating a new session with unique phone: {unique_phone}")
+        
+        new_session_id = create_and_verify_session(unique_phone, valid_country_code)
+        print(f"New session ID for profile tests: {new_session_id}")
+        
+        # Test profile creation with the new session
+        profile_created = test_profile_create_endpoint(new_session_id)
+        
+        # If profile creation failed, we'll use the original session for remaining tests
+        test_session_id = new_session_id if profile_created else verified_session_id
         
         # Test profile retrieval
-        test_profile_get_endpoint(verified_session_id)
+        test_profile_get_endpoint(test_session_id)
         
         # Test profile update
-        test_profile_update_endpoint(verified_session_id)
+        test_profile_update_endpoint(test_session_id)
         
         # Test network endpoint
         print("\n=== Testing Network Endpoint ===")
-        test_network_endpoint(verified_session_id)
+        test_network_endpoint(test_session_id)
         
         # Run performance tests
         print("\n=== Running Performance Tests ===")
