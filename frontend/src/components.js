@@ -201,9 +201,19 @@ export const Dashboard = ({
           </div>
         </div>
         <div className="mt-4 bg-emerald-50 rounded-xl p-4 text-center">
-          <button onClick={onMembersClick} className="w-full text-center hover:bg-emerald-100 rounded-lg p-1 transition-all">
-            <p className="text-sm text-emerald-600 font-medium mb-1">{t('dashboard.network_members')}</p>
-            <p className="text-2xl font-bold text-emerald-700">{connectedMembers}</p>
+          <button 
+            onClick={onMembersClick} 
+            className="w-full text-center hover:bg-emerald-100 rounded-lg p-2 transition-all transform hover:scale-105 cursor-pointer group"
+          >
+            <p className="text-sm text-emerald-600 font-medium mb-1 group-hover:text-emerald-700 transition-colors">
+              {t('dashboard.network_members')}
+            </p>
+            <p className="text-2xl font-bold text-emerald-700 group-hover:text-emerald-800 transition-colors">
+              {connectedMembers}
+            </p>
+            <p className="text-xs text-emerald-500 mt-1 group-hover:text-emerald-600 transition-colors">
+              👥 Explorez votre réseau de confiance
+            </p>
           </button>
         </div>
       </div>
