@@ -386,7 +386,7 @@ const TontyApp = ({ sessionId }) => {
                   onTontineSelect={handleTontineSelect}
                   currency={currency}
                   onCurrencyToggle={handleCurrencyToggle}
-                  onMembersClick={() => setIsMembersListOpen(true)}
+                  onMembersClick={() => window.location.href = '/network'}
                   onUpcomingToursClick={() => setIsUpcomingToursOpen(true)}
                   onDepositClick={() => setIsDepositOpen(true)}
                   onWithdrawClick={() => setIsWithdrawOpen(true)}
