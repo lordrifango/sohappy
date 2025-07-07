@@ -6,14 +6,8 @@ import re
 import statistics
 from datetime import datetime
 
-# Get the backend URL from the frontend .env file
-with open('/app/frontend/.env', 'r') as f:
-    env_content = f.read()
-    backend_url_match = re.search(r'REACT_APP_BACKEND_URL=(.+)', env_content)
-    if backend_url_match:
-        BACKEND_URL = backend_url_match.group(1).strip()
-    else:
-        raise ValueError("Could not find REACT_APP_BACKEND_URL in frontend/.env")
+# Use the internal backend URL for testing
+BACKEND_URL = "http://localhost:8001"
 
 print(f"Using backend URL: {BACKEND_URL}")
 
