@@ -209,6 +209,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified profile retrieval API is still working correctly after recent frontend modifications. GET /api/profile/{session_id} successfully retrieves profiles and handles non-existent profiles and invalid sessions with appropriate error messages. Performance tests show good response times: profile-get (avg: 28.45ms)."
+      - working: true
+        agent: "testing"
+        comment: "Verified profile retrieval API is still working correctly after Trust Passport implementation. GET /api/profile/{session_id} successfully retrieves profiles and handles non-existent profiles and invalid sessions with appropriate error messages. Cross-user profile logic is working correctly, with proper session validation and user differentiation. Performance tests show excellent response times: profile-get (avg: 16.11ms)."
 
   - task: "Profile Update API"
     implemented: true
