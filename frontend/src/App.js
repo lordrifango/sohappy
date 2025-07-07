@@ -37,6 +37,7 @@ import TrustPassportPage from './TrustPassportPage';
 import NetworkScreen from './NetworkScreen';
 import ConnectionDetailScreen from './ConnectionDetailScreen';
 import GroupActivityFeed from './GroupActivityFeed';
+import SocialFeedWithTabs from './SocialFeedWithTabs';
 
 const TontyApp = ({ sessionId }) => {
   const { t } = useTranslation();
