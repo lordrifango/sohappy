@@ -34,6 +34,8 @@ import {
   PricingPage
 } from './components';
 import TrustPassportPage from './TrustPassportPage';
+import NetworkScreen from './NetworkScreen';
+import ConnectionDetailScreen from './ConnectionDetailScreen';
 
 const TontyApp = ({ sessionId }) => {
   const { t } = useTranslation();
