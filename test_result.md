@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Modifier le tableau de bord des tontines pour être plus logique et réel sans mock data. Passer de 6 à 3 tontines actives de base avec barre de progression logique (1,2,3 ou illimité premium). Afficher la limite atteinte avant upgrade. Rendre les cagnottes visibles dans le dashboard 'mes objectifs' (renommé). Ajouter message de succès création cagnotte et possibilité de partage."
+user_problem_statement: "Modifier le système de profil pour implémenter un 'Mon Passeport de Confiance' intelligent. Pour les nouveaux utilisateurs: afficher le modal de création de profil existant. Pour les utilisateurs existants: afficher une nouvelle page 'Mon Passeport de Confiance' avec bilan de confiance (Fiabilité, Engagement, Réseau), badges de réalisations, et bouton pour modifier le profil."
 
 backend:
   - task: "Authentication API Endpoints"
