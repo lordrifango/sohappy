@@ -188,6 +188,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified profile creation API is still working correctly after recent frontend modifications. POST /api/profile/create successfully creates profiles with valid data and properly handles validation errors, duplicate profiles, and invalid sessions. Performance tests show good response times: profile-create (avg: 37.08ms)."
+      - working: true
+        agent: "testing"
+        comment: "Verified profile creation API is still working correctly after Trust Passport implementation. POST /api/profile/create successfully creates profiles with valid data and properly handles validation errors, duplicate profiles, and invalid sessions. Performance tests show excellent response times: profile-create (avg: 8.04ms)."
 
   - task: "Profile Retrieval API"
     implemented: true
