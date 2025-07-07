@@ -303,12 +303,32 @@ const TontyApp = ({ sessionId }) => {
 
   // Handlers pour le menu profil
   const handleProfileClick = () => {
-    setIsProfileEditOpen(true);
+    // Check if user has a profile
+    if (hasProfile && profile) {
+      // Existing user - show Trust Passport
+      setIsTrustPassportOpen(true);
+    } else {
+      // New user - show profile creation/edit modal
+      setIsProfileEditOpen(true);
+    }
   };
 
   const handleProfileUpdated = (updatedProfile) => {
     // Profile will be automatically updated by the ProfileContext
     alert(t('profile.profile_updated'));
+  };
+
+  const handleEditProfileFromTrustPassport = () => {
+    setIsTrustPassportOpen(false);
+    setIsProfileEditOpen(true);
+  };
+
+  const handleProfileEditClosed = () => {
+    setIsProfileEditOpen(false);
+    // If user came from Trust Passport, return to it
+    if (hasProfile && profile) {
+      setIsTrustPassportOpen(true);
+    }
   };
 
   const handleReplayTutorial = () => {
