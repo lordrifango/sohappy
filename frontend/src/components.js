@@ -259,38 +259,10 @@ export const Dashboard = ({
         </div>
       </div>
 
-      <div className="text-center">
-        <button className="text-violet-600 text-sm hover:underline">
-          {t('dashboard.see_themed_tontines')}
-        </button>
-      </div>
-
-      {/* Premium Status - Déplacé et simplifié */}
-      {isPremium && (
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-xl shadow-lg mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <span className="text-xl">⭐</span>
-              <div>
-                <h3 className="font-bold">Tonty Premium</h3>
-                <p className="text-sm opacity-90">Toutes les fonctionnalités débloquées</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm opacity-90">Objectifs illimités</p>
-              <p className="font-bold">Actif</p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Objectifs List */}
       <div>
-        <div className="flex justify-between items-center mb-4">
+        <div className="mb-4">
           <h3 className="text-xl font-semibold text-gray-800">{t('dashboard.my_objectives')}</h3>
-          <button className="bg-violet-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-600 transition-colors">
-            + {t('objectives.create_objective')}
-          </button>
         </div>
         
         <div className="space-y-4">
