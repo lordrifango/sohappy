@@ -94,7 +94,7 @@ const UserPostCard = ({ post }) => {
 };
 
 // Composant principal GroupActivityFeed
-const GroupActivityFeed = ({ groupId, sessionId }) => {
+const GroupActivityFeed = ({ groupId, sessionId, isEmbedded = false }) => {
   const [feedItems, setFeedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
