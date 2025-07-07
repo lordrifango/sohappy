@@ -33,6 +33,7 @@ import {
   PremiumModal,
   PricingPage
 } from './components';
+import TrustPassportPage from './TrustPassportPage';
 
 const TontyApp = ({ sessionId }) => {
   const { t } = useTranslation();
