@@ -76,9 +76,18 @@ const DiscussionsTab = ({ tontines, onGroupClick }) => {
   );
 };
 
-// Composant pour l'onglet Communauté - Feed général
+// Composant pour l'onglet Communauté - Feed général avec invitation d'amis
 const CommunityTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteMethod, setInviteMethod] = useState('search'); // 'search' or 'invite'
+
+  // Mock data pour les amis trouvés
+  const mockFoundFriends = [
+    { id: 1, name: 'Sékou Traoré', phone: '+225 07 12 34 56 78', isOnTonty: true, avatar: 'ST', color: 'bg-green-500' },
+    { id: 2, name: 'Fatoumata Diallo', phone: '+225 01 23 45 67 89', isOnTonty: false, avatar: 'FD', color: 'bg-blue-500' },
+    { id: 3, name: 'Mamadou Koné', phone: '+225 05 98 76 54 32', isOnTonty: true, avatar: 'MK', color: 'bg-purple-500' },
+  ];
 
   // Feed de la communauté avec des événements généraux
   const mockCommunityData = [
@@ -124,9 +133,212 @@ const CommunityTab = () => {
     }
   ];
 
+  const handleShareTonty = () => {
+    const shareText = `🎯 Rejoignez-moi sur Tonty ! 
+L'application qui révolutionne l'épargne en groupe en Afrique.
+💰 Tontines sécurisées
+🤝 Réseau de confiance  
+📈 Suivi en temps réel
+
+Téléchargez Tonty maintenant : https://tonty.app`;
+
+    try {
+      if (navigator.share && typeof navigator.share === 'function') {
+        navigator.share({
+          title: 'Rejoignez-moi sur Tonty !',
+          text: shareText,
+          url: 'https://tonty.app'
+        });
+      } else {
+        // Fallback: copier dans le presse-papier
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareText).then(() => {
+            alert('🎉 Lien d\'invitation copié ! Partagez-le avec vos amis.');
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors du partage:', error);
+      alert('📋 Lien copié ! Partagez-le avec vos amis sur WhatsApp, SMS ou email.');
+    }
+  };
+
   return (
     <div className="p-4">
-      {/* Barre de recherche */}
+      {/* Section Invitation d'amis - Nouvel ajout */}
+      <div className="bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-200 rounded-xl p-6 mb-6">
+        <div className="text-center mb-4">
+          <h3 className="text-lg font-bold text-emerald-800 mb-2">
+            👫 Invitez vos amis sur Tonty !
+          </h3>
+          <p className="text-emerald-700 text-sm">
+            Plus vous êtes nombreux, plus vos épargnes sont sécurisées et motivantes.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <button 
+            onClick={() => setShowInviteModal(true)}
+            className="flex items-center justify-center space-x-2 bg-emerald-500 text-white py-3 px-4 rounded-xl hover:bg-emerald-600 transition-colors"
+          >
+            <span>🔍</span>
+            <span className="font-medium">Rechercher des amis</span>
+          </button>
+          
+          <button 
+            onClick={handleShareTonty}
+            className="flex items-center justify-center space-x-2 bg-blue-500 text-white py-3 px-4 rounded-xl hover:bg-blue-600 transition-colors"
+          >
+            <span>📲</span>
+            <span className="font-medium">Partager Tonty</span>
+          </button>
+          
+          <button 
+            onClick={() => {
+              const message = "Salut ! J'utilise Tonty pour mes épargnes en groupe. Rejoins-moi ! https://tonty.app";
+              window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+            }}
+            className="flex items-center justify-center space-x-2 bg-green-500 text-white py-3 px-4 rounded-xl hover:bg-green-600 transition-colors"
+          >
+            <span>💬</span>
+            <span className="font-medium">Via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Modal de recherche/invitation */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-6 rounded-t-3xl">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Trouvez vos amis</h2>
+                <button 
+                  onClick={() => setShowInviteModal(false)}
+                  className="text-white hover:text-gray-200"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              {/* Méthodes d'invitation */}
+              <div className="flex mb-4 bg-gray-100 rounded-xl p-1">
+                <button
+                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                    inviteMethod === 'search' 
+                      ? 'bg-white text-emerald-600 shadow-sm' 
+                      : 'text-gray-600'
+                  }`}
+                  onClick={() => setInviteMethod('search')}
+                >
+                  🔍 Rechercher
+                </button>
+                <button
+                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                    inviteMethod === 'invite' 
+                      ? 'bg-white text-emerald-600 shadow-sm' 
+                      : 'text-gray-600'
+                  }`}
+                  onClick={() => setInviteMethod('invite')}
+                >
+                  📲 Inviter
+                </button>
+              </div>
+
+              {inviteMethod === 'search' ? (
+                <div>
+                  <div className="relative mb-4">
+                    <input
+                      type="text"
+                      placeholder="Rechercher par nom ou numéro..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    />
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Résultats de recherche */}
+                  <div className="space-y-3">
+                    {(searchQuery ? mockFoundFriends.filter(friend => 
+                      friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      friend.phone.includes(searchQuery)
+                    ) : mockFoundFriends).map(friend => (
+                      <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-10 h-10 ${friend.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                            {friend.avatar}
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-gray-800">{friend.name}</h4>
+                            <p className="text-xs text-gray-500">{friend.phone}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {friend.isOnTonty ? (
+                            <>
+                              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
+                                Sur Tonty
+                              </span>
+                              <button className="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-emerald-600">
+                                Ajouter
+                              </button>
+                            </>
+                          ) : (
+                            <button className="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600">
+                              Inviter
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">📲</div>
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">Invitez par lien</h3>
+                  <p className="text-gray-600 text-sm mb-6">
+                    Partagez votre lien d'invitation personnel
+                  </p>
+                  
+                  <div className="bg-gray-100 rounded-xl p-4 mb-4">
+                    <p className="text-sm text-gray-700 break-all">
+                      https://tonty.app/invite/AZER123
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText('https://tonty.app/invite/AZER123');
+                        alert('Lien copié !');
+                      }}
+                      className="w-full bg-emerald-500 text-white py-3 rounded-xl hover:bg-emerald-600"
+                    >
+                      📋 Copier le lien
+                    </button>
+                    <button 
+                      onClick={() => window.open('https://wa.me/?text=Rejoins-moi sur Tonty ! https://tonty.app/invite/AZER123', '_blank')}
+                      className="w-full bg-green-500 text-white py-3 rounded-xl hover:bg-green-600"
+                    >
+                      💬 Partager sur WhatsApp
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Barre de recherche pour la communauté */}
       <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-4">
         <div className="relative">
           <input
