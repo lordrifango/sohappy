@@ -230,6 +230,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified profile update API is still working correctly after recent frontend modifications. PUT /api/profile/{session_id} successfully updates profiles while preserving unchanged fields and properly handles non-existent profiles and invalid sessions with appropriate error messages. Performance tests show good response times: profile-update (avg: 33.55ms)."
+      - working: true
+        agent: "testing"
+        comment: "Verified profile update API is still working correctly after Trust Passport implementation. PUT /api/profile/{session_id} successfully updates profiles while preserving unchanged fields and properly handles non-existent profiles and invalid sessions with appropriate error messages. Performance tests show excellent response times: profile-update (avg: 10.49ms)."
 
   - task: "Trust Passport Page Component"
     implemented: true
