@@ -154,14 +154,16 @@ const GroupActivityFeed = ({ groupId, sessionId, isEmbedded = false }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* En-tête du fil d'activité */}
-      <div className="bg-gradient-to-r from-violet-500 to-indigo-600 text-white p-4">
-        <h1 className="text-2xl font-bold mb-1">Fil d'Activité du Groupe</h1>
-        <p className="opacity-90 text-sm">
-          Suivez l'historique vivante et inaltérable de votre groupe
-        </p>
-      </div>
+    <div className={isEmbedded ? "bg-gray-50" : "min-h-screen bg-gray-50"}>
+      {/* En-tête du fil d'activité - seulement si pas intégré */}
+      {!isEmbedded && (
+        <div className="bg-gradient-to-r from-violet-500 to-indigo-600 text-white p-4">
+          <h1 className="text-2xl font-bold mb-1">Fil d'Activité du Groupe</h1>
+          <p className="opacity-90 text-sm">
+            Suivez l'historique vivante et inaltérable de votre groupe
+          </p>
+        </div>
+      )}
 
       {/* Zone de création de post */}
       <div className="p-4">
