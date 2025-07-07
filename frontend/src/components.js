@@ -259,6 +259,25 @@ export const Dashboard = ({
         </div>
       </div>
 
+      {/* Premium Status - Affichage conditionnel */}
+      {isPremium && (
+        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-xl shadow-lg mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <span className="text-xl">⭐</span>
+              <div>
+                <h3 className="font-bold">Tonty Premium</h3>
+                <p className="text-sm opacity-90">Toutes les fonctionnalités débloquées</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-sm opacity-90">Objectifs illimités</p>
+              <p className="font-bold">Actif</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Objectifs List */}
       <div>
         <div className="mb-4">
