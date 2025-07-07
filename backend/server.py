@@ -511,6 +511,161 @@ async def get_user_network(session_id: str):
         logger.error(f"Error getting network: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération du réseau")
 
+# Ledger Event Models for the chronological registry system
+class LedgerEvent(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    group_id: str
+    event_type: str  # 'payment', 'member_joined', 'goal_achieved', 'cycle_completed', etc.
+    icon_name: str  # 'cash', 'arrow-right', 'flag', 'lock-closed'
+    content: str  # The generated system message
+    actor_name: Optional[str] = None  # Who performed the action
+    amount: Optional[str] = None  # For payment events
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    is_immutable: bool = True  # Always true for ledger events
+
+class UserPost(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    group_id: str
+    author_name: str
+    author_avatar_url: Optional[str] = None
+    content: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    likes: int = 0
+    comments: int = 0
+
+class FeedItem(BaseModel):
+    type: str  # 'POST' or 'LEDGER_EVENT'
+    id: str
+    timestamp: datetime
+    # For posts
+    author: Optional[dict] = None
+    content: Optional[str] = None
+    likes: Optional[int] = None
+    comments: Optional[int] = None
+    # For ledger events
+    icon_name: Optional[str] = None
+
+class GroupFeedResponse(BaseModel):
+    success: bool
+    message: str
+    items: List[FeedItem] = []
+
+# Group Activity Feed endpoint
+@api_router.get("/v1/group/{group_id}/feed", response_model=GroupFeedResponse)
+async def get_group_activity_feed(group_id: str, session_id: str):
+    """
+    Get mixed activity feed for a group (user posts + system ledger events)
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        # Mock data for demonstration - In reality, this would fetch from database
+        mock_ledger_events = [
+            {
+                "type": "LEDGER_EVENT",
+                "id": "evt_001",
+                "icon_name": "cash",
+                "content": "Mariam K. a payé sa cotisation de 250 000 FCFA.",
+                "timestamp": datetime.utcnow() - timedelta(hours=2)
+            },
+            {
+                "type": "LEDGER_EVENT", 
+                "id": "evt_002",
+                "icon_name": "arrow-right",
+                "content": "Abdoulaye C. a rejoint le groupe.",
+                "timestamp": datetime.utcnow() - timedelta(hours=6)
+            },
+            {
+                "type": "LEDGER_EVENT",
+                "id": "evt_003", 
+                "icon_name": "flag",
+                "content": "Le groupe a atteint 75% de son objectif trimestriel.",
+                "timestamp": datetime.utcnow() - timedelta(days=1)
+            },
+            {
+                "type": "LEDGER_EVENT",
+                "id": "evt_004",
+                "icon_name": "cash",
+                "content": "Fatou D. a validé la réception du tour.",
+                "timestamp": datetime.utcnow() - timedelta(days=2)
+            },
+            {
+                "type": "LEDGER_EVENT",
+                "id": "evt_005",
+                "icon_name": "lock-closed",
+                "content": "Le système a enregistré une nouvelle échéance : Tour du 15 Mars 2025.",
+                "timestamp": datetime.utcnow() - timedelta(days=3)
+            }
+        ]
+        
+        mock_user_posts = [
+            {
+                "type": "POST",
+                "id": "post_001",
+                "author": {
+                    "name": "Moussa C.",
+                    "avatarUrl": None
+                },
+                "content": "N'oubliez pas le paiement de demain les amis !",
+                "timestamp": datetime.utcnow() - timedelta(hours=4),
+                "likes": 5,
+                "comments": 2
+            },
+            {
+                "type": "POST", 
+                "id": "post_002",
+                "author": {
+                    "name": "Aminata K.",
+                    "avatarUrl": None
+                },
+                "content": "Merci à tous pour votre soutien. J'ai bien reçu mon tour ! 🎉",
+                "timestamp": datetime.utcnow() - timedelta(hours=8),
+                "likes": 12,
+                "comments": 6
+            },
+            {
+                "type": "POST",
+                "id": "post_003", 
+                "author": {
+                    "name": "Ibrahim T.",
+                    "avatarUrl": None
+                },
+                "content": "Une question sur l'ordre des tours : est-ce qu'on peut échanger nos positions ?",
+                "timestamp": datetime.utcnow() - timedelta(days=1, hours=2),
+                "likes": 3,
+                "comments": 8
+            }
+        ]
+        
+        # Combine and sort by timestamp (most recent first)
+        all_items = mock_ledger_events + mock_user_posts
+        all_items.sort(key=lambda x: x['timestamp'], reverse=True)
+        
+        # Convert timestamps to ISO format for JSON serialization
+        for item in all_items:
+            item['timestamp'] = item['timestamp'].isoformat()
+        
+        logger.info(f"Retrieved feed for group {group_id} with {len(all_items)} items")
+        
+        return GroupFeedResponse(
+            success=True,
+            message=f"Feed récupéré avec succès ({len(all_items)} éléments)",
+            items=all_items
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting group feed: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération du feed")
+
 # Include the router in the main app
 app.include_router(api_router)
 
