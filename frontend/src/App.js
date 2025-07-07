@@ -516,11 +516,20 @@ const TontyApp = ({ sessionId }) => {
       {/* Profile Edit Modal */}
       <ProfileEditModal 
         isOpen={isProfileEditOpen}
-        onClose={() => setIsProfileEditOpen(false)}
+        onClose={handleProfileEditClosed}
         sessionId={sessionId}
         currentProfile={profile}
         onProfileUpdated={handleProfileUpdated}
       />
+
+      {/* Trust Passport Page */}
+      {isTrustPassportOpen && (
+        <TrustPassportPage
+          sessionId={sessionId}
+          onClose={() => setIsTrustPassportOpen(false)}
+          onEditProfile={handleEditProfileFromTrustPassport}
+        />
+      )}
     </div>
   );
 };
