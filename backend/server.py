@@ -425,6 +425,92 @@ async def update_user_profile(session_id: str, request: UserProfileUpdate):
         logger.error(f"Error updating profile: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour du profil")
 
+# Network endpoint
+@api_router.get("/network/{session_id}", response_model=NetworkResponse)
+async def get_user_network(session_id: str):
+    """
+    Get user's trust network members
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Mock network data - In a real app, this would be calculated from tontine memberships
+        mock_network_members = [
+            NetworkMember(
+                id="usr_001",
+                avatar_url=None,
+                initials="MK",
+                full_name="Mariam Konaté",
+                trust_link="Membre de la Tontine Familiale Konaté avec vous.",
+                member_since="Février 2025",
+                common_tontines=["TFK"],
+                collaboration_duration="2 ans"
+            ),
+            NetworkMember(
+                id="usr_002",
+                avatar_url=None,
+                initials="AK", 
+                full_name="Aminata Koné",
+                trust_link="Vous avez participé à 2 projets ensemble.",
+                member_since="Mars 2025",
+                common_tontines=["TFK", "GAA"],
+                collaboration_duration="1 an 8 mois"
+            ),
+            NetworkMember(
+                id="usr_003",
+                avatar_url=None,
+                initials="FD",
+                full_name="Fatou Diallo", 
+                trust_link="Lien via Moussa C. dans le Groupe Amis Abidjan.",
+                member_since="Janvier 2025",
+                common_tontines=["GAA"],
+                collaboration_duration="10 mois"
+            ),
+            NetworkMember(
+                id="usr_004",
+                avatar_url=None,
+                initials="IT",
+                full_name="Ibrahim Touré",
+                trust_link="Membre de votre réseau depuis Février 2025.",
+                member_since="Février 2025", 
+                common_tontines=["ÉQB"],
+                collaboration_duration="11 mois"
+            ),
+            NetworkMember(
+                id="usr_005",
+                avatar_url=None,
+                initials="MC",
+                full_name="Moussa Camara",
+                trust_link="Co-fondateur de 3 tontines avec vous.",
+                member_since="Janvier 2025",
+                common_tontines=["TFK", "GAA", "ÉQB"],
+                collaboration_duration="2 ans 1 mois"
+            )
+        ]
+        
+        logger.info(f"Retrieved network for {session.country_code}{session.phone}")
+        
+        return NetworkResponse(
+            success=True,
+            message=f"Réseau récupéré avec succès ({len(mock_network_members)} membres)",
+            members=mock_network_members
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting network: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération du réseau")
+
 # Include the router in the main app
 app.include_router(api_router)
 
