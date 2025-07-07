@@ -368,6 +368,54 @@ def test_profile_update_endpoint(session_id):
     
     return True
 
+def test_network_endpoint(session_id):
+    """Test the /api/network/{session_id} endpoint"""
+    print("\n=== Testing GET /api/network/{session_id} ===")
+    
+    # Test with valid session_id
+    print("\nTesting with valid session_id:")
+    url = f"{BACKEND_URL}/api/network/{session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "members" in data, "Expected members in response"
+    assert isinstance(data["members"], list), "Expected members to be a list"
+    
+    # Validate member structure if there are members
+    if len(data["members"]) > 0:
+        member = data["members"][0]
+        assert "id" in member, "Expected id in member"
+        assert "full_name" in member, "Expected full_name in member"
+        assert "initials" in member, "Expected initials in member"
+        assert "trust_link" in member, "Expected trust_link in member"
+        assert "common_tontines" in member, "Expected common_tontines in member"
+        assert isinstance(member["common_tontines"], list), "Expected common_tontines to be a list"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    url = f"{BACKEND_URL}/api/network/{invalid_session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    return True
+
 def run_all_tests():
     """Run all tests in sequence"""
     try:
@@ -399,6 +447,10 @@ def run_all_tests():
         
         # Test profile update
         test_profile_update_endpoint(verified_session_id)
+        
+        # Test network endpoint
+        print("\n=== Testing Network Endpoint ===")
+        test_network_endpoint(verified_session_id)
         
         # Run performance tests
         print("\n=== Running Performance Tests ===")
