@@ -36,6 +36,7 @@ import {
 import TrustPassportPage from './TrustPassportPage';
 import NetworkScreen from './NetworkScreen';
 import ConnectionDetailScreen from './ConnectionDetailScreen';
+import GroupActivityFeed from './GroupActivityFeed';
 
 const TontyApp = ({ sessionId }) => {
   const { t } = useTranslation();
