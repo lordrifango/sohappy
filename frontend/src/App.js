@@ -411,9 +411,9 @@ const TontyApp = ({ sessionId }) => {
               )}
               
               {activeTab === 'social' && (
-                <GroupActivityFeed 
-                  groupId="demo_group_001" 
-                  sessionId={sessionId} 
+                <SocialFeedWithTabs 
+                  tontines={allObjectives} 
+                  sessionId={sessionId}
                 />
               )}
             </>
