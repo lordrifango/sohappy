@@ -378,8 +378,6 @@ const TontyApp = ({ sessionId }) => {
       
       <main className="pb-20 bg-gray-50">
         <Routes>
-          <Route path="/network" element={<NetworkScreen />} />
-          <Route path="/network/connection/:memberId" element={<ConnectionDetailScreen />} />
           <Route path="/" element={
             <>
               {activeTab === 'dashboard' && (
@@ -416,6 +414,8 @@ const TontyApp = ({ sessionId }) => {
               )}
             </>
           } />
+          <Route path="/network" element={<NetworkScreen />} />
+          <Route path="/network/connection/:memberId" element={<ConnectionDetailScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
