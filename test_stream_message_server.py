@@ -157,7 +157,7 @@ def test_message_sending():
         }
         
         # Send the message using the server client
-        message_response = channel.send_message(message)
+        message_response = channel.send_message(message, user_id)
         print(f"Message response: {json.dumps(message_response, indent=2)}")
         
         # Verify the message was sent successfully
