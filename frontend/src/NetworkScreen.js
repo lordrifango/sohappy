@@ -666,6 +666,17 @@ const NetworkScreen = () => {
           </>
         )}
       </div>
+      
+      {/* Modals */}
+      <UserSearchModal 
+        isOpen={isUserSearchModalOpen}
+        onClose={() => setIsUserSearchModalOpen(false)}
+      />
+      
+      <ContactsList 
+        isOpen={isContactsListOpen}
+        onClose={() => setIsContactsListOpen(false)}
+      />
     </div>
   );
 };
