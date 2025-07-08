@@ -92,17 +92,32 @@ const NetworkMemberCard = ({ member, onInvite, onCreateGroup, onViewConnection }
 // Page principale du Réseau de Confiance
 const NetworkScreen = () => {
   const navigate = useNavigate();
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [error, setError] = useState(null);
-  const [activeNetworkTab, setActiveNetworkTab] = useState('membres'); // 'membres' ou 'discussions'
   
-  // GetStream integration
-  const { chatClient, streamToken, getUserChannels, createTontineChannel, isConnecting } = useStreamClient();
+  // États pour les données et l'interface
+  const [members, setMembers] = useState([]);
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState(null);
+  const [activeNetworkTab, setActiveNetworkTab] = useState('membres');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // États pour le chat
   const [channelsLoading, setChannelsLoading] = useState(true);
+  
+  // États pour les nouvelles fonctionnalités
+  const [isUserSearchModalOpen, setIsUserSearchModalOpen] = useState(false);
+  const [isContactsListOpen, setIsContactsListOpen] = useState(false);
+  
+  // Hook GetStream
+  const { 
+    chatClient, 
+    streamToken, 
+    isConnecting, 
+    createTontineChannel, 
+    createDirectChannel, 
+    getUserChannels 
+  } = useStreamClient();
 
   // Mock data - Dans un vrai projet, cela viendrait de l'API
   const mockNetworkData = [
