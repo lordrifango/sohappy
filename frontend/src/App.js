@@ -447,6 +447,14 @@ const TontyApp = ({ sessionId }) => {
           } />
           <Route path="/network" element={<NetworkScreen />} />
           <Route path="/network/connection/:memberId" element={<ConnectionDetailScreen />} />
+          <Route path="/chat" element={<ChatContainer />} />
+          <Route path="/chat/tontine/:tontineId" element={
+            <TontineChat 
+              tontineId={window.location.pathname.split('/').pop()}
+              tontineName="Tontine Chat"
+              members={[]}
+            />
+          } />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
