@@ -603,6 +603,10 @@ def test_chat_message_sending(session_id):
     """Test sending messages to a GetStream channel"""
     print("\n=== Testing GetStream Message Sending ===")
     
+    headers = {
+        "Content-Type": "application/json"
+    }
+    
     # Step 1: Get a Stream token
     print("\nStep 1: Getting Stream token")
     token_url = f"{BACKEND_URL}/api/chat/token"
@@ -610,7 +614,7 @@ def test_chat_message_sending(session_id):
         "session_id": session_id
     }
     
-    token_response = requests.post(token_url, json=token_payload)
+    token_response = requests.post(token_url, json=token_payload, headers=headers)
     assert token_response.status_code == 200, f"Expected status code 200, got {token_response.status_code}"
     
     token_data = token_response.json()
@@ -632,7 +636,7 @@ def test_chat_message_sending(session_id):
         "members": []
     }
     
-    channel_response = requests.post(channel_url, json=channel_payload)
+    channel_response = requests.post(channel_url, json=channel_payload, headers=headers)
     assert channel_response.status_code == 200, f"Expected status code 200, got {channel_response.status_code}"
     
     channel_data = channel_response.json()
