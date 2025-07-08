@@ -716,6 +716,313 @@ def test_chat_message_sending(session_id):
         print(f"❌ Error sending message: {str(e)}")
         raise
         
+def test_user_search_endpoint():
+    """Test the /api/users/search endpoint"""
+    print("\n=== Testing POST /api/users/search ===")
+    
+    # First, create a user profile to search for
+    test_phone = f"650555{int(time.time()) % 10000}"
+    test_country_code = "+1"
+    
+    # Create and verify a session
+    session_id = create_and_verify_session(test_phone, test_country_code)
+    
+    # Create a profile for this user
+    profile_data = {
+        "first_name": "Test",
+        "last_name": "User",
+        "city": "Paris",
+        "country": "France"
+    }
+    
+    profile_response = requests.post(
+        f"{BACKEND_URL}/api/profile/create?session_id={session_id}", 
+        json=profile_data
+    )
+    
+    assert profile_response.status_code == 200, f"Failed to create test profile: {profile_response.text}"
+    
+    # Now test searching for this user
+    print("\nTesting search for existing user:")
+    url = f"{BACKEND_URL}/api/users/search"
+    payload = {
+        "phone": test_phone,
+        "country_code": test_country_code
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert data["user_found"] == True, "Expected user_found to be True"
+    assert "user_data" in data, "Expected user_data in response"
+    assert data["user_data"] is not None, "Expected user_data to not be None"
+    assert data["user_data"]["first_name"] == "Test", "First name doesn't match"
+    assert data["user_data"]["last_name"] == "User", "Last name doesn't match"
+    assert data["user_data"]["phone"] == test_phone, "Phone doesn't match"
+    assert data["user_data"]["country_code"] == test_country_code, "Country code doesn't match"
+    
+    # Test searching for non-existent user
+    print("\nTesting search for non-existent user:")
+    non_existent_phone = "6505559999999"  # Very unlikely to exist
+    payload = {
+        "phone": non_existent_phone,
+        "country_code": test_country_code
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert data["user_found"] == False, "Expected user_found to be False"
+    assert "user_data" not in data or data["user_data"] is None, "Expected no user_data for non-existent user"
+    
+    return session_id, test_phone, test_country_code
+
+def test_add_contact_endpoint(session_id, contact_phone, contact_country_code):
+    """Test the /api/users/add-contact endpoint"""
+    print("\n=== Testing POST /api/users/add-contact ===")
+    
+    # Test adding a contact
+    print("\nTesting adding a contact:")
+    url = f"{BACKEND_URL}/api/users/add-contact"
+    payload = {
+        "session_id": session_id,
+        "contact_phone": contact_phone,
+        "contact_country_code": contact_country_code
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "contact_id" in data, "Expected contact_id in response"
+    assert data["contact_id"] is not None, "Expected contact_id to not be None"
+    
+    # Store the contact_id for later tests
+    contact_id = data["contact_id"]
+    
+    # Test adding the same contact again (should return success but indicate it's already added)
+    print("\nTesting adding the same contact again:")
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "Contact déjà ajouté" in data["message"], "Expected message to indicate contact already added"
+    assert data["contact_id"] == contact_id, "Contact ID should match the previously added contact"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    payload = {
+        "session_id": invalid_session_id,
+        "contact_phone": contact_phone,
+        "contact_country_code": contact_country_code
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    # Test with non-existent contact
+    print("\nTesting with non-existent contact:")
+    payload = {
+        "session_id": session_id,
+        "contact_phone": "6505559999999",  # Very unlikely to exist
+        "contact_country_code": contact_country_code
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for non-existent contact
+    assert response.status_code == 404, f"Expected status code 404, got {response.status_code}"
+    
+    return contact_id
+
+def test_get_contacts_endpoint(session_id):
+    """Test the /api/users/contacts/{session_id} endpoint"""
+    print("\n=== Testing GET /api/users/contacts/{session_id} ===")
+    
+    # Test with valid session_id
+    print("\nTesting with valid session_id:")
+    url = f"{BACKEND_URL}/api/users/contacts/{session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "contacts" in data, "Expected contacts in response"
+    assert isinstance(data["contacts"], list), "Expected contacts to be a list"
+    
+    # Validate contact structure if there are contacts
+    if len(data["contacts"]) > 0:
+        contact = data["contacts"][0]
+        assert "id" in contact, "Expected id in contact"
+        assert "user_id" in contact, "Expected user_id in contact"
+        assert "name" in contact, "Expected name in contact"
+        assert "phone" in contact, "Expected phone in contact"
+        assert "country_code" in contact, "Expected country_code in contact"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    url = f"{BACKEND_URL}/api/users/contacts/{invalid_session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    return True
+
+def test_user_search_and_add_contact_integration():
+    """Test the integration of user search and add contact endpoints"""
+    print("\n=== Testing User Search and Add Contact Integration ===")
+    
+    # Create two users for this test
+    user1_phone = f"650555{int(time.time()) % 10000}"
+    user2_phone = f"650555{(int(time.time()) + 1) % 10000}"
+    test_country_code = "+1"
+    
+    # Create and verify sessions for both users
+    user1_session_id = create_and_verify_session(user1_phone, test_country_code)
+    user2_session_id = create_and_verify_session(user2_phone, test_country_code)
+    
+    # Create profiles for both users
+    profile1_data = {
+        "first_name": "User",
+        "last_name": "One",
+        "city": "Paris",
+        "country": "France"
+    }
+    
+    profile2_data = {
+        "first_name": "User",
+        "last_name": "Two",
+        "city": "Lyon",
+        "country": "France"
+    }
+    
+    requests.post(
+        f"{BACKEND_URL}/api/profile/create?session_id={user1_session_id}", 
+        json=profile1_data
+    )
+    
+    requests.post(
+        f"{BACKEND_URL}/api/profile/create?session_id={user2_session_id}", 
+        json=profile2_data
+    )
+    
+    # Step 1: User1 searches for User2
+    print("\nStep 1: User1 searches for User2")
+    search_url = f"{BACKEND_URL}/api/users/search"
+    search_payload = {
+        "phone": user2_phone,
+        "country_code": test_country_code
+    }
+    
+    search_response = requests.post(search_url, json=search_payload)
+    assert search_response.status_code == 200, f"Search failed: {search_response.text}"
+    
+    search_data = search_response.json()
+    assert search_data["user_found"] == True, "User2 should be found"
+    assert search_data["user_data"]["first_name"] == "User", "First name doesn't match"
+    assert search_data["user_data"]["last_name"] == "Two", "Last name doesn't match"
+    
+    user2_id = search_data["user_data"]["id"]
+    print(f"Found User2 with ID: {user2_id}")
+    
+    # Step 2: User1 adds User2 as a contact
+    print("\nStep 2: User1 adds User2 as a contact")
+    add_contact_url = f"{BACKEND_URL}/api/users/add-contact"
+    add_contact_payload = {
+        "session_id": user1_session_id,
+        "contact_phone": user2_phone,
+        "contact_country_code": test_country_code
+    }
+    
+    add_contact_response = requests.post(add_contact_url, json=add_contact_payload)
+    assert add_contact_response.status_code == 200, f"Add contact failed: {add_contact_response.text}"
+    
+    add_contact_data = add_contact_response.json()
+    assert add_contact_data["success"] == True, "Adding contact should succeed"
+    assert add_contact_data["contact_id"] == user2_id, "Contact ID should match User2's ID"
+    
+    # Step 3: Verify User2 is in User1's contacts
+    print("\nStep 3: Verify User2 is in User1's contacts")
+    contacts_url = f"{BACKEND_URL}/api/users/contacts/{user1_session_id}"
+    
+    contacts_response = requests.get(contacts_url)
+    assert contacts_response.status_code == 200, f"Get contacts failed: {contacts_response.text}"
+    
+    contacts_data = contacts_response.json()
+    assert contacts_data["success"] == True, "Getting contacts should succeed"
+    
+    # Find User2 in the contacts list
+    user2_found = False
+    for contact in contacts_data["contacts"]:
+        if contact["id"] == user2_id:
+            user2_found = True
+            assert contact["first_name"] == "User", "First name doesn't match"
+            assert contact["last_name"] == "Two", "Last name doesn't match"
+            assert contact["phone"] == user2_phone, "Phone doesn't match"
+            assert contact["country_code"] == test_country_code, "Country code doesn't match"
+            break
+    
+    assert user2_found, "User2 should be in User1's contacts"
+    
+    print("✅ User search and add contact integration test passed!")
+    return True
+
 def run_all_tests():
     """Run all tests in sequence"""
     try:
@@ -771,6 +1078,15 @@ def run_all_tests():
         
         # Test GetStream message sending
         test_chat_message_sending(test_session_id)
+        
+        # Test user search and contact management endpoints
+        print("\n=== Testing User Search and Contact Management Endpoints ===")
+        search_session_id, found_phone, found_country_code = test_user_search_endpoint()
+        test_add_contact_endpoint(test_session_id, found_phone, found_country_code)
+        test_get_contacts_endpoint(test_session_id)
+        
+        # Test integration of user search and add contact
+        test_user_search_and_add_contact_integration()
         
         # Run performance tests
         print("\n=== Running Performance Tests ===")
