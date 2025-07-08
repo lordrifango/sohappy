@@ -433,6 +433,12 @@ const TontyApp = ({ sessionId }) => {
                   sessionId={sessionId}
                 />
               )}
+              
+              {activeTab === 'chat' && (
+                <div className="p-4">
+                  <ChatContainer />
+                </div>
+              )}
             </>
           } />
           <Route path="/projects" element={
