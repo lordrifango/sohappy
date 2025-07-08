@@ -94,6 +94,13 @@ const NetworkScreen = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState(null);
+  const [activeNetworkTab, setActiveNetworkTab] = useState('membres'); // 'membres' ou 'discussions'
+  
+  // GetStream integration
+  const { chatClient, streamToken, getUserChannels, isConnecting } = useStreamClient();
+  const [channels, setChannels] = useState([]);
+  const [selectedChannel, setSelectedChannel] = useState(null);
+  const [channelsLoading, setChannelsLoading] = useState(true);
 
   // Mock data - Dans un vrai projet, cela viendrait de l'API
   const mockNetworkData = [
