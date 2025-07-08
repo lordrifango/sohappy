@@ -138,6 +138,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified channel management endpoints are working correctly. POST /api/chat/channel successfully creates both tontine channels and direct message channels with proper user_id. The previous issue with 'data.created_by.id is a required field' has been fixed by properly passing the user_id to channel.create() method. GET /api/chat/channels/{session_id} successfully retrieves user channels with proper MongoDB ObjectId serialization. Performance tests show good response times: chat-channel (avg: 61.95ms), chat-channels-get (avg: 6.74ms)."
+      - working: true
+        agent: "testing"
+        comment: "Verified channel management endpoints are still working correctly after recent modifications. POST /api/chat/channel successfully creates both tontine channels and direct message channels with proper user_id. The fix for passing user_id to channel.create() method is working correctly. GET /api/chat/channels/{session_id} successfully retrieves user channels with proper MongoDB ObjectId serialization. Performance tests show good response times: chat-channel (avg: 37.32ms), chat-channels-get (avg: 7.02ms)."
 
 frontend:
   - task: "Stream React Context Integration"
