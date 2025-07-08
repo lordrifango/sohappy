@@ -67,13 +67,14 @@ def create_and_verify_session(phone, country_code):
 def create_user_profile(session_id):
     """Create a user profile if it doesn't exist"""
     # Check if profile exists
-    response = requests.get(f"{BACKEND_URL}/api/profile/{session_id}")
+    response = requests.get(f"{BACKEND_URL}/profile/{session_id}")
+    print(f"Profile check response: {response.text}")
     data = response.json()
     
     if not data["success"]:
         # Create profile
         response = requests.post(
-            f"{BACKEND_URL}/api/profile/create?session_id={session_id}", 
+            f"{BACKEND_URL}/profile/create?session_id={session_id}", 
             json=valid_profile_data
         )
         print(f"Profile creation response: {response.text}")
