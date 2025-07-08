@@ -603,6 +603,18 @@ const NetworkScreen = () => {
             >
               💬 Discussions ({channels.length})
             </button>
+            <button
+              onClick={() => setIsUserSearchModalOpen(true)}
+              className="px-4 py-2 rounded-lg font-medium transition-colors text-white hover:bg-white/10"
+            >
+              🔍 Rechercher
+            </button>
+            <button
+              onClick={() => setIsContactsListOpen(true)}
+              className="px-4 py-2 rounded-lg font-medium transition-colors text-white hover:bg-white/10"
+            >
+              👥 Contacts
+            </button>
           </div>
 
           {/* Barre de recherche (uniquement pour l'onglet membres) */}
