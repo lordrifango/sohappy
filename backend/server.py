@@ -675,6 +675,227 @@ async def get_group_activity_feed(group_id: str, session_id: str):
         logger.error(f"Error getting group feed: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération du feed")
 
+# ============================
+# GetStream Chat Models
+# ============================
+class StreamTokenRequest(BaseModel):
+    session_id: str
+
+class StreamTokenResponse(BaseModel):
+    success: bool
+    message: str
+    token: Optional[str] = None
+    user_id: Optional[str] = None
+    username: Optional[str] = None
+    stream_api_key: Optional[str] = None
+
+class CreateChannelRequest(BaseModel):
+    session_id: str
+    channel_type: str = "team"  # 'team' for group chats, 'messaging' for direct messages
+    channel_id: Optional[str] = None
+    channel_name: Optional[str] = None
+    members: List[str] = []  # List of user IDs to add to the channel
+    tontine_id: Optional[str] = None  # Link to tontine if it's a tontine chat
+
+class CreateChannelResponse(BaseModel):
+    success: bool
+    message: str
+    channel_id: Optional[str] = None
+    channel_cid: Optional[str] = None
+
+# ============================
+# GetStream Chat Endpoints
+# ============================
+@api_router.post("/chat/token", response_model=StreamTokenResponse)
+async def get_stream_token(request: StreamTokenRequest):
+    """
+    Generate a GetStream token for authenticated user
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": request.session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Get user profile
+        profile_data = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if not profile_data:
+            raise HTTPException(status_code=404, detail="Profil utilisateur non trouvé")
+        
+        profile = UserProfile(**profile_data)
+        
+        # Generate unique user ID for Stream
+        user_id = f"user_{profile.id}"
+        username = f"{profile.first_name} {profile.last_name}"
+        
+        # Create or update user in Stream
+        user_data = {
+            "id": user_id,
+            "name": username,
+            "phone": f"{session.country_code}{session.phone}",
+            "role": "user"
+        }
+        
+        # Create user in Stream if doesn't exist
+        stream_client.update_user(user_data)
+        
+        # Generate token
+        token = stream_client.create_token(user_id)
+        
+        logger.info(f"Generated Stream token for user {user_id}")
+        
+        return StreamTokenResponse(
+            success=True,
+            message="Token généré avec succès",
+            token=token,
+            user_id=user_id,
+            username=username,
+            stream_api_key=STREAM_API_KEY
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating Stream token: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la génération du token")
+
+@api_router.post("/chat/channel", response_model=CreateChannelResponse)
+async def create_chat_channel(request: CreateChannelRequest):
+    """
+    Create a new chat channel (for tontines or direct messages)
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": request.session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Get user profile
+        profile_data = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if not profile_data:
+            raise HTTPException(status_code=404, detail="Profil utilisateur non trouvé")
+        
+        profile = UserProfile(**profile_data)
+        user_id = f"user_{profile.id}"
+        
+        # Generate channel ID if not provided
+        if not request.channel_id:
+            if request.tontine_id:
+                request.channel_id = f"tontine_{request.tontine_id}"
+            else:
+                request.channel_id = f"channel_{str(uuid.uuid4())}"
+        
+        # Prepare channel data
+        channel_data = {
+            "created_by_id": user_id,
+            "members": [user_id] + request.members
+        }
+        
+        if request.channel_name:
+            channel_data["name"] = request.channel_name
+        
+        if request.tontine_id:
+            channel_data["tontine_id"] = request.tontine_id
+            if not request.channel_name:
+                channel_data["name"] = f"Chat Tontine {request.tontine_id}"
+        
+        # Create channel in Stream
+        channel = stream_client.channel(request.channel_type, request.channel_id, channel_data)
+        channel.create(user_id)
+        
+        # Store channel metadata in our database
+        channel_metadata = {
+            "id": str(uuid.uuid4()),
+            "channel_id": request.channel_id,
+            "channel_type": request.channel_type,
+            "channel_cid": f"{request.channel_type}:{request.channel_id}",
+            "created_by": user_id,
+            "tontine_id": request.tontine_id,
+            "members": channel_data["members"],
+            "created_at": datetime.utcnow()
+        }
+        
+        await db.chat_channels.insert_one(channel_metadata)
+        
+        logger.info(f"Created chat channel {request.channel_id} for user {user_id}")
+        
+        return CreateChannelResponse(
+            success=True,
+            message="Canal de chat créé avec succès",
+            channel_id=request.channel_id,
+            channel_cid=f"{request.channel_type}:{request.channel_id}"
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating chat channel: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la création du canal")
+
+@api_router.get("/chat/channels/{session_id}")
+async def get_user_channels(session_id: str):
+    """
+    Get all channels for a user
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Get user profile
+        profile_data = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if not profile_data:
+            raise HTTPException(status_code=404, detail="Profil utilisateur non trouvé")
+        
+        profile = UserProfile(**profile_data)
+        user_id = f"user_{profile.id}"
+        
+        # Get channels from our database
+        channels = await db.chat_channels.find({"members": user_id}).to_list(1000)
+        
+        return {
+            "success": True,
+            "message": "Canaux récupérés avec succès",
+            "channels": channels
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting user channels: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des canaux")
+
 # Include the router in the main app
 app.include_router(api_router)
 
