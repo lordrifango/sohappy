@@ -160,11 +160,10 @@ def test_send_message_with_stream_sdk(token_data, channel_data):
         # Try to send a message
         try:
             message = {
-                "text": f"Test message sent at {datetime.now().isoformat()}",
-                "user_id": user_id
+                "text": f"Test message sent at {datetime.now().isoformat()}"
             }
             
-            response = channel.send_message(message)
+            response = channel.send_message(message, user_id)
             print(f"Message send response: {json.dumps(response, indent=2)}")
             
             if "message" in response:
