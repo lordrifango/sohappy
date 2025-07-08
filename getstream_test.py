@@ -85,7 +85,7 @@ def create_user_profile(session_id):
 def get_stream_token(session_id):
     """Get a Stream token for the user"""
     response = requests.post(
-        f"{BACKEND_URL}/api/chat/token",
+        f"{BACKEND_URL}/chat/token",
         json={"session_id": session_id}
     )
     
@@ -98,7 +98,7 @@ def create_test_channel(session_id, channel_name=None):
         channel_name = f"Test Channel {uuid.uuid4()}"
         
     response = requests.post(
-        f"{BACKEND_URL}/api/chat/channel",
+        f"{BACKEND_URL}/chat/channel",
         json={
             "session_id": session_id,
             "channel_type": "team",
@@ -112,7 +112,7 @@ def create_test_channel(session_id, channel_name=None):
 
 def get_user_channels(session_id):
     """Get all channels for a user"""
-    response = requests.get(f"{BACKEND_URL}/api/chat/channels/{session_id}")
+    response = requests.get(f"{BACKEND_URL}/chat/channels/{session_id}")
     print(f"Get channels response: {response.text}")
     return response.json()
 
