@@ -5,6 +5,7 @@ import time
 import re
 import statistics
 from datetime import datetime
+import uuid
 
 # Use the internal backend URL for testing
 BACKEND_URL = "http://localhost:8001"
@@ -36,6 +37,10 @@ update_profile_data = {
     "city": "Lyon",
     "occupation": "Senior Engineer"
 }
+
+# Contact test data
+contact_phone = "6505552222"
+contact_country_code = "+1"
 
 def test_send_code_endpoint():
     """Test the /api/auth/send-code endpoint"""
