@@ -187,18 +187,18 @@ def test_direct_stream_api_access(token_data):
     print("\n=== Testing direct Stream API access ===")
     
     try:
-        # Initialize Stream client with the API key and secret from the backend
-        api_key = token_data.get("stream_api_key")
-        token = token_data.get("token")
+        # Initialize Stream client with the API key and secret
+        api_key = STREAM_API_KEY
+        api_secret = STREAM_API_SECRET
         user_id = token_data.get("user_id")
         
         print(f"Initializing Stream client with:")
         print(f"  API Key: {api_key}")
-        print(f"  Token: {token}")
+        print(f"  API Secret: {'*' * len(api_secret) if api_secret else 'None'}")
         print(f"  User ID: {user_id}")
         
-        # Initialize the client
-        stream_client = StreamChat(api_key=api_key, token=token)
+        # Initialize the client with API key and secret (server-side approach)
+        stream_client = StreamChat(api_key=api_key, api_secret=api_secret)
         
         # Try to get the user
         try:
@@ -214,7 +214,7 @@ def test_direct_stream_api_access(token_data):
             filter_criteria = {"members": {"$in": [user_id]}}
             channels = stream_client.query_channels(filter_criteria, sort=[{"last_message_at": -1}])
             print(f"Channels: {json.dumps(channels, indent=2)}")
-            print(f"✅ Successfully retrieved {len(channels['channels'])} channels from Stream API")
+            print(f"✅ Successfully retrieved channels from Stream API")
         except Exception as e:
             print(f"❌ Error listing channels: {str(e)}")
             return False
