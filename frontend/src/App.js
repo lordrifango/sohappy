@@ -696,7 +696,9 @@ const App = () => {
     <BrowserRouter>
       <AuthProvider>
         <ProfileProvider>
-          <AuthWrapper />
+          <StreamProvider>
+            <AuthWrapper />
+          </StreamProvider>
         </ProfileProvider>
       </AuthProvider>
     </BrowserRouter>
