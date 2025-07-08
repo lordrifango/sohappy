@@ -12,6 +12,9 @@ from datetime import datetime, timedelta
 import random
 import string
 
+# GetStream imports
+from stream_chat import StreamChat
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
