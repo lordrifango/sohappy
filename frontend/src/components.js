@@ -102,7 +102,8 @@ export const Dashboard = ({
   totalObjectivesCount = 0,
   limits = { totalObjectives: 3 },
   onUpgrade,
-  nextTour = null
+  nextTour = null,
+  onProjectsClick
 }) => {
   const { t } = useTranslation();
   const activeObjectives = tontines.length;
