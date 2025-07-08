@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Refactoriser le Dashboard principal pour qu'il devienne un 'résumé haute-performance' et déporter les vues de détail dans des écrans dédiés. Le principe est : 'Un écran, une intention principale'. Les trucks de tontine qui sont en bas en ce moment sur la page Les 3 tontines examples JE veux que désormais sois plus dispo dans l'écran principal mais sur le mes projets quand on clique"
+user_problem_statement: "Test complet de l'intégration GetStream backend pour identifier pourquoi les messages ne s'envoient pas dans les chats. L'utilisateur rapporte que les canaux GetStream sont créés correctement (logs confirment connexion) mais il ne peut pas envoyer de messages dans les chats. La création de discussions fonctionne mais pas l'envoi de messages."
 
 # NOUVELLES INTÉGRATIONS - GetStream Chat
 backend:
@@ -141,6 +141,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified channel management endpoints are still working correctly after recent modifications. POST /api/chat/channel successfully creates both tontine channels and direct message channels with proper user_id. The fix for passing user_id to channel.create() method is working correctly. GET /api/chat/channels/{session_id} successfully retrieves user channels with proper MongoDB ObjectId serialization. Performance tests show good response times: chat-channel (avg: 37.32ms), chat-channels-get (avg: 7.02ms)."
+      - working: true
+        agent: "testing"
+        comment: "Identified and fixed the issue with message sending in GetStream channels. The problem was in how messages were being sent to the Stream API. The Stream SDK's send_message() method requires the user_id as a separate parameter, not just in the message object. Created a comprehensive test that successfully sends messages to channels. All GetStream backend functionality is now working correctly: token generation, channel creation, and message sending."
 
 frontend:
   - task: "Stream React Context Integration"
@@ -640,3 +643,5 @@ agent_communication:
     message: "✅ GETSTREAM INTEGRATION RETEST COMPLETE: All GetStream endpoints are still working correctly after recent modifications. Token generation, channel creation, and channel retrieval endpoints are functioning properly. The fix for passing user_id to channel.create() method is working correctly. Performance is good across all endpoints with chat-token (avg: 56.02ms), chat-channel (avg: 37.32ms), and chat-channels-get (avg: 7.02ms). The backend integration with GetStream remains fully functional."
   - agent: "main"
     message: "🚀 NOUVELLE PHASE : Implémentation complète du système de chat avec recherche d'utilisateurs. OBJECTIFS: 1) Réparer l'envoi de messages dans les chats existants 2) Implémenter recherche d'utilisateurs par numéro 3) Système de contacts intégré GetStream 4) Création automatique discussions tontine avec membres 5) Chat privé entre utilisateurs enregistrés. DÉBUT PAR TEST BACKEND GETSTREAM ACTUEL."
+  - agent: "testing"
+    message: "✅ GETSTREAM MESSAGE SENDING ISSUE FIXED: Identified and fixed the issue with message sending in GetStream channels. The problem was in how messages were being sent to the Stream API. The Stream SDK's send_message() method requires the user_id as a separate parameter, not just in the message object. Created a comprehensive test that successfully sends messages to channels. All GetStream backend functionality is now working correctly: token generation, channel creation, and message sending."
