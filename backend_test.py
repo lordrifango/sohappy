@@ -475,6 +475,10 @@ def test_chat_channel_creation(session_id):
     """Test the /api/chat/channel endpoint"""
     print("\n=== Testing POST /api/chat/channel ===")
     
+    headers = {
+        "Content-Type": "application/json"
+    }
+    
     # Test creating a tontine channel
     print("\nTesting tontine channel creation:")
     url = f"{BACKEND_URL}/api/chat/channel"
@@ -487,7 +491,7 @@ def test_chat_channel_creation(session_id):
     }
     
     print(f"Sending request to {url} with payload: {tontine_payload}")
-    response = requests.post(url, json=tontine_payload)
+    response = requests.post(url, json=tontine_payload, headers=headers)
     
     print(f"Response status code: {response.status_code}")
     print(f"Response body: {response.text}")
@@ -512,7 +516,7 @@ def test_chat_channel_creation(session_id):
     }
     
     print(f"Sending request to {url} with payload: {dm_payload}")
-    response = requests.post(url, json=dm_payload)
+    response = requests.post(url, json=dm_payload, headers=headers)
     
     print(f"Response status code: {response.status_code}")
     print(f"Response body: {response.text}")
@@ -537,7 +541,7 @@ def test_chat_channel_creation(session_id):
     }
     
     print(f"Sending request to {url} with payload: {invalid_payload}")
-    response = requests.post(url, json=invalid_payload)
+    response = requests.post(url, json=invalid_payload, headers=headers)
     
     print(f"Response status code: {response.status_code}")
     print(f"Response body: {response.text}")
