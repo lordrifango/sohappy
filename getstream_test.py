@@ -42,16 +42,25 @@ def create_and_verify_session(phone, country_code):
     """Helper function to create and verify a session"""
     # Create session
     response = requests.post(
-        f"{BACKEND_URL}/api/auth/send-code", 
+        f"{BACKEND_URL}/auth/send-code", 
         json={"phone": phone, "country_code": country_code}
     )
-    session_id = response.json()["session_id"]
+    print(f"Send code response: {response.text}")
+    data = response.json()
+    if not data.get("success"):
+        raise Exception(f"Failed to create session: {data.get('message')}")
+    
+    session_id = data["session_id"]
     
     # Verify session
-    requests.post(
-        f"{BACKEND_URL}/api/auth/verify-code", 
+    verify_response = requests.post(
+        f"{BACKEND_URL}/auth/verify-code", 
         json={"phone": phone, "country_code": country_code, "code": "123456"}
     )
+    print(f"Verify code response: {verify_response.text}")
+    verify_data = verify_response.json()
+    if not verify_data.get("success"):
+        raise Exception(f"Failed to verify session: {verify_data.get('message')}")
     
     return session_id
 
