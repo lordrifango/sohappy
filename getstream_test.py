@@ -6,8 +6,17 @@ import uuid
 from datetime import datetime
 from stream_chat import StreamChat
 
-# Use the internal backend URL for testing
-BACKEND_URL = "http://localhost:8001"
+# Use the external backend URL for testing
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from frontend .env file
+load_dotenv("/app/frontend/.env")
+
+# Get the backend URL from environment
+BACKEND_URL = os.environ.get("REACT_APP_BACKEND_URL", "http://localhost:8001")
+if not BACKEND_URL.endswith("/api"):
+    BACKEND_URL = f"{BACKEND_URL}/api"
 
 print(f"Using backend URL: {BACKEND_URL}")
 
