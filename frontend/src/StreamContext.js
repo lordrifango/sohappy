@@ -1,0 +1,188 @@
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { StreamChat } from 'stream-chat';
+import { useAuth } from './AuthContext';
+
+const StreamContext = createContext();
+
+export const useStreamClient = () => {
+  const context = useContext(StreamContext);
+  if (!context) {
+    throw new Error('useStreamClient must be used within a StreamProvider');
+  }
+  return context;
+};
+
+export const StreamProvider = ({ children }) => {
+  const [chatClient, setChatClient] = useState(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [streamToken, setStreamToken] = useState(null);
+  const { sessionId } = useAuth();
+
+  useEffect(() => {
+    const initializeStream = async () => {
+      if (!sessionId || isConnecting) return;
+
+      setIsConnecting(true);
+      
+      try {
+        // Get Stream token from backend
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ session_id: sessionId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to get Stream token');
+        }
+
+        const tokenData = await response.json();
+        setStreamToken(tokenData);
+
+        // Initialize Stream client
+        const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY);
+        
+        // Connect user
+        await client.connectUser(
+          {
+            id: tokenData.user_id,
+            name: tokenData.username,
+          },
+          tokenData.token
+        );
+
+        setChatClient(client);
+        console.log('Stream client initialized successfully');
+      } catch (error) {
+        console.error('Error initializing Stream client:', error);
+      } finally {
+        setIsConnecting(false);
+      }
+    };
+
+    initializeStream();
+
+    // Cleanup on unmount or sessionId change
+    return () => {
+      if (chatClient) {
+        chatClient.disconnectUser();
+        setChatClient(null);
+      }
+    };
+  }, [sessionId]);
+
+  // Disconnect when session is lost
+  useEffect(() => {
+    if (!sessionId && chatClient) {
+      chatClient.disconnectUser();
+      setChatClient(null);
+      setStreamToken(null);
+    }
+  }, [sessionId, chatClient]);
+
+  const createTontineChannel = async (tontineId, tontineName, members = []) => {
+    if (!chatClient || !streamToken) {
+      throw new Error('Stream client not initialized');
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat/channel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          channel_type: 'team',
+          channel_id: `tontine_${tontineId}`,
+          channel_name: `Chat ${tontineName}`,
+          members: members,
+          tontine_id: tontineId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create tontine channel');
+      }
+
+      const channelData = await response.json();
+      
+      // Get the channel from Stream
+      const channel = chatClient.channel('team', `tontine_${tontineId}`);
+      await channel.watch();
+      
+      return channel;
+    } catch (error) {
+      console.error('Error creating tontine channel:', error);
+      throw error;
+    }
+  };
+
+  const createDirectChannel = async (otherUserId) => {
+    if (!chatClient || !streamToken) {
+      throw new Error('Stream client not initialized');
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat/channel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          channel_type: 'messaging',
+          members: [otherUserId],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create direct channel');
+      }
+
+      const channelData = await response.json();
+      
+      // Get the channel from Stream
+      const channel = chatClient.channel('messaging', channelData.channel_id);
+      await channel.watch();
+      
+      return channel;
+    } catch (error) {
+      console.error('Error creating direct channel:', error);
+      throw error;
+    }
+  };
+
+  const getUserChannels = async () => {
+    if (!chatClient || !streamToken) {
+      throw new Error('Stream client not initialized');
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat/channels/${sessionId}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to get user channels');
+      }
+
+      const data = await response.json();
+      return data.channels;
+    } catch (error) {
+      console.error('Error getting user channels:', error);
+      throw error;
+    }
+  };
+
+  const value = {
+    chatClient,
+    streamToken,
+    isConnecting,
+    createTontineChannel,
+    createDirectChannel,
+    getUserChannels,
+  };
+
+  return <StreamContext.Provider value={value}>{children}</StreamContext.Provider>;
+};
