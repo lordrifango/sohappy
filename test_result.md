@@ -104,6 +104,69 @@
 
 user_problem_statement: "Refactoriser le Dashboard principal pour qu'il devienne un 'résumé haute-performance' et déporter les vues de détail dans des écrans dédiés. Le principe est : 'Un écran, une intention principale'. Les trucks de tontine qui sont en bas en ce moment sur la page Les 3 tontines examples JE veux que désormais sois plus dispo dans l'écran principal mais sur le mes projets quand on clique"
 
+# NOUVELLES INTÉGRATIONS - GetStream Chat
+backend:
+  - task: "GetStream SDK Integration - Token Generation"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Intégré GetStream SDK avec endpoints /api/chat/token, /api/chat/channel, /api/chat/channels/{session_id}. Ajouté configuration Stream avec clés API dans .env et imports dans server.py."
+
+  - task: "GetStream Channel Management"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Créé endpoints pour création de canaux (tontines et messages privés) et récupération des canaux utilisateur. Intégré avec système d'authentification existant via session_id."
+
+frontend:
+  - task: "Stream React Context Integration"
+    implemented: true
+    working: "NA"
+    file: "StreamContext.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Créé StreamContext.js avec StreamProvider, gestion des tokens, création de canaux tontine et messages privés. Intégré avec système d'authentification existant."
+
+  - task: "Chat Components Creation"
+    implemented: true
+    working: "NA"
+    file: "ChatContainer.js, TontineChat.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Créé ChatContainer.js pour chat général et TontineChat.js pour chats spécifiques aux tontines. Intégré avec stream-chat-react pour interface utilisateur."
+
+  - task: "Chat Navigation Integration"
+    implemented: true
+    working: "NA"
+    file: "App.js, components.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Ajouté onglet Chat dans BottomNavigation, nouvelles routes /chat et /chat/tontine/:id, intégré StreamProvider dans hiérarchie des providers, ajouté boutons chat dans TontineCard."
+
 backend:
   - task: "Authentication API Endpoints"
     implemented: true
