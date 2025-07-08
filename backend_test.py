@@ -587,6 +587,106 @@ def test_chat_channels_retrieval(session_id):
     
     return True
 
+def test_chat_message_sending(session_id):
+    """Test sending messages to a GetStream channel"""
+    print("\n=== Testing GetStream Message Sending ===")
+    
+    # Step 1: Get a Stream token
+    print("\nStep 1: Getting Stream token")
+    token_url = f"{BACKEND_URL}/api/chat/token"
+    token_payload = {
+        "session_id": session_id
+    }
+    
+    token_response = requests.post(token_url, json=token_payload)
+    assert token_response.status_code == 200, f"Expected status code 200, got {token_response.status_code}"
+    
+    token_data = token_response.json()
+    assert token_data["success"] == True, "Failed to get Stream token"
+    
+    stream_token = token_data["token"]
+    user_id = token_data["user_id"]
+    stream_api_key = token_data["stream_api_key"]
+    
+    print(f"Got Stream token for user {user_id}")
+    
+    # Step 2: Create a test channel
+    print("\nStep 2: Creating a test channel")
+    channel_url = f"{BACKEND_URL}/api/chat/channel"
+    channel_payload = {
+        "session_id": session_id,
+        "channel_type": "team",
+        "channel_name": f"Test Message Channel {uuid.uuid4()}",
+        "members": []
+    }
+    
+    channel_response = requests.post(channel_url, json=channel_payload)
+    assert channel_response.status_code == 200, f"Expected status code 200, got {channel_response.status_code}"
+    
+    channel_data = channel_response.json()
+    assert channel_data["success"] == True, "Failed to create channel"
+    
+    channel_id = channel_data["channel_id"]
+    channel_cid = channel_data["channel_cid"]
+    
+    print(f"Created channel with ID: {channel_id} and CID: {channel_cid}")
+    
+    # Step 3: Send a message to the channel using the Stream API directly
+    print("\nStep 3: Sending a message to the channel using Stream API")
+    
+    # Import the Stream Chat SDK
+    from stream_chat import StreamChat
+    
+    # Initialize the Stream client with the API key and token
+    client = StreamChat(api_key=stream_api_key, api_secret=None, timeout=10)
+    client.set_user_token(user_id, stream_token)
+    
+    # Get the channel
+    channel = client.channel("team", channel_id)
+    
+    # Send a message
+    message_text = f"Test message sent at {datetime.now().isoformat()}"
+    try:
+        message_response = channel.send_message(
+            {"text": message_text},
+            user_id  # Pass the user_id as a separate parameter
+        )
+        print(f"Message response: {message_response}")
+        
+        # Verify the message was sent successfully
+        assert "message" in message_response, "No message in response"
+        assert message_response["message"]["text"] == message_text, "Message text doesn't match"
+        
+        print("✅ Message sent successfully!")
+        
+        # Step 4: Retrieve the channel messages to verify
+        print("\nStep 4: Retrieving channel messages")
+        
+        # Get the channel messages
+        response = channel.query({"messages": {"limit": 10}})
+        
+        print(f"Channel query response: {response}")
+        
+        # Verify the message is in the channel
+        assert "messages" in response, "No messages in response"
+        assert len(response["messages"]) > 0, "No messages in channel"
+        
+        # Find our message
+        found_message = False
+        for msg in response["messages"]:
+            if msg["text"] == message_text:
+                found_message = True
+                break
+        
+        assert found_message, "Couldn't find our message in the channel"
+        
+        print("✅ Message successfully verified in channel!")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error sending message: {str(e)}")
+        raise
+        
 def run_all_tests():
     """Run all tests in sequence"""
     try:
@@ -639,6 +739,9 @@ def run_all_tests():
         test_chat_token_endpoint(test_session_id)
         test_chat_channel_creation(test_session_id)
         test_chat_channels_retrieval(test_session_id)
+        
+        # Test GetStream message sending
+        test_chat_message_sending(test_session_id)
         
         # Run performance tests
         print("\n=== Running Performance Tests ===")
