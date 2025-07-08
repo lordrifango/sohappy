@@ -1517,12 +1517,13 @@ export const CreateTontineModal = ({ isOpen, onClose, onTontineCreated }) => {
       amount: formData.amount,
       currency: 'FCFA',
       nextPayment: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'),
-      membersCount: 1, // Creator only initially
+      membersCount: 1 + formData.members.length, // Creator + added members
       startDate: formData.startDate,
       endDate: new Date(new Date(formData.startDate).getTime() + parseInt(formData.duration) * 30 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'),
       remaining: `${formData.duration} mois restants`,
       progress: 0,
-      color: ['bg-blue-500', 'bg-purple-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500'][Math.floor(Math.random() * 5)]
+      color: ['bg-blue-500', 'bg-purple-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500'][Math.floor(Math.random() * 5)],
+      members: formData.members // Include members for channel creation
     };
 
     setNewTontineId(newTontine.id);
