@@ -133,7 +133,7 @@ export const StreamProvider = ({ children }) => {
     }
   };
 
-  const createDirectChannel = async (otherUserId) => {
+  const createDirectChannel = async (otherUserId, otherUserName) => {
     if (!chatClient || !streamToken) {
       throw new Error('Stream client not initialized');
     }
@@ -148,6 +148,7 @@ export const StreamProvider = ({ children }) => {
           session_id: sessionId,
           channel_type: 'messaging',
           members: [otherUserId],
+          channel_name: `Chat avec ${otherUserName}`,
         }),
       });
 
@@ -156,6 +157,7 @@ export const StreamProvider = ({ children }) => {
       }
 
       const channelData = await response.json();
+      console.log('Direct channel created successfully:', channelData);
       
       // Get the channel from Stream
       const channel = chatClient.channel('messaging', channelData.channel_id);
