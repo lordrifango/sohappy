@@ -692,7 +692,7 @@ def test_chat_message_sending(session_id):
         print("\nStep 4: Retrieving channel messages")
         
         # Get the channel messages
-        response = channel.query({"messages": {"limit": 10}})
+        response = channel.query(messages={"limit": 10})
         
         print(f"Channel query response: {response}")
         
