@@ -432,6 +432,16 @@ const TontyApp = ({ sessionId }) => {
               )}
             </>
           } />
+          <Route path="/projects" element={
+            <ProjectListDetailed 
+              tontines={allObjectives}
+              onTontineSelect={handleTontineSelect}
+              onBackClick={handleBackToDashboard}
+              isPremium={isPremium}
+              totalObjectivesCount={totalObjectivesCount}
+              limits={FREE_LIMITS}
+            />
+          } />
           <Route path="/network" element={<NetworkScreen />} />
           <Route path="/network/connection/:memberId" element={<ConnectionDetailScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
