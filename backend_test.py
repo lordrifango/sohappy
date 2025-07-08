@@ -714,6 +714,9 @@ def run_performance_tests(num_iterations=5):
     profile_get_times = []
     profile_update_times = []
     network_get_times = []
+    chat_token_times = []
+    chat_channel_times = []
+    chat_channels_get_times = []
     
     for i in range(num_iterations):
         print(f"\nPerformance test iteration {i+1}/{num_iterations}")
@@ -779,6 +782,33 @@ def run_performance_tests(num_iterations=5):
         response = requests.get(f"{BACKEND_URL}/api/network/{session_id}")
         end_time = time.time()
         network_get_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        # Test chat-token performance
+        start_time = time.time()
+        response = requests.post(
+            f"{BACKEND_URL}/api/chat/token",
+            json={"session_id": session_id}
+        )
+        end_time = time.time()
+        chat_token_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        # Test chat-channel creation performance
+        start_time = time.time()
+        channel_data = {
+            "session_id": session_id,
+            "channel_type": "team",
+            "channel_name": f"Test Channel {i}",
+            "tontine_id": f"tontine_{i}"
+        }
+        response = requests.post(f"{BACKEND_URL}/api/chat/channel", json=channel_data)
+        end_time = time.time()
+        chat_channel_times.append((end_time - start_time) * 1000)  # Convert to ms
+        
+        # Test chat-channels retrieval performance
+        start_time = time.time()
+        response = requests.get(f"{BACKEND_URL}/api/chat/channels/{session_id}")
+        end_time = time.time()
+        chat_channels_get_times.append((end_time - start_time) * 1000)  # Convert to ms
     
     # Calculate and print statistics
     print("\nPerformance Test Results (in milliseconds):")
@@ -789,6 +819,9 @@ def run_performance_tests(num_iterations=5):
     print(f"  profile-get:    avg={statistics.mean(profile_get_times):.2f}ms, min={min(profile_get_times):.2f}ms, max={max(profile_get_times):.2f}ms")
     print(f"  profile-update: avg={statistics.mean(profile_update_times):.2f}ms, min={min(profile_update_times):.2f}ms, max={max(profile_update_times):.2f}ms")
     print(f"  network-get:    avg={statistics.mean(network_get_times):.2f}ms, min={min(network_get_times):.2f}ms, max={max(network_get_times):.2f}ms")
+    print(f"  chat-token:     avg={statistics.mean(chat_token_times):.2f}ms, min={min(chat_token_times):.2f}ms, max={max(chat_token_times):.2f}ms")
+    print(f"  chat-channel:   avg={statistics.mean(chat_channel_times):.2f}ms, min={min(chat_channel_times):.2f}ms, max={max(chat_channel_times):.2f}ms")
+    print(f"  chat-channels:  avg={statistics.mean(chat_channels_get_times):.2f}ms, min={min(chat_channels_get_times):.2f}ms, max={max(chat_channels_get_times):.2f}ms")
     
     return {
         "send_code": {
@@ -825,6 +858,21 @@ def run_performance_tests(num_iterations=5):
             "avg": statistics.mean(network_get_times),
             "min": min(network_get_times),
             "max": max(network_get_times)
+        },
+        "chat_token": {
+            "avg": statistics.mean(chat_token_times),
+            "min": min(chat_token_times),
+            "max": max(chat_token_times)
+        },
+        "chat_channel": {
+            "avg": statistics.mean(chat_channel_times),
+            "min": min(chat_channel_times),
+            "max": max(chat_channel_times)
+        },
+        "chat_channels_get": {
+            "avg": statistics.mean(chat_channels_get_times),
+            "min": min(chat_channels_get_times),
+            "max": max(chat_channels_get_times)
         }
     }
 
