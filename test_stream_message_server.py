@@ -152,8 +152,7 @@ def test_message_sending():
         
         # Create message data
         message = {
-            "text": message_text,
-            "user_id": user_id
+            "text": message_text
         }
         
         # Send the message using the server client
