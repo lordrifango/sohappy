@@ -411,6 +411,7 @@ const TontyApp = ({ sessionId }) => {
                   limits={FREE_LIMITS}
                   onUpgrade={() => setIsPricingPageOpen(true)}
                   nextTour={nextTour}
+                  onProjectsClick={handleProjectsClick}
                   className="dashboard-balance balance-actions"
                 />
               )}
