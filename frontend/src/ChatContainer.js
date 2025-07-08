@@ -6,7 +6,7 @@ import 'stream-chat-react/dist/css/v2/index.css';
 const filters = { type: 'messaging', members: { $in: ['user_id'] } };
 const sort = { last_message_at: -1 };
 
-const ChatContainer = ({ tontineId = null, onClose }) => {
+const ChatContainer = ({ tontineId = null, channelId = null, channelType = null, onClose }) => {
   const { chatClient, streamToken, isConnecting } = useStreamClient();
   const [channel, setChannel] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +23,11 @@ const ChatContainer = ({ tontineId = null, onClose }) => {
           const tontineChannel = chatClient.channel('team', `tontine_${tontineId}`);
           await tontineChannel.watch();
           setChannel(tontineChannel);
+        } else if (channelId && channelType === 'direct') {
+          // Load specific direct channel
+          const directChannel = chatClient.channel('messaging', channelId);
+          await directChannel.watch();
+          setChannel(directChannel);
         } else {
           // For general chat, don't set a specific channel - let user select from list
           setChannel(null);
@@ -35,7 +40,7 @@ const ChatContainer = ({ tontineId = null, onClose }) => {
     };
 
     initializeChat();
-  }, [chatClient, streamToken, tontineId]);
+  }, [chatClient, streamToken, tontineId, channelId, channelType]);
 
   if (isConnecting || isLoading) {
     return (
