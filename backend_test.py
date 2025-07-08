@@ -412,6 +412,176 @@ def test_network_endpoint(session_id):
     
     return True
 
+def test_chat_token_endpoint(session_id):
+    """Test the /api/chat/token endpoint"""
+    print("\n=== Testing POST /api/chat/token ===")
+    
+    # Test with valid session_id
+    print("\nTesting with valid session_id:")
+    url = f"{BACKEND_URL}/api/chat/token"
+    payload = {
+        "session_id": session_id
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "token" in data, "Expected token in response"
+    assert data["token"] is not None, "Expected token to not be None"
+    assert "user_id" in data, "Expected user_id in response"
+    assert "username" in data, "Expected username in response"
+    assert "stream_api_key" in data, "Expected stream_api_key in response"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    payload = {
+        "session_id": invalid_session_id
+    }
+    
+    print(f"Sending request to {url} with payload: {payload}")
+    response = requests.post(url, json=payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    return True
+
+def test_chat_channel_creation(session_id):
+    """Test the /api/chat/channel endpoint"""
+    print("\n=== Testing POST /api/chat/channel ===")
+    
+    # Test creating a tontine channel
+    print("\nTesting tontine channel creation:")
+    url = f"{BACKEND_URL}/api/chat/channel"
+    tontine_payload = {
+        "session_id": session_id,
+        "channel_type": "team",
+        "channel_name": "Test Tontine Chat",
+        "tontine_id": "tontine_123",
+        "members": []  # Empty for now, would include other user IDs in real scenario
+    }
+    
+    print(f"Sending request to {url} with payload: {tontine_payload}")
+    response = requests.post(url, json=tontine_payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "channel_id" in data, "Expected channel_id in response"
+    assert data["channel_id"] is not None, "Expected channel_id to not be None"
+    assert "channel_cid" in data, "Expected channel_cid in response"
+    assert data["channel_cid"].startswith("team:"), "Expected channel_cid to start with 'team:'"
+    
+    # Test creating a direct message channel
+    print("\nTesting direct message channel creation:")
+    dm_payload = {
+        "session_id": session_id,
+        "channel_type": "messaging",
+        "channel_name": "Direct Message Test",
+        "members": []  # Empty for now, would include other user IDs in real scenario
+    }
+    
+    print(f"Sending request to {url} with payload: {dm_payload}")
+    response = requests.post(url, json=dm_payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "channel_id" in data, "Expected channel_id in response"
+    assert data["channel_id"] is not None, "Expected channel_id to not be None"
+    assert "channel_cid" in data, "Expected channel_cid in response"
+    assert data["channel_cid"].startswith("messaging:"), "Expected channel_cid to start with 'messaging:'"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    invalid_payload = {
+        "session_id": invalid_session_id,
+        "channel_type": "team",
+        "channel_name": "Invalid Session Test"
+    }
+    
+    print(f"Sending request to {url} with payload: {invalid_payload}")
+    response = requests.post(url, json=invalid_payload)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    return True
+
+def test_chat_channels_retrieval(session_id):
+    """Test the /api/chat/channels/{session_id} endpoint"""
+    print("\n=== Testing GET /api/chat/channels/{session_id} ===")
+    
+    # Test with valid session_id
+    print("\nTesting with valid session_id:")
+    url = f"{BACKEND_URL}/api/chat/channels/{session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    
+    data = response.json()
+    assert data["success"] == True, "Expected success to be True"
+    assert "channels" in data, "Expected channels in response"
+    assert isinstance(data["channels"], list), "Expected channels to be a list"
+    
+    # Validate channel structure if there are channels
+    if len(data["channels"]) > 0:
+        channel = data["channels"][0]
+        assert "id" in channel, "Expected id in channel"
+        assert "channel_id" in channel, "Expected channel_id in channel"
+        assert "channel_type" in channel, "Expected channel_type in channel"
+        assert "channel_cid" in channel, "Expected channel_cid in channel"
+        assert "members" in channel, "Expected members in channel"
+        assert isinstance(channel["members"], list), "Expected members to be a list"
+    
+    # Test with invalid session_id
+    print("\nTesting with invalid session_id:")
+    invalid_session_id = "invalid-session-id"
+    url = f"{BACKEND_URL}/api/chat/channels/{invalid_session_id}"
+    
+    print(f"Sending request to {url}")
+    response = requests.get(url)
+    
+    print(f"Response status code: {response.status_code}")
+    print(f"Response body: {response.text}")
+    
+    # Validate response for invalid session
+    assert response.status_code == 401, f"Expected status code 401, got {response.status_code}"
+    
+    return True
+
 def run_all_tests():
     """Run all tests in sequence"""
     try:
@@ -458,6 +628,12 @@ def run_all_tests():
         # Test network endpoint
         print("\n=== Testing Network Endpoint ===")
         test_network_endpoint(test_session_id)
+        
+        # Test GetStream Chat endpoints
+        print("\n=== Testing GetStream Chat Endpoints ===")
+        test_chat_token_endpoint(test_session_id)
+        test_chat_channel_creation(test_session_id)
+        test_chat_channels_retrieval(test_session_id)
         
         # Run performance tests
         print("\n=== Running Performance Tests ===")
