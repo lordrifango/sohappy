@@ -6,9 +6,14 @@ import re
 import statistics
 from datetime import datetime
 import uuid
+import os
+from dotenv import load_dotenv
 
-# Use the internal backend URL for testing
-BACKEND_URL = "http://localhost:8001"
+# Load environment variables from frontend/.env
+load_dotenv("/app/frontend/.env")
+
+# Use the REACT_APP_BACKEND_URL from frontend/.env
+BACKEND_URL = os.environ.get("REACT_APP_BACKEND_URL", "http://localhost:8001")
 
 print(f"Using backend URL: {BACKEND_URL}")
 
