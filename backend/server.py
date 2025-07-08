@@ -24,6 +24,12 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
+# GetStream configuration
+STREAM_API_KEY = os.environ['STREAM_API_KEY']
+STREAM_API_SECRET = os.environ['STREAM_API_SECRET']
+STREAM_APP_ID = os.environ['STREAM_APP_ID']
+stream_client = StreamChat(api_key=STREAM_API_KEY, api_secret=STREAM_API_SECRET)
+
 # Create the main app without a prefix
 app = FastAPI()
 
