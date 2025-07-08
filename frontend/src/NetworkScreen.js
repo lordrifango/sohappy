@@ -249,6 +249,8 @@ const NetworkScreen = () => {
 
   // Composant pour l'onglet Discussions
   const DiscussionsTab = () => {
+    const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
+    
     if (isConnecting || channelsLoading) {
       return (
         <div className="flex items-center justify-center h-64">
@@ -287,22 +289,65 @@ const NetworkScreen = () => {
     };
     const sort = { last_message_at: -1 };
 
+    const handleCreateTestChannel = async () => {
+      try {
+        const testChannelId = `test_${Date.now()}`;
+        const testChannelName = `Test Discussion ${Date.now()}`;
+        
+        await createTontineChannel(testChannelId, testChannelName, []);
+        
+        // Recharger les canaux
+        const userChannels = await getUserChannels();
+        setChannels(userChannels);
+        
+        alert('✅ Canal de test créé avec succès !');
+      } catch (error) {
+        console.error('Erreur lors de la création du canal de test:', error);
+        alert('❌ Erreur lors de la création du canal de test');
+      }
+    };
+
     return (
       <div className="space-y-4">
         {/* Statistiques des discussions */}
         <div className="bg-gradient-to-r from-violet-50 to-violet-100 rounded-2xl p-4 border border-violet-200">
-          <div className="flex items-center space-x-3">
-            <div className="text-2xl">💬</div>
-            <div>
-              <h3 className="font-semibold text-violet-800">
-                Discussions de groupe par objectifs
-              </h3>
-              <p className="text-violet-700 text-sm">
-                {channels.length} discussion{channels.length > 1 ? 's' : ''} active{channels.length > 1 ? 's' : ''}
-              </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="text-2xl">💬</div>
+              <div>
+                <h3 className="font-semibold text-violet-800">
+                  Discussions de groupe par objectifs
+                </h3>
+                <p className="text-violet-700 text-sm">
+                  {channels.length} discussion{channels.length > 1 ? 's' : ''} active{channels.length > 1 ? 's' : ''}
+                </p>
+              </div>
             </div>
+            {/* Bouton de test temporaire */}
+            <button
+              onClick={handleCreateTestChannel}
+              className="bg-violet-500 text-white px-3 py-2 rounded-lg hover:bg-violet-600 text-sm"
+            >
+              + Test
+            </button>
           </div>
         </div>
+
+        {channels.length === 0 && (
+          <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-200">
+            <div className="flex items-center space-x-3">
+              <div className="text-2xl">ℹ️</div>
+              <div>
+                <h3 className="font-semibold text-yellow-800">
+                  Aucune discussion pour le moment
+                </h3>
+                <p className="text-yellow-700 text-sm">
+                  Créez un objectif avec le bouton flottant (+) pour générer automatiquement une discussion de groupe, ou utilisez le bouton "Test" ci-dessus pour créer une discussion test.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Interface de chat */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100" style={{ height: '500px' }}>
