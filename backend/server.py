@@ -807,7 +807,7 @@ async def create_chat_channel(request: CreateChannelRequest):
         
         # Prepare channel data
         channel_data = {
-            "created_by_id": user_id,
+            "created_by": {"id": user_id},
             "members": [user_id] + request.members
         }
         
