@@ -144,14 +144,63 @@ def test_message_sending():
         # Send a message
         message_text = f"Test message sent at {datetime.now().isoformat()}"
         
-        # Create message data
-        message = {
-            "text": message_text
-        }
-        
-        # Send the message
-        message_response = channel.send_message(message, user_id)
-        print(f"Message response: {json.dumps(message_response, indent=2)}")
+        # Try different approaches to send a message
+        try:
+            print("Approach 1: Using send_message with message dict and user_id")
+            message = {
+                "text": message_text
+            }
+            message_response = channel.send_message(message, user_id)
+            print(f"Message response: {json.dumps(message_response, indent=2)}")
+        except Exception as e:
+            print(f"Approach 1 failed: {str(e)}")
+            
+            try:
+                print("\nApproach 2: Using send_message with text only")
+                message_response = channel.send_message({"text": message_text})
+                print(f"Message response: {json.dumps(message_response, indent=2)}")
+            except Exception as e:
+                print(f"Approach 2 failed: {str(e)}")
+                
+                try:
+                    print("\nApproach 3: Using create_message")
+                    message_response = channel.create_message({"text": message_text, "user": {"id": user_id}})
+                    print(f"Message response: {json.dumps(message_response, indent=2)}")
+                except Exception as e:
+                    print(f"Approach 3 failed: {str(e)}")
+                    
+                    try:
+                        print("\nApproach 4: Using direct API call")
+                        # Get the Stream API URL
+                        api_url = f"https://chat-us-east-1.stream-io-api.com/channels/team/{channel_id}/message"
+                        
+                        # Prepare headers with authentication
+                        api_headers = {
+                            "Content-Type": "application/json",
+                            "Authorization": f"Bearer {stream_token}",
+                            "Stream-Auth-Type": "jwt"
+                        }
+                        
+                        # Prepare message payload
+                        message_payload = {
+                            "message": {
+                                "text": message_text,
+                                "user_id": user_id
+                            }
+                        }
+                        
+                        # Send the request
+                        api_response = requests.post(api_url, headers=api_headers, json=message_payload)
+                        print(f"API Response: {api_response.status_code}")
+                        print(f"API Response Body: {api_response.text}")
+                        
+                        if api_response.status_code == 200:
+                            message_response = api_response.json()
+                        else:
+                            raise Exception(f"API call failed with status {api_response.status_code}")
+                    except Exception as e:
+                        print(f"Approach 4 failed: {str(e)}")
+                        raise
         
         # Verify the message was sent successfully
         if "message" not in message_response:
