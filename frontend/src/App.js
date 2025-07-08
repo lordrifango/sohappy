@@ -62,6 +62,9 @@ const TontyApp = ({ sessionId }) => {
     FREE_LIMITS,
     activatePremium
   } = usePremium();
+
+  // GetStream integration
+  const { createTontineChannel, createDirectChannel } = useStreamClient();
   
   // États pour les menus et modals
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
