@@ -41,6 +41,7 @@ import SocialFeedWithTabs from './SocialFeedWithTabs';
 import ProjectListDetailed from './ProjectListDetailed';
 
 const TontyApp = ({ sessionId }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { balance, formatBalance, deposit, withdraw } = useBalance();
   const { profile, hasProfile } = useProfile();
