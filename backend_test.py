@@ -432,9 +432,12 @@ def test_chat_token_endpoint(session_id):
     payload = {
         "session_id": session_id
     }
+    headers = {
+        "Content-Type": "application/json"
+    }
     
     print(f"Sending request to {url} with payload: {payload}")
-    response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload, headers=headers)
     
     print(f"Response status code: {response.status_code}")
     print(f"Response body: {response.text}")
@@ -458,7 +461,7 @@ def test_chat_token_endpoint(session_id):
     }
     
     print(f"Sending request to {url} with payload: {payload}")
-    response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload, headers=headers)
     
     print(f"Response status code: {response.status_code}")
     print(f"Response body: {response.text}")
