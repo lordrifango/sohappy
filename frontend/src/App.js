@@ -249,10 +249,14 @@ const TontyApp = ({ sessionId }) => {
     addTontine(newTontine);
     console.log('Tontine created:', newTontine);
     
-    // Créer automatiquement un canal GetStream pour la tontine
+    // Créer automatiquement un canal GetStream pour la tontine avec les membres
     try {
       if (createTontineChannel) {
-        await createTontineChannel(newTontine.id, newTontine.fullName, []);
+        // Extraire les IDs des membres pour GetStream
+        const memberIds = newTontine.members ? newTontine.members.map(member => member.id || member.user_id) : [];
+        console.log('Creating channel with members:', memberIds);
+        
+        await createTontineChannel(newTontine.id, newTontine.fullName, memberIds);
         console.log('Canal GetStream créé pour la tontine:', newTontine.id);
       }
     } catch (error) {
