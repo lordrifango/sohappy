@@ -108,15 +108,18 @@ user_problem_statement: "Refactoriser le Dashboard principal pour qu'il devienne
 backend:
   - task: "GetStream SDK Integration - Token Generation"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Intégré GetStream SDK avec endpoints /api/chat/token, /api/chat/channel, /api/chat/channels/{session_id}. Ajouté configuration Stream avec clés API dans .env et imports dans server.py."
+      - working: true
+        agent: "testing"
+        comment: "Verified token generation endpoint is working correctly. POST /api/chat/token successfully generates a token for authenticated users with valid session_id. The endpoint correctly validates session_id, retrieves user profile, and generates a Stream token. Performance tests show good response times: chat-token (avg: 40.46ms)."
 
   - task: "GetStream Channel Management"
     implemented: true
