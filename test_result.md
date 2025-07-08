@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Modifier le système de profil pour implémenter un 'Mon Passeport de Confiance' intelligent. Pour les nouveaux utilisateurs: afficher le modal de création de profil existant. Pour les utilisateurs existants: afficher une nouvelle page 'Mon Passeport de Confiance' avec bilan de confiance (Fiabilité, Engagement, Réseau), badges de réalisations, et bouton pour modifier le profil."
+user_problem_statement: "Refactoriser le Dashboard principal pour qu'il devienne un 'résumé haute-performance' et déporter les vues de détail dans des écrans dédiés. Le principe est : 'Un écran, une intention principale'. Les trucks de tontine qui sont en bas en ce moment sur la page Les 3 tontines examples JE veux que désormais sois plus dispo dans l'écran principal mais sur le mes projets quand on clique"
 
 backend:
   - task: "Authentication API Endpoints"
