@@ -882,7 +882,15 @@ async def get_user_channels(session_id: str):
         user_id = f"user_{profile.id}"
         
         # Get channels from our database
-        channels = await db.chat_channels.find({"members": user_id}).to_list(1000)
+        channels_data = await db.chat_channels.find({"members": user_id}).to_list(1000)
+        
+        # Convert MongoDB ObjectId to string to make it JSON serializable
+        channels = []
+        for channel in channels_data:
+            # Convert ObjectId to string if present
+            if '_id' in channel:
+                channel['_id'] = str(channel['_id'])
+            channels.append(channel)
         
         return {
             "success": True,
