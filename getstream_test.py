@@ -10,13 +10,21 @@ from stream_chat import StreamChat
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from frontend .env file
+# Load environment variables from backend .env file
+load_dotenv("/app/backend/.env")
+
+# Get the backend URL from frontend .env file
 load_dotenv("/app/frontend/.env")
 
 # Get the backend URL from environment
 BACKEND_URL = os.environ.get("REACT_APP_BACKEND_URL", "http://localhost:8001")
 if not BACKEND_URL.endswith("/api"):
     BACKEND_URL = f"{BACKEND_URL}/api"
+    
+# Get Stream API credentials
+STREAM_API_KEY = os.environ.get("STREAM_API_KEY")
+STREAM_API_SECRET = os.environ.get("STREAM_API_SECRET")
+STREAM_APP_ID = os.environ.get("STREAM_APP_ID")
 
 print(f"Using backend URL: {BACKEND_URL}")
 
