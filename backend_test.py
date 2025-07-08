@@ -555,12 +555,16 @@ def test_chat_channels_retrieval(session_id):
     """Test the /api/chat/channels/{session_id} endpoint"""
     print("\n=== Testing GET /api/chat/channels/{session_id} ===")
     
+    headers = {
+        "Content-Type": "application/json"
+    }
+    
     # Test with valid session_id
     print("\nTesting with valid session_id:")
     url = f"{BACKEND_URL}/api/chat/channels/{session_id}"
     
     print(f"Sending request to {url}")
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
     
     print(f"Response status code: {response.status_code}")
     print(f"Response body: {response.text}")
@@ -589,7 +593,7 @@ def test_chat_channels_retrieval(session_id):
     url = f"{BACKEND_URL}/api/chat/channels/{invalid_session_id}"
     
     print(f"Sending request to {url}")
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
     
     print(f"Response status code: {response.status_code}")
     print(f"Response body: {response.text}")
