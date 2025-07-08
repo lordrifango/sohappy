@@ -234,19 +234,37 @@ backend:
         agent: "testing"
         comment: "Verified profile update API is still working correctly after Trust Passport implementation. PUT /api/profile/{session_id} successfully updates profiles while preserving unchanged fields and properly handles non-existent profiles and invalid sessions with appropriate error messages. Performance tests show excellent response times: profile-update (avg: 10.49ms)."
 
-  - task: "Trust Passport Page Component"
+  - task: "Dashboard Refactoring - Progressive Disclosure"
     implemented: true
     working: true
-    file: "TrustPassportPage.js"
+    file: "components.js, App.js, ProjectListDetailed.jsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Created new TrustPassportPage component with profile header, trust metrics (Fiabilité, Engagement, Réseau), achievement badges system, and edit profile button. Includes intelligent empty state for new users and progressive unlock system based on user activity."
+        comment: "Refactored Dashboard component to implement progressive disclosure. Removed detailed objectives list from main dashboard. Made 'Projets en cours' section clickable to navigate to /projects. Preserved individual functionality for 'Prochain tour' (opens UpcomingToursModal) and 'Réseau de confiance' (navigates to /network)."
+      - working: true
+        agent: "testing"
+        comment: "Verified Dashboard refactoring implementation through code review. All requested functionality has been correctly implemented: Dashboard now shows clean summary view, 'Projets en cours' section navigates to /projects, and individual functionalities for tours and network are preserved. Implementation follows progressive disclosure principles."
 
-  - task: "Profile Logic Modification"
+  - task: "ProjectListDetailed Component Creation"
+    implemented: true
+    working: true
+    file: "ProjectListDetailed.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created new ProjectListDetailed component that contains the detailed objectives list previously shown at bottom of Dashboard. Includes back navigation, progress indicators, and empty state handling. Component is autonomous and displays all types of objectives (tontines, personal goals, funds)."
+      - working: true
+        agent: "testing"
+        comment: "Verified ProjectListDetailed component creation through code review. Component correctly displays detailed project list with proper navigation, progress indicators, and handles empty states. Back button functionality is properly implemented to return to dashboard."
+
+  - task: "Projects Route Implementation"
     implemented: true
     working: true
     file: "App.js"
@@ -256,7 +274,10 @@ backend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Modified handleProfileClick function to check hasProfile status from ProfileContext. New users (no profile) see ProfileEditModal, existing users see TrustPassportPage. Added state management for Trust Passport and proper navigation between Trust Passport and Profile Edit modal."
+        comment: "Added new /projects route in App.js that renders ProjectListDetailed component. Implemented navigation handlers for moving between dashboard and projects page. Route receives all necessary props (tontines, callbacks, premium status, limits)."
+      - working: true
+        agent: "testing"
+        comment: "Verified Projects route implementation through code review. New route /projects correctly renders ProjectListDetailed component with all required props and navigation functionality."
 
 frontend:
   - task: "Authentication Context"
