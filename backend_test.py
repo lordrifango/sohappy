@@ -657,9 +657,15 @@ def test_chat_message_sending(session_id):
     # Import the Stream Chat SDK
     from stream_chat import StreamChat
     
-    # Initialize the Stream client with the API key and token
-    client = StreamChat(api_key=stream_api_key, api_secret=None, timeout=10)
-    client.set_user_token(user_id, stream_token)
+    # Get Stream API key and secret from environment variables
+    import os
+    from dotenv import load_dotenv
+    load_dotenv("/app/backend/.env")
+    STREAM_API_KEY = os.environ.get("STREAM_API_KEY")
+    STREAM_API_SECRET = os.environ.get("STREAM_API_SECRET")
+    
+    # Initialize the Stream client with the API key and secret
+    client = StreamChat(api_key=STREAM_API_KEY, api_secret=STREAM_API_SECRET)
     
     # Get the channel
     channel = client.channel("team", channel_id)
@@ -672,7 +678,7 @@ def test_chat_message_sending(session_id):
             "text": message_text
         }
         
-        # Send the message
+        # Send the message using the server client
         message_response = channel.send_message(message, user_id)
         print(f"Message response: {message_response}")
         
