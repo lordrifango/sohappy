@@ -185,7 +185,7 @@ const TontyApp = ({ sessionId }) => {
     setActiveTab('members');
   };
 
-  const handleBackToDashboard = () => {
+  const handleBackToDashboardFromMembers = () => {
     setSelectedTontine(null);
     setActiveTab('dashboard');
   };
