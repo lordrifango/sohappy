@@ -7,7 +7,7 @@ import { ProfileProvider, useProfile } from './ProfileContext';
 import { TutorialProvider, useTutorial } from './TutorialContext';
 import { BalanceProvider, useBalance } from './BalanceContext';
 import { PremiumProvider, usePremium } from './PremiumContext';
-import { StreamProvider } from './StreamContext';
+import { StreamProvider, useStreamClient } from './StreamContext';
 import { PhoneLoginScreen, SMSVerificationScreen } from './AuthComponents';
 import { ProfileCreationScreen, ProfileEditModal } from './ProfileComponents';
 import { useTranslation } from 'react-i18next';
