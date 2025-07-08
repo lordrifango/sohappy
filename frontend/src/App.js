@@ -473,6 +473,9 @@ const TontyApp = ({ sessionId }) => {
           if (tab === 'dashboard') {
             setSelectedTontine(null);
           }
+          if (tab === 'chat') {
+            setSelectedTontine(null);
+          }
         }}
         className="bottom-navigation"
       />
