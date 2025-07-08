@@ -174,7 +174,7 @@ def test_message_sending():
         print("\nStep 6: Retrieving channel messages")
         
         # Get the channel messages
-        response = channel.query({"messages": {"limit": 10}})
+        response = channel.query(messages={"limit": 10})
         
         print(f"Channel query response: {json.dumps(response, indent=2)}")
         
