@@ -355,6 +355,16 @@ const TontyApp = ({ sessionId }) => {
     console.log('Déconnexion');
   };
 
+  // Handler pour naviguer vers la page des projets
+  const handleProjectsClick = () => {
+    navigate('/projects');
+  };
+
+  // Handler pour revenir du page des projets au dashboard
+  const handleBackToDashboard = () => {
+    navigate('/');
+  };
+
   // Mock contacts data
   const mockContacts = [
     { id: 1, name: 'Amadou Diallo', status: 'En ligne', avatar: 'AD', color: 'bg-green-500', lastSeen: 'maintenant' },
