@@ -230,18 +230,18 @@ def test_channel_permissions(token_data, channel_data):
     print("\n=== Testing channel permissions ===")
     
     try:
-        # Initialize Stream client with the token
-        api_key = token_data.get("stream_api_key")
-        token = token_data.get("token")
+        # Initialize Stream client with the API key and secret
+        api_key = STREAM_API_KEY
+        api_secret = STREAM_API_SECRET
         user_id = token_data.get("user_id")
         
         print(f"Initializing Stream client with:")
         print(f"  API Key: {api_key}")
-        print(f"  Token: {token}")
+        print(f"  API Secret: {'*' * len(api_secret) if api_secret else 'None'}")
         print(f"  User ID: {user_id}")
         
-        # Initialize the client
-        stream_client = StreamChat(api_key=api_key, token=token)
+        # Initialize the client with API key and secret (server-side approach)
+        stream_client = StreamChat(api_key=api_key, api_secret=api_secret)
         
         # Get the channel
         channel_id = channel_data["channel_id"]
