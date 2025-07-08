@@ -97,7 +97,7 @@ const NetworkScreen = () => {
   const [activeNetworkTab, setActiveNetworkTab] = useState('membres'); // 'membres' ou 'discussions'
   
   // GetStream integration
-  const { chatClient, streamToken, getUserChannels, isConnecting } = useStreamClient();
+  const { chatClient, streamToken, getUserChannels, createTontineChannel, isConnecting } = useStreamClient();
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [channelsLoading, setChannelsLoading] = useState(true);
