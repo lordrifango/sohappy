@@ -821,7 +821,7 @@ async def create_chat_channel(request: CreateChannelRequest):
         
         # Create channel in Stream
         channel = stream_client.channel(request.channel_type, request.channel_id, channel_data)
-        channel.create(user_id)
+        channel.create(None)  # Don't pass user_id here since we already set created_by_id
         
         # Store channel metadata in our database
         channel_metadata = {
