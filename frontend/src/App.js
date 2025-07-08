@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import './i18n'; // Import i18n configuration
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
 import { ProfileProvider, useProfile } from './ProfileContext';
 import { TutorialProvider, useTutorial } from './TutorialContext';
@@ -38,6 +38,7 @@ import NetworkScreen from './NetworkScreen';
 import ConnectionDetailScreen from './ConnectionDetailScreen';
 import GroupActivityFeed from './GroupActivityFeed';
 import SocialFeedWithTabs from './SocialFeedWithTabs';
+import ProjectListDetailed from './ProjectListDetailed';
 
 const TontyApp = ({ sessionId }) => {
   const { t } = useTranslation();
