@@ -170,7 +170,10 @@ export const Dashboard = ({
       </div>
 
       {/* Carte 2 - Aperçu de mes Projets */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+      <button 
+        onClick={onProjectsClick}
+        className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl hover:border-violet-200 transition-all duration-300 transform hover:scale-105 cursor-pointer w-full text-left"
+      >
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
           <span className="text-violet-500 mr-2">📊</span>
           {t('dashboard.projects_overview')}
@@ -181,7 +184,7 @@ export const Dashboard = ({
             <p className="text-2xl font-bold text-violet-700">{activeObjectives}</p>
           </div>
           <div className="bg-indigo-50 rounded-xl p-4 text-center">
-            <button onClick={onUpcomingToursClick} className="w-full text-center hover:bg-indigo-100 rounded-lg p-1 transition-all">
+            <div className="w-full text-center">
               <p className="text-sm text-indigo-600 font-medium mb-1">{t('dashboard.next_tour')}</p>
               {nextTour ? (
                 <div className="space-y-1">
@@ -198,26 +201,29 @@ export const Dashboard = ({
               ) : (
                 <p className="text-2xl font-bold text-indigo-700">{t('dashboard.none')}</p>
               )}
-            </button>
+            </div>
           </div>
         </div>
         <div className="mt-4 bg-emerald-50 rounded-xl p-4 text-center">
-          <button 
-            onClick={onMembersClick} 
-            className="w-full text-center hover:bg-emerald-100 rounded-lg p-2 transition-all transform hover:scale-105 cursor-pointer group"
-          >
-            <p className="text-sm text-emerald-600 font-medium mb-1 group-hover:text-emerald-700 transition-colors">
+          <div className="w-full text-center">
+            <p className="text-sm text-emerald-600 font-medium mb-1">
               {t('dashboard.network_members')}
             </p>
-            <p className="text-2xl font-bold text-emerald-700 group-hover:text-emerald-800 transition-colors">
+            <p className="text-2xl font-bold text-emerald-700">
               {connectedMembers}
             </p>
-            <p className="text-xs text-emerald-500 mt-1 group-hover:text-emerald-600 transition-colors">
+            <p className="text-xs text-emerald-500 mt-1">
               👥 Explorez votre réseau de confiance
             </p>
-          </button>
+          </div>
         </div>
-      </div>
+        <div className="mt-4 flex items-center justify-center text-violet-600">
+          <span className="text-sm font-medium">Voir tous les projets</span>
+          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </button>
 
       {/* Carte 3 - Suivi d'Objectifs */}
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
