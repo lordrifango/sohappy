@@ -230,18 +230,50 @@ const TontyApp = ({ sessionId }) => {
     setIsGoalTypeSelectionOpen(false);
   };
 
-  const handlePersonalGoalCreated = (newGoal) => {
+  const handlePersonalGoalCreated = async (newGoal) => {
     addGoal(newGoal);
     console.log('Personal goal created:', newGoal);
+    
+    // Créer automatiquement un canal GetStream pour l'objectif personnel
+    try {
+      if (createTontineChannel) {
+        await createTontineChannel(newGoal.id, `Objectif: ${newGoal.title}`, []);
+        console.log('Canal GetStream créé pour l\'objectif personnel:', newGoal.id);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création du canal pour l\'objectif personnel:', error);
+    }
   };
   
-  const handleTontineCreated = (newTontine) => {
+  const handleTontineCreated = async (newTontine) => {
     addTontine(newTontine);
+    console.log('Tontine created:', newTontine);
+    
+    // Créer automatiquement un canal GetStream pour la tontine
+    try {
+      if (createTontineChannel) {
+        await createTontineChannel(newTontine.id, newTontine.fullName, []);
+        console.log('Canal GetStream créé pour la tontine:', newTontine.id);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création du canal pour la tontine:', error);
+    }
   };
 
-  const handleFundCreated = (newFund) => {
+  const handleFundCreated = async (newFund) => {
     addFund(newFund);
     console.log('Cagnotte créée:', newFund);
+    
+    // Créer automatiquement un canal GetStream pour la cagnotte
+    try {
+      if (createTontineChannel) {
+        await createTontineChannel(newFund.id, `Cagnotte: ${newFund.title}`, []);
+        console.log('Canal GetStream créé pour la cagnotte:', newFund.id);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création du canal pour la cagnotte:', error);
+    }
+    
     // Afficher un message de succès
     alert('🎉 Cagnotte créée avec succès ! Elle est maintenant visible dans vos objectifs.');
   };
