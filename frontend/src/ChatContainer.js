@@ -79,7 +79,7 @@ const ChatContainer = ({ tontineId = null, channelId = null, channelType = null,
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <h3 className="text-lg font-semibold text-gray-800">
-          {tontineId ? 'Chat Tontine' : 'Messages'}
+          {tontineId ? 'Chat Tontine' : channelId ? 'Chat Direct' : 'Messages'}
         </h3>
         {onClose && (
           <button 
