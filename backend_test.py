@@ -652,10 +652,14 @@ def test_chat_message_sending(session_id):
     # Send a message
     message_text = f"Test message sent at {datetime.now().isoformat()}"
     try:
-        message_response = channel.send_message(
-            {"text": message_text},
-            user_id  # Pass the user_id as a separate parameter
-        )
+        # Create message data
+        message_data = {
+            "text": message_text,
+            "user_id": user_id  # Include user_id in the message data
+        }
+        
+        # Send the message
+        message_response = channel.send_message(message_data, user_id)
         print(f"Message response: {message_response}")
         
         # Verify the message was sent successfully
