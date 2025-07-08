@@ -904,6 +904,218 @@ async def get_user_channels(session_id: str):
         logger.error(f"Error getting user channels: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des canaux")
 
+# User Search and Contact Management
+class UserSearchRequest(BaseModel):
+    phone: str
+    country_code: str = "+33"
+
+class UserSearchResponse(BaseModel):
+    success: bool
+    message: str
+    user_found: bool = False
+    user_data: Optional[dict] = None
+
+class AddContactRequest(BaseModel):
+    session_id: str
+    contact_phone: str
+    contact_country_code: str = "+33"
+
+class AddContactResponse(BaseModel):
+    success: bool
+    message: str
+    contact_id: Optional[str] = None
+
+@api_router.post("/users/search", response_model=UserSearchResponse)
+async def search_user_by_phone(request: UserSearchRequest):
+    """
+    Search for a user by phone number
+    """
+    try:
+        # Look for user profile by phone number
+        profile_data = await db.user_profiles.find_one({
+            "phone": request.phone,
+            "country_code": request.country_code
+        })
+        
+        if not profile_data:
+            return UserSearchResponse(
+                success=True,
+                message="Utilisateur non trouvé",
+                user_found=False
+            )
+        
+        profile = UserProfile(**profile_data)
+        
+        # Return basic user information (not sensitive data)
+        user_data = {
+            "id": profile.id,
+            "user_id": f"user_{profile.id}",
+            "first_name": profile.first_name,
+            "last_name": profile.last_name,
+            "phone": profile.phone,
+            "country_code": profile.country_code,
+            "city": profile.city,
+            "country": profile.country,
+            "avatar_url": f"https://ui-avatars.com/api/?name={profile.first_name}+{profile.last_name}&background=random"
+        }
+        
+        logger.info(f"User search successful for phone {request.phone}")
+        
+        return UserSearchResponse(
+            success=True,
+            message="Utilisateur trouvé",
+            user_found=True,
+            user_data=user_data
+        )
+        
+    except Exception as e:
+        logger.error(f"Error searching user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la recherche")
+
+@api_router.post("/users/add-contact", response_model=AddContactResponse)
+async def add_contact(request: AddContactRequest):
+    """
+    Add a user as a contact
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": request.session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Get current user profile
+        current_profile_data = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if not current_profile_data:
+            raise HTTPException(status_code=404, detail="Profil utilisateur non trouvé")
+        
+        current_profile = UserProfile(**current_profile_data)
+        
+        # Check if contact exists
+        contact_profile_data = await db.user_profiles.find_one({
+            "phone": request.contact_phone,
+            "country_code": request.contact_country_code
+        })
+        
+        if not contact_profile_data:
+            raise HTTPException(status_code=404, detail="Contact non trouvé")
+        
+        contact_profile = UserProfile(**contact_profile_data)
+        
+        # Check if contact is already added
+        existing_contact = await db.user_contacts.find_one({
+            "user_id": current_profile.id,
+            "contact_id": contact_profile.id
+        })
+        
+        if existing_contact:
+            return AddContactResponse(
+                success=True,
+                message="Contact déjà ajouté",
+                contact_id=contact_profile.id
+            )
+        
+        # Add contact
+        contact_data = {
+            "id": str(uuid.uuid4()),
+            "user_id": current_profile.id,
+            "contact_id": contact_profile.id,
+            "contact_name": f"{contact_profile.first_name} {contact_profile.last_name}",
+            "contact_phone": contact_profile.phone,
+            "contact_country_code": contact_profile.country_code,
+            "added_at": datetime.utcnow()
+        }
+        
+        await db.user_contacts.insert_one(contact_data)
+        
+        logger.info(f"Contact added: {current_profile.id} -> {contact_profile.id}")
+        
+        return AddContactResponse(
+            success=True,
+            message="Contact ajouté avec succès",
+            contact_id=contact_profile.id
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error adding contact: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'ajout du contact")
+
+@api_router.get("/users/contacts/{session_id}")
+async def get_user_contacts(session_id: str):
+    """
+    Get all contacts for a user
+    """
+    try:
+        # Verify session
+        session_data = await db.user_sessions.find_one({
+            "id": session_id,
+            "is_verified": True
+        })
+        
+        if not session_data:
+            raise HTTPException(status_code=401, detail="Session invalide")
+        
+        session = UserSession(**session_data)
+        
+        # Get user profile
+        profile_data = await db.user_profiles.find_one({
+            "phone": session.phone,
+            "country_code": session.country_code
+        })
+        
+        if not profile_data:
+            raise HTTPException(status_code=404, detail="Profil utilisateur non trouvé")
+        
+        profile = UserProfile(**profile_data)
+        
+        # Get contacts from database
+        contacts_data = await db.user_contacts.find({"user_id": profile.id}).to_list(1000)
+        
+        # Enrich contacts with profile data
+        contacts = []
+        for contact in contacts_data:
+            # Get contact profile
+            contact_profile_data = await db.user_profiles.find_one({"id": contact["contact_id"]})
+            if contact_profile_data:
+                contact_profile = UserProfile(**contact_profile_data)
+                enriched_contact = {
+                    "id": contact["contact_id"],
+                    "user_id": f"user_{contact['contact_id']}",
+                    "name": f"{contact_profile.first_name} {contact_profile.last_name}",
+                    "first_name": contact_profile.first_name,
+                    "last_name": contact_profile.last_name,
+                    "phone": contact_profile.phone,
+                    "country_code": contact_profile.country_code,
+                    "city": contact_profile.city,
+                    "country": contact_profile.country,
+                    "avatar_url": f"https://ui-avatars.com/api/?name={contact_profile.first_name}+{contact_profile.last_name}&background=random",
+                    "added_at": contact["added_at"]
+                }
+                contacts.append(enriched_contact)
+        
+        return {
+            "success": True,
+            "message": "Contacts récupérés avec succès",
+            "contacts": contacts
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting user contacts: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des contacts")
+
 # Include the router in the main app
 app.include_router(api_router)
 
