@@ -202,8 +202,9 @@ def test_direct_stream_api_access(token_data):
         
         # Try to get the user
         try:
-            user = stream_client.get_user(user_id)
-            print(f"User data: {json.dumps(user, indent=2)}")
+            filter_conditions = {'id': {'$eq': user_id}}
+            user_response = stream_client.query_users(filter_conditions)
+            print(f"User data: {json.dumps(user_response, indent=2)}")
             print("✅ Successfully retrieved user data from Stream API")
         except Exception as e:
             print(f"❌ Error getting user data: {str(e)}")
@@ -212,8 +213,8 @@ def test_direct_stream_api_access(token_data):
         # Try to list channels
         try:
             filter_criteria = {"members": {"$in": [user_id]}}
-            channels = stream_client.query_channels(filter_criteria, sort=[{"last_message_at": -1}])
-            print(f"Channels: {json.dumps(channels, indent=2)}")
+            channels_response = stream_client.query_channels(filter_criteria, sort=[{"last_message_at": -1}])
+            print(f"Channels: {json.dumps(channels_response, indent=2)}")
             print(f"✅ Successfully retrieved channels from Stream API")
         except Exception as e:
             print(f"❌ Error listing channels: {str(e)}")
