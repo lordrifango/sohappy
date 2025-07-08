@@ -605,13 +605,18 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "GetStream SDK Integration - Token Generation"
+    - "GetStream Channel Management"
+    - "Stream React Context Integration"
+    - "Chat Components Creation"
+    - "Chat Navigation Integration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "Refactorisation complète du Dashboard pour implémenter la divulgation progressive terminée. OBJECTIF ATTEINT : 'Un écran, une intention principale'. ✅ Dashboard épuré - Supprimé la liste détaillée des objectifs du bas. ✅ Composant ProjectListDetailed.jsx créé - Contient la liste détaillée des objectifs avec navigation retour. ✅ Route /projects ajoutée - Affiche la vue détaillée des projets. ✅ Carte 'Aperçu Projets' intelligente : Section 'Projets en cours' (violet) → cliquable vers /projects. Section 'Prochain tour' (bleu) → conserve modal UpcomingToursModal. Section 'Réseau de confiance' (vert) → conserve navigation vers /network. ✅ Principe de divulgation progressive respecté : Dashboard = résumé haute-performance, Détails = écrans dédiés. Les 3 tontines examples ne sont plus en bas du dashboard principal mais accessibles via 'mes projets' en cliquant."
+    message: "🚀 INTÉGRATION GETSTREAM SDK TERMINÉE ! ✅ Backend : Ajouté stream-chat SDK, endpoints /api/chat/token, /api/chat/channel, /api/chat/channels/{session_id} avec authentification par session_id. Configuration clés API dans .env. ✅ Frontend : Créé StreamContext.js avec StreamProvider, ChatContainer.js et TontineChat.js. Intégré stream-chat-react pour UI. ✅ Navigation : Ajouté onglet Chat dans BottomNavigation, routes /chat et /chat/tontine/:id. Boutons chat dans cartes tontine. ✅ Providers : Intégré StreamProvider dans hiérarchie App.js. 🔄 PRÊT POUR TESTS : Endpoints backend et composants frontend implémentés. Chat général et chats spécifiques tontines disponibles. Authentification intégrée avec système existant."
   - agent: "testing"
     message: "Verified Dashboard refactoring implementation through comprehensive code review. All functionality correctly implemented: progressive disclosure achieved with clean dashboard summary and detailed projects page. Individual functionalities for tours and network preserved as requested."
