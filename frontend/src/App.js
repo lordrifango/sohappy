@@ -496,6 +496,12 @@ const TontyApp = ({ sessionId }) => {
               members={[]}
             />
           } />
+          <Route path="/chat/direct/:channelId" element={
+            <ChatContainer 
+              channelId={window.location.pathname.split('/').pop()}
+              channelType="direct"
+            />
+          } />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
