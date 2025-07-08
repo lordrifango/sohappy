@@ -223,11 +223,17 @@ def test_channel_permissions(token_data, channel_data):
     
     try:
         # Initialize Stream client with the token
-        stream_client = StreamChat(
-            api_key=token_data["stream_api_key"],
-            api_secret=None,
-            token=token_data["token"]
-        )
+        api_key = token_data.get("stream_api_key")
+        token = token_data.get("token")
+        user_id = token_data.get("user_id")
+        
+        print(f"Initializing Stream client with:")
+        print(f"  API Key: {api_key}")
+        print(f"  Token: {token}")
+        print(f"  User ID: {user_id}")
+        
+        # Initialize the client
+        stream_client = StreamChat(api_key=api_key, token=token)
         
         # Get the channel
         channel_id = channel_data["channel_id"]
@@ -239,7 +245,6 @@ def test_channel_permissions(token_data, channel_data):
         try:
             channel_state = channel.query()
             members = channel_state.get("members", [])
-            user_id = token_data["user_id"]
             
             is_member = any(member.get("user_id") == user_id for member in members)
             print(f"User {user_id} is a member of the channel: {is_member}")
