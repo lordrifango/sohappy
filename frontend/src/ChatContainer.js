@@ -97,7 +97,7 @@ const ChatContainer = ({ tontineId = null, channelId = null, channelType = null,
       <div className="flex" style={{ height: '540px' }}>
         <Chat client={chatClient} theme="messaging light">
           {/* Channel List */}
-          {!tontineId && (
+          {!tontineId && !channelId && (
             <div className="w-1/3 border-r">
               <ChannelList
                 filters={customFilters}
@@ -109,7 +109,7 @@ const ChatContainer = ({ tontineId = null, channelId = null, channelType = null,
           )}
 
           {/* Messages Area */}
-          <div className={tontineId ? 'w-full' : 'w-2/3'}>
+          <div className={tontineId || channelId ? 'w-full' : 'w-2/3'}>
             {channel ? (
               <Channel channel={channel}>
                 <Window>
