@@ -7,6 +7,7 @@ import { ProfileProvider, useProfile } from './ProfileContext';
 import { TutorialProvider, useTutorial } from './TutorialContext';
 import { BalanceProvider, useBalance } from './BalanceContext';
 import { PremiumProvider, usePremium } from './PremiumContext';
+import { StreamProvider } from './StreamContext';
 import { PhoneLoginScreen, SMSVerificationScreen } from './AuthComponents';
 import { ProfileCreationScreen, ProfileEditModal } from './ProfileComponents';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +40,8 @@ import ConnectionDetailScreen from './ConnectionDetailScreen';
 import GroupActivityFeed from './GroupActivityFeed';
 import SocialFeedWithTabs from './SocialFeedWithTabs';
 import ProjectListDetailed from './ProjectListDetailed';
+import ChatContainer from './ChatContainer';
+import TontineChat from './TontineChat';
 
 const TontyApp = ({ sessionId }) => {
   const navigate = useNavigate();
