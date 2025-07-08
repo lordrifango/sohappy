@@ -204,6 +204,25 @@ const NetworkScreen = () => {
     loadNetworkData();
   }, []);
 
+  // Charger les canaux GetStream
+  useEffect(() => {
+    const loadChannels = async () => {
+      if (!chatClient || !streamToken || isConnecting) return;
+      
+      try {
+        setChannelsLoading(true);
+        const userChannels = await getUserChannels();
+        setChannels(userChannels);
+      } catch (error) {
+        console.error('Erreur lors du chargement des canaux:', error);
+      } finally {
+        setChannelsLoading(false);
+      }
+    };
+
+    loadChannels();
+  }, [chatClient, streamToken, isConnecting, getUserChannels]);
+
   // Filtrage en temps réel
   const filteredMembers = members.filter(member => 
     member.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
