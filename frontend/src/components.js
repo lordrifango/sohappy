@@ -170,21 +170,27 @@ export const Dashboard = ({
       </div>
 
       {/* Carte 2 - Aperçu de mes Projets */}
-      <button 
-        onClick={onProjectsClick}
-        className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl hover:border-violet-200 transition-all duration-300 transform hover:scale-105 cursor-pointer w-full text-left"
-      >
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
           <span className="text-violet-500 mr-2">📊</span>
           {t('dashboard.projects_overview')}
         </h3>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-violet-50 rounded-xl p-4 text-center">
+          <button 
+            onClick={onProjectsClick}
+            className="bg-violet-50 rounded-xl p-4 text-center hover:bg-violet-100 transition-all transform hover:scale-105 cursor-pointer"
+          >
             <p className="text-sm text-violet-600 font-medium mb-1">{t('dashboard.ongoing_projects')}</p>
             <p className="text-2xl font-bold text-violet-700">{activeObjectives}</p>
-          </div>
+            <div className="mt-2 flex items-center justify-center text-violet-600">
+              <span className="text-xs font-medium">Voir tous</span>
+              <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </button>
           <div className="bg-indigo-50 rounded-xl p-4 text-center">
-            <div className="w-full text-center">
+            <button onClick={onUpcomingToursClick} className="w-full text-center hover:bg-indigo-100 rounded-lg p-1 transition-all">
               <p className="text-sm text-indigo-600 font-medium mb-1">{t('dashboard.next_tour')}</p>
               {nextTour ? (
                 <div className="space-y-1">
@@ -201,29 +207,26 @@ export const Dashboard = ({
               ) : (
                 <p className="text-2xl font-bold text-indigo-700">{t('dashboard.none')}</p>
               )}
-            </div>
+            </button>
           </div>
         </div>
         <div className="mt-4 bg-emerald-50 rounded-xl p-4 text-center">
-          <div className="w-full text-center">
-            <p className="text-sm text-emerald-600 font-medium mb-1">
+          <button 
+            onClick={onMembersClick} 
+            className="w-full text-center hover:bg-emerald-100 rounded-lg p-2 transition-all transform hover:scale-105 cursor-pointer group"
+          >
+            <p className="text-sm text-emerald-600 font-medium mb-1 group-hover:text-emerald-700 transition-colors">
               {t('dashboard.network_members')}
             </p>
-            <p className="text-2xl font-bold text-emerald-700">
+            <p className="text-2xl font-bold text-emerald-700 group-hover:text-emerald-800 transition-colors">
               {connectedMembers}
             </p>
-            <p className="text-xs text-emerald-500 mt-1">
+            <p className="text-xs text-emerald-500 mt-1 group-hover:text-emerald-600 transition-colors">
               👥 Explorez votre réseau de confiance
             </p>
-          </div>
+          </button>
         </div>
-        <div className="mt-4 flex items-center justify-center text-violet-600">
-          <span className="text-sm font-medium">Voir tous les projets</span>
-          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-      </button>
+      </div>
 
       {/* Carte 3 - Suivi d'Objectifs */}
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
