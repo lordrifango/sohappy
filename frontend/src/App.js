@@ -419,7 +419,7 @@ const TontyApp = ({ sessionId }) => {
                 <MembersList 
                   tontine={selectedTontine}
                   members={mockMembers[selectedTontine.id] || []}
-                  onBack={handleBackToDashboard}
+                  onBack={handleBackToDashboardFromMembers}
                 />
               )}
               
