@@ -284,23 +284,6 @@ export const Dashboard = ({
           </div>
         </div>
       )}
-
-      {/* Objectifs List */}
-      <div>
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">{t('dashboard.my_objectives')}</h3>
-        </div>
-        
-        <div className="space-y-4">
-          {tontines.map((tontine) => (
-            <TontineCard 
-              key={tontine.id} 
-              tontine={tontine} 
-              onClick={() => onTontineSelect(tontine)}
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
