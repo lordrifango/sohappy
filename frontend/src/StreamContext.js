@@ -44,17 +44,24 @@ export const StreamProvider = ({ children }) => {
         // Initialize Stream client
         const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY);
         
-        // Connect user
+        // Connect user with proper user object
         await client.connectUser(
           {
             id: tokenData.user_id,
             name: tokenData.username,
+            // Add additional user properties for better chat experience
+            image: tokenData.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(tokenData.username)}&background=random`,
+            role: 'user',
           },
           tokenData.token
         );
 
         setChatClient(client);
-        console.log('Stream client initialized successfully');
+        console.log('Stream client initialized successfully', {
+          user_id: tokenData.user_id,
+          username: tokenData.username,
+          stream_api_key: process.env.REACT_APP_STREAM_API_KEY
+        });
       } catch (error) {
         console.error('Error initializing Stream client:', error);
       } finally {
