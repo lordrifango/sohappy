@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useStreamClient } from './StreamContext';
+import { Chat, Channel, ChannelList, MessageList, MessageInput, Thread, Window } from 'stream-chat-react';
+import 'stream-chat-react/dist/css/v2/index.css';
 
 // Composant Avatar pour les membres
 const Avatar = ({ avatarUrl, initials, size = "w-12 h-12" }) => {
