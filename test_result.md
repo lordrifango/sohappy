@@ -120,6 +120,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified token generation endpoint is working correctly. POST /api/chat/token successfully generates a token for authenticated users with valid session_id. The endpoint correctly validates session_id, retrieves user profile, and generates a Stream token. Performance tests show good response times: chat-token (avg: 40.46ms)."
+      - working: true
+        agent: "testing"
+        comment: "Verified token generation endpoint is still working correctly after recent modifications. POST /api/chat/token successfully generates a token for authenticated users with valid session_id. The endpoint correctly validates session_id, retrieves user profile, and generates a Stream token. Performance tests show good response times: chat-token (avg: 56.02ms)."
 
   - task: "GetStream Channel Management"
     implemented: true
