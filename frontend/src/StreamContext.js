@@ -115,10 +115,16 @@ export const StreamProvider = ({ children }) => {
       }
 
       const channelData = await response.json();
+      console.log('Channel created successfully:', channelData);
       
-      // Get the channel from Stream
+      // Get the channel from Stream with proper initialization
       const channel = chatClient.channel('team', `tontine_${tontineId}`);
+      
+      // Initialize the channel state
       await channel.watch();
+      
+      // Make sure the current user is added as a member
+      await channel.addMembers([streamToken.user_id]);
       
       return channel;
     } catch (error) {
