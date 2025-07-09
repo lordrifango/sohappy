@@ -211,6 +211,10 @@ async def verify_code(request: VerifyCodeRequest):
     Verify the SMS code. Any 6-digit code is accepted.
     """
     try:
+        # Normalize phone number and country code
+        normalized_phone = normalize_phone(request.phone)
+        normalized_country_code = normalize_country_code(request.country_code)
+        
         # Validate code format (must be 6 digits)
         if not request.code.isdigit() or len(request.code) != 6:
             return AuthResponse(
@@ -220,8 +224,8 @@ async def verify_code(request: VerifyCodeRequest):
         
         # Find active session for this phone
         session_data = await db.user_sessions.find_one({
-            "phone": request.phone,
-            "country_code": request.country_code,
+            "phone": normalized_phone,
+            "country_code": normalized_country_code,
             "is_verified": False
         })
         
