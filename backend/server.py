@@ -39,12 +39,23 @@ api_router = APIRouter(prefix="/api")
 
 # Utility function to normalize phone numbers
 def normalize_phone(phone):
-    """Normalize phone number by removing spaces and other non-digit characters"""
-    return re.sub(r'\D', '', phone)
+    """Normalize phone number by removing spaces, dashes, and other non-digit characters"""
+    if not phone:
+        return ""
+    # Remove all non-digit characters (spaces, dashes, parentheses, etc.)
+    normalized = re.sub(r'\D', '', str(phone))
+    # Remove leading zeros (but keep at least one digit)
+    normalized = normalized.lstrip('0') or '0'
+    return normalized
 
 def normalize_country_code(country_code):
-    """Normalize country code by removing spaces"""
-    return country_code.strip()
+    """Normalize country code by removing spaces and ensuring it starts with +"""
+    if not country_code:
+        return "+33"  # Default to France
+    normalized = str(country_code).strip()
+    if not normalized.startswith('+'):
+        normalized = '+' + normalized
+    return normalized
 
 # Define Models
 class StatusCheck(BaseModel):
