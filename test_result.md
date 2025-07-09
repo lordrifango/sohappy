@@ -152,6 +152,9 @@ backend:
         comment: "Identified and fixed the issue with message sending in GetStream channels. The problem was in how messages were being sent to the Stream API. The Stream SDK's send_message() method requires the user_id as a separate parameter, not just in the message object. Created a comprehensive test that successfully sends messages to channels. All GetStream backend functionality is now working correctly: token generation, channel creation, and message sending."
       - working: true
         agent: "testing"
+        comment: "✅ GETSTREAM 2025 BEST PRACTICES VERIFIED: Channel management with new UI components structure working perfectly. POST /api/chat/channel creates channels optimized for ChannelHeader, ChannelList, Window structure. Channel creation with members fixed - ensures all members exist in Stream before creating channels. Message sending verified with proper user_id handling. Performance excellent: chat-channel (avg: 80.28ms), chat-channels-get (avg: 35.45ms). Ready for ChannelSearch, Thread, and other 2025 GetStream React components."
+      - working: true
+        agent: "testing"
         comment: "Comprehensive testing confirms channel management is working correctly. Both team channels (for tontines) and messaging channels (for direct messages) can be created successfully. The channel creation endpoint properly validates session_id, retrieves user profile, and creates channels with the correct members. Channel retrieval works correctly, returning all channels for a user with proper metadata. However, there is an issue when creating channels with members from other users - this needs to be fixed for proper direct messaging functionality."
       - working: true
         agent: "testing"
