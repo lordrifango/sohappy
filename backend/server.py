@@ -323,10 +323,13 @@ async def create_user_profile(request: UserProfileCreate, session_id: str):
         
         session = UserSession(**session_data)
         
-        # Check if profile already exists
+        # Check if profile already exists (with normalized phone data)
+        normalized_phone = normalize_phone(session.phone)
+        normalized_country_code = normalize_country_code(session.country_code)
+        
         existing_profile = await db.user_profiles.find_one({
-            "phone": session.phone,
-            "country_code": session.country_code
+            "phone": normalized_phone,
+            "country_code": normalized_country_code
         })
         
         if existing_profile:
