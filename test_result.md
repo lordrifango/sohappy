@@ -666,12 +666,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "GetStream SDK Integration - Token Generation"
-    - "GetStream Channel Management"
-    - "Stream React Context Integration"
-    - "Chat Components Creation"
-    - "Chat Navigation Integration"
     - "User Search Functionality"
+    - "GetStream Channel Management"
   stuck_tasks:
     - "User Search Functionality"
   test_all: false
