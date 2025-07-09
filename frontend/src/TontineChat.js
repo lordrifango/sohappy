@@ -21,13 +21,30 @@ const TontineChat = ({ tontineId, tontineName, members = [], isVisible = true })
         const existingChannel = chatClient.channel('team', `tontine_${tontineId}`);
         
         try {
-          await existingChannel.watch();
+          // Check if channel exists by trying to query it
+          const channelState = await existingChannel.query();
+          
+          // Ensure current user is a member
+          const currentUserId = streamToken.user_id;
+          if (!channelState.members[currentUserId]) {
+            await existingChannel.addMembers([currentUserId]);
+          }
+          
           setChannel(existingChannel);
+          console.log('Using existing channel for tontine:', tontineId);
         } catch (watchError) {
           console.log('Channel does not exist, creating new one...');
           // If channel doesn't exist, create it
-          const newChannel = await createTontineChannel(tontineId, tontineName, members);
+          const memberIds = members.map(member => {
+            if (typeof member === 'string') {
+              return member.startsWith('user_') ? member : `user_${member}`;
+            }
+            return member.id || member.user_id || `user_${member}`;
+          });
+          
+          const newChannel = await createTontineChannel(tontineId, tontineName, memberIds);
           setChannel(newChannel);
+          console.log('Created new channel for tontine:', tontineId);
         }
       } catch (error) {
         console.error('Error initializing tontine chat:', error);
