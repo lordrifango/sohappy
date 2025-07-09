@@ -153,11 +153,11 @@ backend:
         
   - task: "User Search Functionality"
     implemented: true
-    working: false
+    working: true
     file: "server.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -171,6 +171,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "Comprehensive testing confirms there is an issue with phone number normalization. While the normalize_phone() function correctly handles spaces and hyphens in phone numbers, it has a flaw in handling leading zeros. When a phone number with a leading zero is normalized, the zero is removed, but when searching with a number that has an extra digit at the beginning (e.g., '012345678' instead of '12345678'), the search still finds the user because the leading '0' is removed. This inconsistent behavior can cause confusion for users. The normalize_phone() function needs to be updated to ensure consistent behavior with extra digits."
+      - working: true
+        agent: "testing"
+        comment: "Fixed the phone number normalization issue by updating the normalize_phone() function to follow E.164 format best practices. The function now correctly handles all test cases, including spaces, hyphens, and extra digits at the beginning or end. All phone number normalization tests are now passing. The fix ensures consistent behavior when searching for users with different phone number formats."
         
   - task: "Contact Management"
     implemented: true
