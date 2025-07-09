@@ -123,6 +123,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified token generation endpoint is still working correctly after recent modifications. POST /api/chat/token successfully generates a token for authenticated users with valid session_id. The endpoint correctly validates session_id, retrieves user profile, and generates a Stream token. Performance tests show good response times: chat-token (avg: 56.02ms)."
+      - working: true
+        agent: "testing"
+        comment: "Comprehensive testing confirms the token generation endpoint is working correctly. The endpoint properly validates session_id, retrieves user profile data, and generates a valid Stream token with the correct user_id. All error cases are handled appropriately, including invalid sessions and non-existent profiles."
 
   - task: "GetStream Channel Management"
     implemented: true
@@ -144,6 +147,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Identified and fixed the issue with message sending in GetStream channels. The problem was in how messages were being sent to the Stream API. The Stream SDK's send_message() method requires the user_id as a separate parameter, not just in the message object. Created a comprehensive test that successfully sends messages to channels. All GetStream backend functionality is now working correctly: token generation, channel creation, and message sending."
+      - working: true
+        agent: "testing"
+        comment: "Comprehensive testing confirms channel management is working correctly. Both team channels (for tontines) and messaging channels (for direct messages) can be created successfully. The channel creation endpoint properly validates session_id, retrieves user profile, and creates channels with the correct members. Channel retrieval works correctly, returning all channels for a user with proper metadata. However, there is an issue when creating channels with members from other users - this needs to be fixed for proper direct messaging functionality."
         
   - task: "User Search Functionality"
     implemented: true
@@ -151,7 +157,7 @@ backend:
     file: "server.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
@@ -162,6 +168,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "Identified critical issue with phone number format handling. The system requires exact format matches for phone numbers, which causes problems when users search with slightly different formats (e.g., with/without spaces, with/without leading zeros). Created multiple test users with different phone formats and confirmed that searching with a different format than what was used during registration fails. This explains the user's reported issue of not being able to find their other account. Recommendation: Implement phone number normalization in both frontend and backend code to remove spaces and non-digit characters before storing and searching."
+      - working: false
+        agent: "testing"
+        comment: "Comprehensive testing confirms there is an issue with phone number normalization. While the normalize_phone() function correctly handles spaces and hyphens in phone numbers, it has a flaw in handling leading zeros. When a phone number with a leading zero is normalized, the zero is removed, but when searching with a number that has an extra digit at the beginning (e.g., '012345678' instead of '12345678'), the search still finds the user because the leading '0' is removed. This inconsistent behavior can cause confusion for users. The normalize_phone() function needs to be updated to ensure consistent behavior with extra digits."
         
   - task: "Contact Management"
     implemented: true
@@ -177,6 +186,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified contact management functionality is working correctly. POST /api/users/add-contact successfully adds contacts with proper validation of session_id and contact existence. The endpoint correctly handles duplicate contact additions and invalid sessions. GET /api/users/contacts/{session_id} successfully retrieves user contacts with enriched profile data. Integration tests confirm the full workflow of searching for users, adding them as contacts, and retrieving the contact list works correctly. Performance tests show good response times: add-contact (avg: 44.61ms), get-contacts (avg: 35.18ms)."
+      - working: true
+        agent: "testing"
+        comment: "Comprehensive testing confirms contact management is working correctly. Users can add other users as contacts, and the system properly handles duplicate contact additions. The contact retrieval endpoint returns all contacts for a user with enriched profile data. The integration between user search and contact management works correctly, allowing users to search for other users and add them as contacts."
 
 frontend:
   - task: "Stream React Context Integration"
