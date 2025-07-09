@@ -251,7 +251,7 @@ async def verify_code(request: VerifyCodeRequest):
             {"$set": {"is_verified": True}}
         )
         
-        logger.info(f"Successfully verified code for {request.country_code}{request.phone}")
+        logger.info(f"Successfully verified code for {normalized_country_code}{normalized_phone}")
         
         return AuthResponse(
             success=True,
