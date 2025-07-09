@@ -179,7 +179,7 @@ const ChatContainer = ({ tontineId = null, channelId = null, channelType = null,
                 setShowChannelList(true);
                 setSelectedChannel(null);
               }}
-              className="text-blue-600 hover:text-blue-800 flex items-center space-x-2 font-medium"
+              className="text-violet-600 hover:text-violet-800 flex items-center space-x-2 font-medium"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
