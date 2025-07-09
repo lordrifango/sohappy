@@ -324,12 +324,12 @@ async def create_user_profile(request: UserProfileCreate, session_id: str):
                 message="Un profil existe déjà pour ce numéro"
             )
         
-        # Create new profile
+        # Create new profile with normalized phone data
         profile_data = request.dict()
         profile_data.update({
             "id": str(uuid.uuid4()),
-            "phone": session.phone,
-            "country_code": session.country_code,
+            "phone": normalize_phone(session.phone),  # Ensure phone is normalized
+            "country_code": normalize_country_code(session.country_code),  # Ensure country code is normalized
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow()
         })
