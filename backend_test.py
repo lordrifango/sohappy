@@ -1329,5 +1329,103 @@ def run_performance_tests(num_iterations=5):
         }
     }
 
+def test_phone_number_normalization():
+    """Test the phone number normalization functionality in user search"""
+    print("\n=== Testing Phone Number Normalization in User Search ===")
+    
+    # Create a user with a specific phone number format
+    base_phone = f"12345678"  # Simple 8-digit number
+    test_country_code = "+33"
+    
+    # Create and verify a session
+    session_id = create_and_verify_session(base_phone, test_country_code)
+    
+    # Create a profile for this user
+    profile_data = {
+        "first_name": "Test",
+        "last_name": "Normalization",
+        "city": "Paris",
+        "country": "France"
+    }
+    
+    profile_response = requests.post(
+        f"{BACKEND_URL}/api/profile/create?session_id={session_id}", 
+        json=profile_data
+    )
+    
+    assert profile_response.status_code == 200, f"Failed to create test profile: {profile_response.text}"
+    print(f"Created user with phone number: {base_phone}")
+    
+    # Test different phone number formats
+    test_formats = [
+        {"format": base_phone, "description": "Original format", "should_work": True},
+        {"format": "1 2 3 4 5 6 7 8", "description": "With spaces", "should_work": True},
+        {"format": "1-2-3-4-5-6-7-8", "description": "With hyphens", "should_work": True},
+        {"format": "123456780", "description": "With extra digit at end", "should_work": False},
+        {"format": "012345678", "description": "With extra digit at beginning", "should_work": False}
+    ]
+    
+    search_url = f"{BACKEND_URL}/api/users/search"
+    
+    results = []
+    
+    for test_case in test_formats:
+        print(f"\nTesting search with {test_case['description']}: '{test_case['format']}'")
+        payload = {
+            "phone": test_case["format"],
+            "country_code": test_country_code
+        }
+        
+        response = requests.post(search_url, json=payload)
+        assert response.status_code == 200, f"Search request failed: {response.text}"
+        
+        data = response.json()
+        found = data.get("user_found", False)
+        
+        result = {
+            "format": test_case["format"],
+            "description": test_case["description"],
+            "found": found,
+            "expected": test_case["should_work"],
+            "passed": found == test_case["should_work"]
+        }
+        
+        results.append(result)
+        
+        print(f"  Search result: {'Found' if found else 'Not found'}")
+        print(f"  Expected: {'Should find' if test_case['should_work'] else 'Should not find'}")
+        print(f"  Test {'PASSED' if result['passed'] else 'FAILED'}")
+    
+    # Print summary
+    print("\nPhone Number Normalization Test Summary:")
+    all_passed = True
+    for result in results:
+        status = "PASSED" if result["passed"] else "FAILED"
+        print(f"  {result['description']}: {status}")
+        if not result["passed"]:
+            all_passed = False
+    
+    if all_passed:
+        print("\n✅ All phone number normalization tests passed!")
+    else:
+        print("\n❌ Some phone number normalization tests failed!")
+        print("The normalize_phone() function may not be working correctly for all formats.")
+        print("Check the implementation in server.py.")
+    
+    return all_passed
+
+def run_phone_normalization_test():
+    """Run only the phone number normalization test"""
+    try:
+        print(f"Starting phone number normalization test at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        result = test_phone_number_normalization()
+        print(f"\nPhone normalization test {'passed' if result else 'failed'}!")
+        return result
+    except Exception as e:
+        print(f"\n❌ Unexpected error in phone normalization test: {str(e)}")
+        return False
+
 if __name__ == "__main__":
-    run_all_tests()
+    # Uncomment the test you want to run
+    # run_all_tests()
+    run_phone_normalization_test()
