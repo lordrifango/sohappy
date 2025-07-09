@@ -147,9 +147,9 @@ backend:
         
   - task: "User Search Functionality"
     implemented: true
-    working: true
+    working: false
     file: "server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -159,6 +159,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Verified user search functionality is working correctly. POST /api/users/search successfully finds users by phone number and returns appropriate user data. The endpoint correctly handles both existing and non-existent users with proper responses. Tests show the endpoint returns user details including ID, name, phone, and location information when a user is found, and properly indicates when a user is not found. Performance tests show good response times: user-search (avg: 21.88ms)."
+      - working: false
+        agent: "testing"
+        comment: "Identified critical issue with phone number format handling. The system requires exact format matches for phone numbers, which causes problems when users search with slightly different formats (e.g., with/without spaces, with/without leading zeros). Created multiple test users with different phone formats and confirmed that searching with a different format than what was used during registration fails. This explains the user's reported issue of not being able to find their other account. Recommendation: Implement phone number normalization in both frontend and backend code to remove spaces and non-digit characters before storing and searching."
         
   - task: "Contact Management"
     implemented: true
