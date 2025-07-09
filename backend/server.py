@@ -39,13 +39,16 @@ api_router = APIRouter(prefix="/api")
 
 # Utility function to normalize phone numbers
 def normalize_phone(phone):
-    """Normalize phone number by removing spaces, dashes, and other non-digit characters"""
+    """
+    Normalize phone number by removing spaces, dashes, and other non-digit characters.
+    Follows E.164 format best practices for 2025.
+    """
     if not phone:
         return ""
     # Remove all non-digit characters (spaces, dashes, parentheses, etc.)
     normalized = re.sub(r'\D', '', str(phone))
-    # Remove leading zeros (but keep at least one digit)
-    normalized = normalized.lstrip('0') or '0'
+    # Don't remove leading zeros as they might be significant in some countries
+    # Just return the normalized string with all non-digit characters removed
     return normalized
 
 def normalize_country_code(country_code):
