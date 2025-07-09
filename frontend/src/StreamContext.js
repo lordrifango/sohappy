@@ -156,6 +156,9 @@ export const StreamProvider = ({ children }) => {
     }
 
     try {
+      // Ensure user ID is in correct format
+      const formattedOtherUserId = otherUserId.startsWith('user_') ? otherUserId : `user_${otherUserId}`;
+      
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat/channel`, {
         method: 'POST',
         headers: {
@@ -164,7 +167,7 @@ export const StreamProvider = ({ children }) => {
         body: JSON.stringify({
           session_id: sessionId,
           channel_type: 'messaging',
-          members: [otherUserId],
+          members: [formattedOtherUserId],
           channel_name: `Chat avec ${otherUserName}`,
         }),
       });
@@ -179,6 +182,13 @@ export const StreamProvider = ({ children }) => {
       // Get the channel from Stream
       const channel = chatClient.channel('messaging', channelData.channel_id);
       await channel.watch();
+      
+      // Send a welcome message to initiate the conversation
+      const currentUserId = streamToken.user_id;
+      await channel.sendMessage({
+        text: `👋 Conversation démarrée avec ${otherUserName}`,
+        user_id: currentUserId,
+      });
       
       return channel;
     } catch (error) {
