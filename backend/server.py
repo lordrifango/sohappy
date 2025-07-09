@@ -853,6 +853,37 @@ async def create_chat_channel(request: CreateChannelRequest):
             if not request.channel_name:
                 channel_data["name"] = f"Chat Tontine {request.tontine_id}"
         
+        # Ensure all members exist in Stream before creating the channel
+        for member_id in request.members:
+            # Check if this is a valid user_id format
+            if not member_id.startswith("user_"):
+                logger.warning(f"Invalid member ID format: {member_id}")
+                continue
+                
+            # Extract the profile ID from the user_id
+            profile_id = member_id[5:]  # Remove "user_" prefix
+            
+            # Get the member's profile from our database
+            member_profile_data = await db.user_profiles.find_one({"id": profile_id})
+            
+            if not member_profile_data:
+                logger.warning(f"Member profile not found for ID: {profile_id}")
+                continue
+                
+            member_profile = UserProfile(**member_profile_data)
+            
+            # Create or update the user in Stream
+            member_data = {
+                "id": member_id,
+                "name": f"{member_profile.first_name} {member_profile.last_name}",
+                "phone": f"{member_profile.country_code}{member_profile.phone}",
+                "role": "user"
+            }
+            
+            # Create user in Stream if doesn't exist
+            stream_client.update_user(member_data)
+            logger.info(f"Ensured Stream user exists for member: {member_id}")
+        
         # Create channel in Stream
         channel = stream_client.channel(request.channel_type, request.channel_id, channel_data)
         channel.create(user_id)  # Pass the user_id as created_by parameter
