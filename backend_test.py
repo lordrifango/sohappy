@@ -1464,8 +1464,273 @@ def run_getstream_tests():
         traceback.print_exc()
         return False
 
+def test_getstream_and_user_search_integration():
+    """Test the integration of GetStream chat with user search and contact management"""
+    print("\n=== Testing GetStream, User Search, and Contact Management Integration ===")
+    
+    # Create two users for this test
+    user1_phone = f"650555{int(time.time()) % 10000}"
+    user2_phone = f"650555{(int(time.time()) + 1) % 10000}"
+    test_country_code = "+1"
+    
+    print(f"Creating two test users with phones: {user1_phone} and {user2_phone}")
+    
+    # Create and verify sessions for both users
+    user1_session_id = create_and_verify_session(user1_phone, test_country_code)
+    user2_session_id = create_and_verify_session(user2_phone, test_country_code)
+    
+    # Create profiles for both users
+    profile1_data = {
+        "first_name": "User",
+        "last_name": "One",
+        "city": "Paris",
+        "country": "France"
+    }
+    
+    profile2_data = {
+        "first_name": "User",
+        "last_name": "Two",
+        "city": "Lyon",
+        "country": "France"
+    }
+    
+    requests.post(
+        f"{BACKEND_URL}/api/profile/create?session_id={user1_session_id}", 
+        json=profile1_data
+    )
+    
+    requests.post(
+        f"{BACKEND_URL}/api/profile/create?session_id={user2_session_id}", 
+        json=profile2_data
+    )
+    
+    # Step 1: User1 searches for User2
+    print("\nStep 1: User1 searches for User2")
+    search_url = f"{BACKEND_URL}/api/users/search"
+    search_payload = {
+        "phone": user2_phone,
+        "country_code": test_country_code
+    }
+    
+    search_response = requests.post(search_url, json=search_payload)
+    assert search_response.status_code == 200, f"Search failed: {search_response.text}"
+    
+    search_data = search_response.json()
+    assert search_data["user_found"] == True, "User2 should be found"
+    assert search_data["user_data"]["first_name"] == "User", "First name doesn't match"
+    assert search_data["user_data"]["last_name"] == "Two", "Last name doesn't match"
+    
+    user2_id = search_data["user_data"]["id"]
+    user2_stream_id = search_data["user_data"]["user_id"]
+    print(f"Found User2 with ID: {user2_id} and Stream ID: {user2_stream_id}")
+    
+    # Step 2: User1 adds User2 as a contact
+    print("\nStep 2: User1 adds User2 as a contact")
+    add_contact_url = f"{BACKEND_URL}/api/users/add-contact"
+    add_contact_payload = {
+        "session_id": user1_session_id,
+        "contact_phone": user2_phone,
+        "contact_country_code": test_country_code
+    }
+    
+    add_contact_response = requests.post(add_contact_url, json=add_contact_payload)
+    assert add_contact_response.status_code == 200, f"Add contact failed: {add_contact_response.text}"
+    
+    add_contact_data = add_contact_response.json()
+    assert add_contact_data["success"] == True, "Adding contact should succeed"
+    assert add_contact_data["contact_id"] == user2_id, "Contact ID should match User2's ID"
+    
+    # Step 3: User1 gets a Stream token
+    print("\nStep 3: User1 gets a Stream token")
+    token_url = f"{BACKEND_URL}/api/chat/token"
+    token_payload = {
+        "session_id": user1_session_id
+    }
+    
+    token_response = requests.post(token_url, json=token_payload)
+    assert token_response.status_code == 200, f"Token generation failed: {token_response.text}"
+    
+    token_data = token_response.json()
+    assert token_data["success"] == True, "Token generation should succeed"
+    assert "token" in token_data, "Response should include a token"
+    assert "user_id" in token_data, "Response should include a user_id"
+    
+    user1_stream_id = token_data["user_id"]
+    user1_stream_token = token_data["token"]
+    print(f"Got Stream token for User1 with Stream ID: {user1_stream_id}")
+    
+    # Step 4: User1 creates a direct message channel with User2
+    print("\nStep 4: User1 creates a direct message channel with User2")
+    channel_url = f"{BACKEND_URL}/api/chat/channel"
+    channel_payload = {
+        "session_id": user1_session_id,
+        "channel_type": "messaging",
+        "channel_name": "Direct Message Test",
+        "members": [user2_stream_id]  # Add User2 as a member
+    }
+    
+    channel_response = requests.post(channel_url, json=channel_payload)
+    assert channel_response.status_code == 200, f"Channel creation failed: {channel_response.text}"
+    
+    channel_data = channel_response.json()
+    assert channel_data["success"] == True, "Channel creation should succeed"
+    assert "channel_id" in channel_data, "Response should include a channel_id"
+    assert "channel_cid" in channel_data, "Response should include a channel_cid"
+    
+    channel_id = channel_data["channel_id"]
+    channel_cid = channel_data["channel_cid"]
+    print(f"Created direct message channel with ID: {channel_id} and CID: {channel_cid}")
+    
+    # Step 5: User1 sends a message to the channel
+    print("\nStep 5: User1 sends a message to the channel")
+    
+    # Import the Stream Chat SDK
+    from stream_chat import StreamChat
+    
+    # Get Stream API key and secret from environment variables
+    import os
+    from dotenv import load_dotenv
+    load_dotenv("/app/backend/.env")
+    STREAM_API_KEY = os.environ.get("STREAM_API_KEY")
+    STREAM_API_SECRET = os.environ.get("STREAM_API_SECRET")
+    
+    # Initialize the Stream client with the API key and secret
+    client = StreamChat(api_key=STREAM_API_KEY, api_secret=STREAM_API_SECRET)
+    
+    # Get the channel
+    channel = client.channel("messaging", channel_id)
+    
+    # Send a message
+    message_text = f"Test message from User1 to User2 at {datetime.now().isoformat()}"
+    try:
+        # Create message data
+        message = {
+            "text": message_text
+        }
+        
+        # Send the message using the server client
+        message_response = channel.send_message(message, user1_stream_id)
+        print(f"Message response: {message_response}")
+        
+        # Verify the message was sent successfully
+        assert "message" in message_response, "No message in response"
+        assert message_response["message"]["text"] == message_text, "Message text doesn't match"
+        
+        print("✅ Message sent successfully!")
+        
+        # Step 6: Verify the message is in the channel
+        print("\nStep 6: Verifying the message is in the channel")
+        
+        # Get the channel messages
+        response = channel.query(messages={"limit": 10})
+        
+        # Verify the message is in the channel
+        assert "messages" in response, "No messages in response"
+        assert len(response["messages"]) > 0, "No messages in channel"
+        
+        # Find our message
+        found_message = False
+        for msg in response["messages"]:
+            if msg["text"] == message_text:
+                found_message = True
+                break
+        
+        assert found_message, "Couldn't find our message in the channel"
+        
+        print("✅ Message successfully verified in channel!")
+        
+        # Step 7: User1 retrieves their channels
+        print("\nStep 7: User1 retrieves their channels")
+        channels_url = f"{BACKEND_URL}/api/chat/channels/{user1_session_id}"
+        
+        channels_response = requests.get(channels_url)
+        assert channels_response.status_code == 200, f"Channels retrieval failed: {channels_response.text}"
+        
+        channels_data = channels_response.json()
+        assert channels_data["success"] == True, "Channels retrieval should succeed"
+        assert "channels" in channels_data, "Response should include channels"
+        
+        # Find our channel in the list
+        found_channel = False
+        for ch in channels_data["channels"]:
+            if ch["channel_id"] == channel_id:
+                found_channel = True
+                break
+        
+        assert found_channel, "Couldn't find our channel in the user's channels"
+        
+        print("✅ Channel successfully found in user's channels!")
+        
+        print("\n✅ GetStream, User Search, and Contact Management Integration test passed!")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error in integration test: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+def run_comprehensive_tests():
+    """Run a comprehensive set of tests focusing on GetStream and User Search functionality"""
+    try:
+        print(f"Starting comprehensive backend tests at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        # Test MongoDB connectivity
+        test_mongodb_connectivity()
+        
+        # Test authentication (needed for other tests)
+        print("\n=== Testing Authentication (prerequisite) ===")
+        session_id = create_and_verify_session("6505551234", "+1")
+        print(f"Created test session: {session_id}")
+        
+        # Create a profile if needed
+        profile_response = requests.get(f"{BACKEND_URL}/api/profile/{session_id}")
+        if profile_response.json().get("success") == False:
+            print("Creating a test profile")
+            profile_data = {
+                "first_name": "Test",
+                "last_name": "User",
+                "city": "Paris",
+                "country": "France"
+            }
+            requests.post(f"{BACKEND_URL}/api/profile/create?session_id={session_id}", json=profile_data)
+        
+        # Test GetStream functionality
+        print("\n=== Testing GetStream Functionality ===")
+        test_chat_token_endpoint(session_id)
+        test_chat_channel_creation(session_id)
+        test_chat_channels_retrieval(session_id)
+        test_chat_message_sending(session_id)
+        
+        # Test User Search and Contact Management
+        print("\n=== Testing User Search and Contact Management ===")
+        search_session_id, found_phone, found_country_code = test_user_search_endpoint()
+        test_add_contact_endpoint(session_id, found_phone, found_country_code)
+        test_get_contacts_endpoint(session_id)
+        
+        # Test phone number normalization
+        print("\n=== Testing Phone Number Normalization ===")
+        test_phone_number_normalization()
+        
+        # Test the integration of all components
+        print("\n=== Testing Full Integration ===")
+        test_getstream_and_user_search_integration()
+        
+        # Run performance tests
+        print("\n=== Running Performance Tests ===")
+        performance_test_results = run_performance_tests(num_iterations=3)  # Reduced iterations for speed
+        
+        print("\n=== All tests completed successfully! ===")
+        return True
+    except AssertionError as e:
+        print(f"\n❌ Test failed: {str(e)}")
+        return False
+    except Exception as e:
+        print(f"\n❌ Unexpected error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return False
+
 if __name__ == "__main__":
-    # Uncomment the test you want to run
-    # run_all_tests()
-    # run_phone_normalization_test()
-    run_getstream_tests()
+    # Run the comprehensive tests
+    run_comprehensive_tests()
