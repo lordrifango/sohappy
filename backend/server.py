@@ -37,6 +37,14 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Utility function to normalize phone numbers
+def normalize_phone(phone):
+    """Normalize phone number by removing spaces and other non-digit characters"""
+    return re.sub(r'\D', '', phone)
+
+def normalize_country_code(country_code):
+    """Normalize country code by removing spaces"""
+    return country_code.strip()
 
 # Define Models
 class StatusCheck(BaseModel):
