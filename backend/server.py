@@ -948,10 +948,14 @@ async def search_user_by_phone(request: UserSearchRequest):
     Search for a user by phone number
     """
     try:
+        # Normalize phone number and country code
+        normalized_phone = normalize_phone(request.phone)
+        normalized_country_code = normalize_country_code(request.country_code)
+        
         # Look for user profile by phone number
         profile_data = await db.user_profiles.find_one({
-            "phone": request.phone,
-            "country_code": request.country_code
+            "phone": normalized_phone,
+            "country_code": normalized_country_code
         })
         
         if not profile_data:
@@ -976,7 +980,7 @@ async def search_user_by_phone(request: UserSearchRequest):
             "avatar_url": f"https://ui-avatars.com/api/?name={profile.first_name}+{profile.last_name}&background=random"
         }
         
-        logger.info(f"User search successful for phone {request.phone}")
+        logger.info(f"User search successful for phone {normalized_phone}")
         
         return UserSearchResponse(
             success=True,
