@@ -65,7 +65,7 @@ const ChatContainer = ({ tontineId = null, channelId = null, channelType = null,
     const handleChannelClick = () => {
       setActiveChannel(channel);
       setSelectedChannel(channel);
-      setShowChannelList(false); // Hide channel list on mobile after selection
+      setShowChannelList(false); // Hide channel list when channel is selected
     };
 
     return (
