@@ -118,11 +118,11 @@ def test_user_search_with_different_numbers():
     # Create first user
     print(f"\nCreating User One with phone: {user1['country_code']}{user1['phone']}")
     user1_session_id = create_and_verify_session(user1["phone"], user1["country_code"])
+    user1["session_id"] = user1_session_id
     user1_profile = create_profile(user1_session_id, user1["first_name"], user1["last_name"])
     
     if user1_profile["success"]:
         print(f"Created User One: {user1['first_name']} {user1['last_name']} with phone {user1['country_code']}{user1['phone']}")
-        user1["session_id"] = user1_session_id
         if "profile" in user1_profile:
             user1["id"] = user1_profile["profile"]["id"]
     else:
@@ -131,11 +131,11 @@ def test_user_search_with_different_numbers():
     # Create second user
     print(f"\nCreating User Two with phone: {user2['country_code']}{user2['phone']}")
     user2_session_id = create_and_verify_session(user2["phone"], user2["country_code"])
+    user2["session_id"] = user2_session_id
     user2_profile = create_profile(user2_session_id, user2["first_name"], user2["last_name"])
     
     if user2_profile["success"]:
         print(f"Created User Two: {user2['first_name']} {user2['last_name']} with phone {user2['country_code']}{user2['phone']}")
-        user2["session_id"] = user2_session_id
         if "profile" in user2_profile:
             user2["id"] = user2_profile["profile"]["id"]
     else:
