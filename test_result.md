@@ -659,7 +659,9 @@ test_plan:
     - "Stream React Context Integration"
     - "Chat Components Creation"
     - "Chat Navigation Integration"
-  stuck_tasks: []
+    - "User Search Functionality"
+  stuck_tasks:
+    - "User Search Functionality"
   test_all: false
   test_priority: "high_first"
 
