@@ -1425,7 +1425,47 @@ def run_phone_normalization_test():
         print(f"\n❌ Unexpected error in phone normalization test: {str(e)}")
         return False
 
+def run_getstream_tests():
+    """Run only the GetStream-related tests"""
+    try:
+        print(f"Starting GetStream tests at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        # Create and verify a session
+        print("\nCreating and verifying a test session")
+        session_id = create_and_verify_session("6505551234", "+1")
+        print(f"Test session ID: {session_id}")
+        
+        # Create a profile for this user if needed
+        profile_response = requests.get(f"{BACKEND_URL}/api/profile/{session_id}")
+        if profile_response.json().get("success") == False:
+            print("Creating a test profile")
+            profile_data = {
+                "first_name": "Test",
+                "last_name": "User",
+                "city": "Paris",
+                "country": "France"
+            }
+            requests.post(f"{BACKEND_URL}/api/profile/create?session_id={session_id}", json=profile_data)
+        
+        # Test GetStream endpoints
+        print("\nTesting GetStream endpoints")
+        token_result = test_chat_token_endpoint(session_id)
+        channel_result = test_chat_channel_creation(session_id)
+        channels_result = test_chat_channels_retrieval(session_id)
+        message_result = test_chat_message_sending(session_id)
+        
+        all_passed = token_result and channel_result and channels_result and message_result
+        
+        print(f"\nGetStream tests {'all passed!' if all_passed else 'had failures!'}")
+        return all_passed
+    except Exception as e:
+        print(f"\n❌ Unexpected error in GetStream tests: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return False
+
 if __name__ == "__main__":
     # Uncomment the test you want to run
     # run_all_tests()
-    run_phone_normalization_test()
+    # run_phone_normalization_test()
+    run_getstream_tests()
