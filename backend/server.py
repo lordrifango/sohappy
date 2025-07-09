@@ -11,6 +11,7 @@ import uuid
 from datetime import datetime, timedelta
 import random
 import string
+import re
 
 # GetStream imports
 from stream_chat import StreamChat
