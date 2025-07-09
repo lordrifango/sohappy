@@ -169,27 +169,31 @@ async def send_verification_code(request: PhoneAuthRequest):
     In reality, this would integrate with an SMS service.
     """
     try:
+        # Normalize phone number and country code
+        normalized_phone = normalize_phone(request.phone)
+        normalized_country_code = normalize_country_code(request.country_code)
+        
         # Generate a random 6-digit code
         verification_code = ''.join(random.choices(string.digits, k=6))
         
         # Create or update user session
         session = UserSession(
-            phone=request.phone,
-            country_code=request.country_code,
+            phone=normalized_phone,
+            country_code=normalized_country_code,
             verification_code=verification_code,
             is_verified=False
         )
         
         # Remove any existing session for this phone
         await db.user_sessions.delete_many({
-            "phone": request.phone,
-            "country_code": request.country_code
+            "phone": normalized_phone,
+            "country_code": normalized_country_code
         })
         
         # Save new session
         await db.user_sessions.insert_one(session.dict())
         
-        logger.info(f"Generated verification code {verification_code} for {request.country_code}{request.phone}")
+        logger.info(f"Generated verification code {verification_code} for {normalized_country_code}{normalized_phone}")
         
         return AuthResponse(
             success=True,
