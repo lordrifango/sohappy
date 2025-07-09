@@ -242,7 +242,7 @@ const ChatContainer = ({ tontineId = null, channelId = null, channelType = null,
           )}
 
           {/* Chat Area */}
-          <div className={`flex-1 flex flex-col ${showChannelList && selectedChannel ? 'block' : 'hidden md:block'}`}>
+          <div className={`flex-1 flex flex-col ${!showChannelList ? 'block' : 'hidden md:block'}`}>
             {selectedChannel ? (
               <Channel channel={selectedChannel}>
                 <Window>
