@@ -150,6 +150,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Comprehensive testing confirms channel management is working correctly. Both team channels (for tontines) and messaging channels (for direct messages) can be created successfully. The channel creation endpoint properly validates session_id, retrieves user profile, and creates channels with the correct members. Channel retrieval works correctly, returning all channels for a user with proper metadata. However, there is an issue when creating channels with members from other users - this needs to be fixed for proper direct messaging functionality."
+      - working: true
+        agent: "testing"
+        comment: "Fixed the issue with creating channels with members from other users. The problem was that the Stream API requires all users to exist in Stream before they can be added to a channel. Updated the channel creation endpoint to ensure all members exist in Stream before creating the channel. Comprehensive testing confirms that direct message channels can now be created with members from other users, and messages can be sent and received in these channels."
         
   - task: "User Search Functionality"
     implemented: true
