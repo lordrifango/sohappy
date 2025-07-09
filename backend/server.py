@@ -342,8 +342,8 @@ async def create_user_profile(request: UserProfileCreate, session_id: str):
         profile_data = request.dict()
         profile_data.update({
             "id": str(uuid.uuid4()),
-            "phone": normalize_phone(session.phone),  # Ensure phone is normalized
-            "country_code": normalize_country_code(session.country_code),  # Ensure country code is normalized
+            "phone": normalized_phone,
+            "country_code": normalized_country_code,
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow()
         })
