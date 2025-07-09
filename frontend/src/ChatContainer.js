@@ -211,7 +211,7 @@ const ChatContainer = ({ tontineId = null, channelId = null, channelType = null,
         <Chat client={chatClient} theme="messaging light">
           {/* Channel List - Hidden on mobile when channel is selected */}
           {showChannelList && (
-            <div className={`${showChannelList && selectedChannel ? 'hidden md:block' : 'block'} w-full md:w-80 border-r border-gray-200 bg-gray-50`}>
+            <div className={`${selectedChannel ? 'hidden md:block' : 'block'} w-full md:w-80 border-r border-gray-200 bg-gray-50`}>
               <div className="p-4 border-b bg-white">
                 <h2 className="text-lg font-semibold text-gray-800 mb-3">Messages</h2>
                 <ChannelSearch />
