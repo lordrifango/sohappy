@@ -95,6 +95,14 @@ export const StreamProvider = ({ children }) => {
     }
 
     try {
+      // Ensure all member IDs are in the correct format
+      const memberIds = members.map(member => {
+        if (typeof member === 'string') {
+          return member.startsWith('user_') ? member : `user_${member}`;
+        }
+        return member.id || member.user_id || `user_${member}`;
+      });
+
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat/channel`, {
         method: 'POST',
         headers: {
@@ -105,7 +113,7 @@ export const StreamProvider = ({ children }) => {
           channel_type: 'team',
           channel_id: `tontine_${tontineId}`,
           channel_name: `Chat ${tontineName}`,
-          members: members,
+          members: memberIds,
           tontine_id: tontineId,
         }),
       });
@@ -120,11 +128,20 @@ export const StreamProvider = ({ children }) => {
       // Get the channel from Stream with proper initialization
       const channel = chatClient.channel('team', `tontine_${tontineId}`);
       
-      // Initialize the channel state
+      // Initialize the channel state and get latest data
       await channel.watch();
       
-      // Make sure the current user is added as a member
-      await channel.addMembers([streamToken.user_id]);
+      // Ensure current user is a member with proper permissions
+      const currentUserId = streamToken.user_id;
+      if (!channel.state.members[currentUserId]) {
+        await channel.addMembers([currentUserId]);
+      }
+      
+      // Send a welcome message to initiate the channel
+      await channel.sendMessage({
+        text: `🎉 Bienvenue dans le chat de la tontine "${tontineName}" ! Vous pouvez maintenant discuter avec les autres membres.`,
+        user_id: currentUserId,
+      });
       
       return channel;
     } catch (error) {
